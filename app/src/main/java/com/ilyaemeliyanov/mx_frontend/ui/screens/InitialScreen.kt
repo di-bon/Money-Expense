@@ -1,0 +1,68 @@
+package com.ilyaemeliyanov.mx_frontend.ui.screens
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxButton
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+
+@Composable
+fun InitialScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.SpaceBetween
+        ) {
+        Column {
+            Text(
+                text = "Money Expense",
+                style = MaterialTheme.typography.displayLarge
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(
+                text = "Your new journey starts here",
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+
+        Column {
+            MxButton(
+                text = "Sign up",
+                onClick = { /*TODO*/ },
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            MxButton(
+                text = "Login",
+                onClick = { /*TODO*/ },
+                containerColor = Color.Yellow,
+                contentColor = Color.Black,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InitialScreenPreview() {
+    MxfrontendTheme {
+        InitialScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(16.dp)
+        )
+    }
+}
