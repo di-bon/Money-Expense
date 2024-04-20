@@ -1,6 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,16 +27,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTransaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier) {
+fun DashboardScreen(
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
-        DashboardTopBar()
-        Spacer(modifier = Modifier.height(20.dp))
-        DashboardInfo()
-        Spacer(modifier = Modifier.height(20.dp))
-        RecentTransactions()
+        DashboardTopBar(
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+        )
+        // Spacer(modifier = Modifier.height(20.dp))
+        DashboardInfo(
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+        )
+        // Spacer(modifier = Modifier.height(20.dp))
+        RecentTransactions(
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+        )
     }
 }
 
@@ -43,27 +61,32 @@ fun DashboardScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun DashboardScreenPreview() {
     MxfrontendTheme {
-        DashboardScreen(modifier = Modifier.padding(16.dp))
+        DashboardScreen(modifier = Modifier.padding(24.dp))
     }
 }
 
 @Composable
-private fun DashboardTopBar(modifier: Modifier = Modifier) {
+private fun DashboardTopBar(
+    modifier: Modifier = Modifier
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        Text(
-            text = "Dashboard",
-            style = MaterialTheme.typography.headlineLarge
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        CurrentWallet()
+        MxTitle(
+            title = "Dashboard",
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            CurrentWallet(onClick = {})
+        }
     }
 }
 
 @Composable
-private fun CurrentWallet(modifier: Modifier = Modifier) {
+private fun CurrentWallet(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -73,21 +96,20 @@ private fun CurrentWallet(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.width(4.dp))
-        // TODO: consider replacing this button with a custom image,
-        //  because 'Button' doesn't shrink to the size of 'Icon'
         Button(
-            onClick = { /* TODO */ },
+            onClick = onClick,
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Black,
                 contentColor = Color.White
             ),
-            modifier = Modifier.wrapContentSize(Alignment.Center)
+            contentPadding = PaddingValues(0.dp),
+            modifier = Modifier
+                .size(16.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowDown,
                 contentDescription = "Change current wallet",
-                tint = Color.White,
                 modifier = Modifier
                     .size(16.dp)
             )
@@ -98,48 +120,15 @@ private fun CurrentWallet(modifier: Modifier = Modifier) {
 @Composable
 private fun DashboardInfo(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        DashboardBox(
-            title = "Balance",
-//            containerColor = Color.Yellow,
+        MxCard(
+            containerColor = Color.Yellow,
+            contentColor = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
-        )
-        Row(modifier = Modifier.fillMaxWidth()) {
-            DashboardBox(
-                title = "Incomes",
-//                containerColor = Color.Black,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            DashboardBox(
-                title = "Expenses",
-//                containerColor = Color.Black,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun DashboardBox(
-    title: String,
-//    containerColor: Color,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
         ) {
             Text(
-                text = title,
+                text = "Balance",
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -148,17 +137,49 @@ private fun DashboardBox(
                 style = MaterialTheme.typography.headlineMedium
             )
         }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            MxCard(
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Incomes",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "\$ 234.35",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            MxCard(
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = "Expenses",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "\$ 123.45",
+                    style = MaterialTheme.typography.headlineMedium
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun DashboardBoxPreview() {
+private fun DashboardInfoPreview() {
     MxfrontendTheme {
-        DashboardBox(
-            title = "Balance",
-//            containerColor = Color.Yellow,
+        DashboardInfo(
             modifier = Modifier
+                .padding(16.dp)
         )
     }
 }
@@ -171,7 +192,18 @@ private fun RecentTransactions(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium
         )
         repeat(4) {
-            Transaction(modifier = Modifier.padding(8.dp))
+//            MxTransaction(modifier = Modifier.padding(8.dp))
+            MxTransaction(
+                transaction = Transaction(
+                    title = "Spesa",
+                    amount = -24.50f,
+                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                    description = null
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
+            )
         }
     }
 }
@@ -184,42 +216,3 @@ private fun RecentTransactionsPreview() {
     }
 }
 
-@Composable
-private fun Transaction(modifier: Modifier = Modifier) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = Icons.Filled.KeyboardArrowUp,
-            contentDescription = null,
-            modifier = Modifier
-                .padding(4.dp)
-                .width(32.dp)
-                // .rotate(-90f)
-        )
-        Column (
-            modifier = Modifier
-                .weight(1f)
-        ) {
-            Text(text = "Spesa", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "04/04/2024", style = MaterialTheme.typography.bodySmall)
-        }
-        Text(
-            text = "-$24.50",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun TransactionPreview() {
-    MxfrontendTheme {
-        Transaction(modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-        )
-    }
-}

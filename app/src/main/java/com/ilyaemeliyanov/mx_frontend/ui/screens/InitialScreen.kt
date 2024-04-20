@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
 
 @Composable
@@ -27,8 +27,8 @@ fun InitialScreen(
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
-        ) {
-        Column (
+    ) {
+        Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
@@ -43,27 +43,37 @@ fun InitialScreen(
             )
         }
 
-        Column (
+        Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            MxButton(
-                text = "Sign up",
+            MxRectangularButton(
                 onClick = onSignUpClick,
                 containerColor = Color.Black,
                 contentColor = Color.White,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .height(60.dp)
-            )
-            MxButton(
-                text = "Login",
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Sign up",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
+            MxRectangularButton(
                 onClick = onLoginClick,
                 containerColor = Color.Yellow,
                 contentColor = Color.Black,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .height(60.dp)
-            )
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Login",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+            }
         }
     }
 }
