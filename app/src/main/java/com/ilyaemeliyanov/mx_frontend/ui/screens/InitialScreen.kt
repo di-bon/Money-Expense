@@ -14,18 +14,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
 
 @Composable
-fun InitialScreen(modifier: Modifier = Modifier) {
+fun InitialScreen(
+    onLoginClick: () -> Unit,
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
         ) {
-        Column {
+        Column (
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Money Expense",
+                lineHeight = 68.sp,
                 style = MaterialTheme.typography.displayLarge
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -35,20 +43,26 @@ fun InitialScreen(modifier: Modifier = Modifier) {
             )
         }
 
-        Column {
+        Column (
+            modifier = Modifier.fillMaxWidth()
+        ) {
             MxButton(
                 text = "Sign up",
-                onClick = { /*TODO*/ },
+                onClick = onSignUpClick,
                 containerColor = Color.Black,
                 contentColor = Color.White,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .height(60.dp)
             )
             MxButton(
                 text = "Login",
-                onClick = { /*TODO*/ },
+                onClick = onLoginClick,
                 containerColor = Color.Yellow,
                 contentColor = Color.Black,
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .height(60.dp)
             )
         }
     }
@@ -59,10 +73,12 @@ fun InitialScreen(modifier: Modifier = Modifier) {
 private fun InitialScreenPreview() {
     MxfrontendTheme {
         InitialScreen(
+            onLoginClick = {},
+            onSignUpClick = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(16.dp)
+                .padding(24.dp)
         )
     }
 }
