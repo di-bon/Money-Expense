@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MX</string>
+    <string name="initial_screen">Initial screen</string>
+    <string name="dashboard_screen">Dashboard</string>
 </resources>
