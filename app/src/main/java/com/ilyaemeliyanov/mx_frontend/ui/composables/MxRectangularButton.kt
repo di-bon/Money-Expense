@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
 fun MxRectangularButton(
@@ -42,7 +42,7 @@ fun MxRectangularButton(
 @Preview(showBackground = true)
 @Composable
 private fun MxRectangularButtonPreview() {
-    MxfrontendTheme {
+    MXTheme {
         MxRectangularButton(
             onClick = {},
             containerColor = Color.Black,

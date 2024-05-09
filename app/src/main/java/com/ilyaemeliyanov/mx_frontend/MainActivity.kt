@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.MxApp
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -49,12 +49,16 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun MoneyExpensePreview() {
-    MxfrontendTheme {
+    MXTheme {
         MxApp(modifier = Modifier.padding(16.dp))
-                    MXScreen()
-                }
-            }
-        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MXScreenPreview() {
+    MXTheme {
+        MXScreen()
     }
 }
 

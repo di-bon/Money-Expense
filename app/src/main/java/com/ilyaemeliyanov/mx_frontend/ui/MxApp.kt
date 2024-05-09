@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ilyaemeliyanov.mx_frontend.R
 import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 enum class MxScreen(@StringRes val title: Int) {
     Initial(title = R.string.initial_screen),
@@ -68,7 +67,7 @@ fun MxApp(
 @Preview(showBackground = true)
 @Composable
 fun MxAppPreview() {
-    MxfrontendTheme {
+    MXTheme {
         MxApp(modifier = Modifier.padding(16.dp))
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
 fun InitialScreen(
@@ -81,7 +81,7 @@ fun InitialScreen(
 @Preview(showBackground = true)
 @Composable
 private fun InitialScreenPreview() {
-    MxfrontendTheme {
+    MXTheme {
         InitialScreen(
             onLoginClick = {},
             onSignUpClick = {},

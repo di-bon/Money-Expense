@@ -31,7 +31,7 @@ import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTransaction
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -60,7 +60,7 @@ fun DashboardScreen(
 @Preview(showBackground = true)
 @Composable
 private fun DashboardScreenPreview() {
-    MxfrontendTheme {
+    MXTheme {
         DashboardScreen(modifier = Modifier.padding(24.dp))
     }
 }
@@ -176,7 +176,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun DashboardInfoPreview() {
-    MxfrontendTheme {
+    MXTheme {
         DashboardInfo(
             modifier = Modifier
                 .padding(16.dp)
@@ -211,7 +211,7 @@ private fun RecentTransactions(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun RecentTransactionsPreview() {
-    MxfrontendTheme {
+    MXTheme {
         RecentTransactions(modifier = Modifier.padding(8.dp))
     }
 }

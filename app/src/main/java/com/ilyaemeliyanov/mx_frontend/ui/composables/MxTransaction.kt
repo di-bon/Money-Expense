@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MxfrontendTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -97,7 +97,7 @@ fun MxTransaction(
 @Preview(showBackground = true)
 @Composable
 private fun MxTransactionPreview() {
-    MxfrontendTheme {
+    MXTheme {
         MxTransaction(
             transaction = Transaction(
                 title = "Spesa",
