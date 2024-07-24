@@ -3,6 +3,7 @@ package com.ilyaemeliyanov.mx_frontend.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = "Sign up", style = MaterialTheme.typography.displayLarge)
+        Spacer(modifier = Modifier.height(24.dp))
         Column {
             MxInput(
                 titleText = "First name",
@@ -57,7 +59,7 @@ fun RegisterScreen(
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
-
+        Spacer(modifier = Modifier.weight(1f))
         MxRectangularButton(
             onClick = onSignUpClick,
             containerColor = Color.Black,
