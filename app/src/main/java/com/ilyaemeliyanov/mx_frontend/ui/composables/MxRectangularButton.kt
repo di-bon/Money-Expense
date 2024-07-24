@@ -28,7 +28,7 @@ fun MxRectangularButton(
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(10.dp), //TODO: 8.dp?
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             contentColor = contentColor

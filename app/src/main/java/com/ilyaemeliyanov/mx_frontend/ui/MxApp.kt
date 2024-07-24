@@ -1,12 +1,14 @@
 package com.ilyaemeliyanov.mx_frontend.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,6 +41,7 @@ fun MxApp(
             startDestination = MxScreen.Initial.name,
             modifier = Modifier
                 .padding(innerPadding)
+                .background(color = Color(246, 246, 246)) // #F6F6F6
         ) {
             composable(route = MxScreen.Initial.name) {
                 InitialScreen(
@@ -51,13 +54,13 @@ fun MxApp(
                     onSignUpClick = { /*TODO*/ },
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(24.dp)
+                        .padding(32.dp)
                 )
             }
 
             composable(route = MxScreen.Dashboard.name) {
                 DashboardScreen(
-                    modifier = Modifier.padding(24.dp)
+                    modifier = Modifier.padding(32.dp)
                 )
             }
         }
