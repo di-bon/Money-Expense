@@ -29,6 +29,8 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXIcons
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
+// TODO: merge this class with ui/MxApp.kt
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

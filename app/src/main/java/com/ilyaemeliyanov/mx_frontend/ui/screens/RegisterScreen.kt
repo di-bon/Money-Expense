@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+
+private const val TAG = "RegisterScreen"
 
 @Composable
 fun RegisterScreen(
@@ -76,6 +79,7 @@ fun RegisterScreen(
 private fun RegisterScreenPreview() {
     MXTheme {
         RegisterScreen({}, modifier = Modifier
+            .background(color = Color(246, 246, 246))
             .padding(32.dp)
             .fillMaxWidth()
             .fillMaxHeight()

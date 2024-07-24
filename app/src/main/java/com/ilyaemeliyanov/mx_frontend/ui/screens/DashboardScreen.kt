@@ -35,6 +35,8 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
 
+private const val TAG = "DashboardScreen"
+
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier

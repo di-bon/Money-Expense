@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
+private const val TAG = "InitialScreen"
+
 @Composable
 fun InitialScreen(
     onLoginClick: () -> Unit,

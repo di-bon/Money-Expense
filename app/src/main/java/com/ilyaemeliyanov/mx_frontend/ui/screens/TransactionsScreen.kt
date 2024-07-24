@@ -8,6 +8,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
+private const val TAG = "TransactionsScreen"
+
 @Composable
 fun TransactionsScreen(modifier: Modifier = Modifier) {
     Text(text = "Transactions screen")

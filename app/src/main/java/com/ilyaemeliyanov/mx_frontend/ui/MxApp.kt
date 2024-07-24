@@ -21,6 +21,8 @@ import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
+private const val TAG = "MxApp"
+
 enum class MxScreen(@StringRes val title: Int) {
     Initial(title = R.string.initial_screen),
     Dashboard(title = R.string.dashboard_screen)
@@ -40,8 +42,8 @@ fun MxApp(
             navController = navController,
             startDestination = MxScreen.Initial.name,
             modifier = Modifier
-                .padding(innerPadding)
                 .background(color = Color(246, 246, 246)) // #F6F6F6
+                .padding(innerPadding)
         ) {
             composable(route = MxScreen.Initial.name) {
                 InitialScreen(
