@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -30,6 +33,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
+import kotlin.math.abs
 
 @Composable
 fun MxTransaction(
@@ -63,15 +67,16 @@ fun MxTransaction(
                 Text(text = transaction.title, style = MaterialTheme.typography.bodyMedium)
 
                 val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formatttedDate = formatter.format(transaction.date)
+                val formattedDate = formatter.format(transaction.date)
 
                 Text(
-                    text = formatttedDate.toString(),
-                    style = MaterialTheme.typography.bodySmall
+                    text = formattedDate.toString(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MXColors.Default.secondaryColor
                 )
             }
             Text(
-                text = "%.2f".format(transaction.amount),
+                text = getFormattedAmount(transaction.amount),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
             )
@@ -90,6 +95,23 @@ fun MxTransaction(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+        Divider(
+            modifier = Modifier
+                .padding(vertical = 8.dp),
+            thickness = 1.dp,
+            color = Color(232, 232, 232) // E8E8E8
+        )
+    }
+}
+
+private fun getFormattedAmount (amount: Float): String {
+    return when {
+        amount >= 0f -> {
+            "+ \$%.2f".format(locale = Locale.US, amount)
+        }
+        else -> {
+            "- \$%.2f".format(locale = Locale.US, abs(amount))
         }
     }
 }

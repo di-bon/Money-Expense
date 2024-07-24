@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -31,6 +32,7 @@ import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTransaction
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -52,10 +54,13 @@ fun DashboardScreen(
                 .padding(vertical = 12.dp)
         )
         // Spacer(modifier = Modifier.height(20.dp))
-        RecentTransactions(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-        )
+
+        MxCard(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        ) {
+            RecentTransactions()
+        }
     }
 }
 
@@ -63,7 +68,11 @@ fun DashboardScreen(
 @Composable
 private fun DashboardScreenPreview() {
     MXTheme {
-        DashboardScreen(modifier = Modifier.padding(24.dp))
+        DashboardScreen(
+            modifier = Modifier
+                .background(color = Color(246, 246, 246))
+                .padding(24.dp)
+        )
     }
 }
 
@@ -123,8 +132,8 @@ private fun CurrentWallet(
 private fun DashboardInfo(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         MxCard(
-            containerColor = Color.Yellow,
-            contentColor = Color.Black,
+            containerColor = MXColors.Default.activeColor,
+            contentColor = MXColors.Default.primaryColor,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
@@ -141,24 +150,25 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
         }
         Row(modifier = Modifier.fillMaxWidth()) {
             MxCard(
-                containerColor = Color.Black,
-                contentColor = Color.White,
+                containerColor = MXColors.Default.primaryColor,
+                contentColor = MXColors.Default.secondaryColor,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = "Incomes",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "\$ 234.35",
-                    style = MaterialTheme.typography.headlineMedium
+                    text = "+ \$ 234.35",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
             MxCard(
                 containerColor = Color.Black,
-                contentColor = Color.White,
+                contentColor = MXColors.Default.secondaryColor,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
@@ -167,8 +177,9 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "\$ 123.45",
-                    style = MaterialTheme.typography.headlineMedium
+                    text = "- \$ 123.45",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
             }
         }
@@ -193,6 +204,7 @@ private fun RecentTransactions(modifier: Modifier = Modifier) {
             text = "Recent transactions",
             style = MaterialTheme.typography.titleMedium
         )
+        Spacer(modifier = Modifier.height(8.dp))
         repeat(4) {
 //            MxTransaction(modifier = Modifier.padding(8.dp))
             MxTransaction(
@@ -214,7 +226,11 @@ private fun RecentTransactions(modifier: Modifier = Modifier) {
 @Composable
 private fun RecentTransactionsPreview() {
     MXTheme {
-        RecentTransactions(modifier = Modifier.padding(8.dp))
+        RecentTransactions(
+            modifier = Modifier
+                .background(color = Color(246, 246, 246))
+                .padding(8.dp)
+        )
     }
 }
 

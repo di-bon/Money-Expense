@@ -13,7 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import java.util.Calendar
+import java.util.GregorianCalendar
+
+/* TODO: update this composable:
+    - change content color logic: it shouldn't set every color of the composable
+ */
 
 @Composable
 fun MxCard(
@@ -35,6 +44,27 @@ fun MxCard(
                 .padding(12.dp)
         ) {
             content()
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MxCardPreview() {
+    MXTheme {
+        MxCard(
+            containerColor = Color(225, 225, 225),
+            contentColor = Color.Black,
+            modifier = Modifier.padding(32.dp)
+        ) {
+            MxTransaction(transaction =
+                Transaction(
+                    title = "MyTransaction",
+                    amount = 10.00f,
+                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                    description = null
+                )
+            )
         }
     }
 }
