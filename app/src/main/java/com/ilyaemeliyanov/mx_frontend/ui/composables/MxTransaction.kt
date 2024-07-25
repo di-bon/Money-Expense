@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -76,7 +77,7 @@ fun MxTransaction(
                 )
             }
             Text(
-                text = getFormattedAmount(transaction.amount),
+                text = StringFormatter.getFormattedAmount(transaction.amount),
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
             )
@@ -102,17 +103,6 @@ fun MxTransaction(
             thickness = 1.dp,
             color = Color(232, 232, 232) // E8E8E8
         )
-    }
-}
-
-private fun getFormattedAmount (amount: Float): String {
-    return when {
-        amount >= 0f -> {
-            "+ \$%.2f".format(locale = Locale.US, amount)
-        }
-        else -> {
-            "- \$%.2f".format(locale = Locale.US, abs(amount))
-        }
     }
 }
 
