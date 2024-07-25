@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 private const val TAG = "InitialScreen"
@@ -65,7 +66,7 @@ fun InitialScreen(
             }
             MxRectangularButton(
                 onClick = onLoginClick,
-                containerColor = Color.Yellow,
+                containerColor = MXColors.Default.activeColor,
                 contentColor = Color.Black,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
