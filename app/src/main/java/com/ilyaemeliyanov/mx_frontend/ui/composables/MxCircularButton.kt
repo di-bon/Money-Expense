@@ -14,18 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
 fun MxCircluarButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    containerColor: Color = MXColors.Default.primaryColor,
+    contentColor: Color = Color.White,
     content: @Composable () -> Unit
 ) {
     Button(
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            contentColor = Color.White
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         shape = CircleShape,
         contentPadding = PaddingValues(0.dp),
