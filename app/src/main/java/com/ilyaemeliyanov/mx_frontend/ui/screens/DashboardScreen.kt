@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -27,6 +25,7 @@ import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTransaction
+import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
@@ -181,43 +180,6 @@ private fun DashboardInfoPreview() {
         DashboardInfo(
             modifier = Modifier
                 .padding(16.dp)
-        )
-    }
-}
-
-@Composable
-private fun RecentTransactions(modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Text(
-            text = "Recent transactions",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        repeat(4) {
-//            MxTransaction(modifier = Modifier.padding(8.dp))
-            MxTransaction(
-                transaction = Transaction(
-                    title = "Spesa",
-                    amount = -24.50f,
-                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                    description = null
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun RecentTransactionsPreview() {
-    MXTheme {
-        RecentTransactions(
-            modifier = Modifier
-                .background(color = Color(246, 246, 246))
-                .padding(8.dp)
         )
     }
 }
