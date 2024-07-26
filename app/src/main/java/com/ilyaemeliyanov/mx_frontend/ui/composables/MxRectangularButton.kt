@@ -1,6 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ fun MxRectangularButton(
     containerColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable () -> Unit
 ) {
     Button(
@@ -33,6 +35,7 @@ fun MxRectangularButton(
             containerColor = containerColor,
             contentColor = contentColor
         ),
+        contentPadding = contentPadding,
         modifier = modifier
     ) {
         content()
