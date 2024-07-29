@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -52,7 +53,7 @@ fun InitialScreen(
         ) {
             MxRectangularButton(
                 onClick = onSignUpClick,
-                containerColor = Color.Black,
+                containerColor = MXColors.Default.primaryColor,
                 contentColor = Color.White,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -92,7 +93,8 @@ private fun InitialScreenPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(24.dp)
+                .background(color = MXColors.Default.bgColor)
+                .padding(32.dp)
         )
     }
 }

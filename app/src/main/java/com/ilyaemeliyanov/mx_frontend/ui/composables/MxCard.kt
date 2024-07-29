@@ -1,6 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -25,7 +26,7 @@ fun MxCard(
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
     contentColor: Color = Color.Black,
-    cardPadding: Dp = 12.dp,
+    contentPadding: Dp = 12.dp,
     content: @Composable () -> Unit
 ) {
     Card(
@@ -38,7 +39,7 @@ fun MxCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(cardPadding)
+                .padding(contentPadding)
         ) {
             content()
         }
@@ -49,19 +50,26 @@ fun MxCard(
 @Composable
 private fun MxCardPreview() {
     MXTheme {
-        MxCard(
-            containerColor = Color(225, 225, 225),
-            contentColor = Color.Black,
-            modifier = Modifier.padding(32.dp)
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
-            MxTransaction(transaction =
-                Transaction(
-                    title = "MyTransaction",
-                    amount = 10.00f,
-                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                    description = null
+            MxCard(
+                containerColor = Color(225, 225, 225),
+                contentColor = Color.Black,
+                modifier = Modifier.padding(16.dp)
+            ) {
+                MxTransaction(
+                    transaction = Transaction(
+                        title = "MyTransaction",
+                        amount = 10.00f,
+                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                        description = null
+                    ),
+                    showBottomDivider = false
                 )
-            )
+            }
         }
     }
 }

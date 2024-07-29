@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -48,22 +51,41 @@ fun MxWallet(
             ) {
                 Text(text = wallet.name, style = MaterialTheme.typography.titleLarge)
                 Spacer(modifier = Modifier.weight(1f))
-                Surface(
-                    onClick = { /*TODO*/ },
+//                Surface(
+//                    onClick = { /*TODO*/ },
+//                    modifier = Modifier
+//                        .fillMaxHeight(),
+//                    color = Color.Transparent
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Filled.Edit,
+//                        contentDescription = "Edit wallet",
+//
+//                    )
+//                }
+//                Surface(
+//                    onClick = { /*TODO*/ },
+//                    modifier = Modifier
+//                        .fillMaxHeight(),
+//                    color = Color.Transparent,
+//                    ) {
+//                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Edit wallet")
+//                }
+                Icon(
+                    imageVector = Icons.Filled.Edit,
+                    contentDescription = "Edit wallet",
                     modifier = Modifier
-                        .fillMaxHeight(),
-                    color = Color.Transparent
-                ) {
-                    Icon(imageVector = Icons.Filled.Edit, contentDescription = "Edit wallet")
-                }
-                Surface(
-                    onClick = { /*TODO*/ },
+                        .fillMaxHeight()
+                        .clickable { /*TODO*/ }
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Edit wallet",
                     modifier = Modifier
-                        .fillMaxHeight(),
-                    color = Color.Transparent,
-                    ) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Edit wallet")
-                }
+                        .fillMaxHeight()
+                        .clickable { /*TODO*/ }
+                )
             }
             Text(
                 text = StringFormatter.getFormattedAmount(wallet.totalAmount),

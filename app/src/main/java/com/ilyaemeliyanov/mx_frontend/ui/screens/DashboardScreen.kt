@@ -54,7 +54,28 @@ fun DashboardScreen(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
-            RecentTransactions()
+            RecentTransactions(
+                transactions = listOf(
+                    Transaction(
+                        title = "Spesa",
+                        amount = -24.50f,
+                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                        description = "Groceries"
+                    ),
+                    Transaction(
+                        title = "Gym sub",
+                        amount = -69.99f,
+                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
+                        description = "Health"
+                    ),
+                    Transaction(
+                        title = "Salary",
+                        amount = 3125f,
+                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
+                        description = "Work at Google"
+                    )
+                )
+            )
         }
     }
 }

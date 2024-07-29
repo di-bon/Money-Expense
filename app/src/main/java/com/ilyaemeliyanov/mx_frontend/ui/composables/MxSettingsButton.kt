@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
@@ -91,15 +93,22 @@ fun MxSettingsButton(
 @Composable
 private fun MxSettingsButtonPreview() {
     MXTheme {
-        MxSettingsButton(
-            onClick = {},
-            leftIconImageVector = Icons.Outlined.Person,
-            titleString = "Change personal info",
-            descriptionString = "Here you can change your firstname, lastname and password",
-            rightIconImageVector = Icons.Filled.KeyboardArrowRight,
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .height(88.dp)
-        )
+                .background(color = MXColors.Default.bgColor)
+                .padding(12.dp)
+        ) {
+            MxSettingsButton(
+                onClick = {},
+                leftIconImageVector = Icons.Outlined.Person,
+                titleString = "Change personal info",
+                descriptionString = "Here you can change your firstname, lastname and password",
+                rightIconImageVector = Icons.Filled.KeyboardArrowRight,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(88.dp)
+            )
+        }
     }
 }

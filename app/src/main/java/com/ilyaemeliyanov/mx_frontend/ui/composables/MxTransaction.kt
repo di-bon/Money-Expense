@@ -1,9 +1,11 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -39,7 +41,8 @@ import kotlin.math.abs
 @Composable
 fun MxTransaction(
     transaction: Transaction,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showBottomDivider: Boolean = true
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -53,7 +56,7 @@ fun MxTransaction(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector = if (transaction.amount < 0) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp,
+                imageVector = if (transaction.amount < 0) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp, // TODO: change icons
                 contentDescription = null,
                 modifier = Modifier
                     // .padding(4.dp)
@@ -87,8 +90,7 @@ fun MxTransaction(
                 .fillMaxWidth()
                 .padding(
                     top = 8.dp,
-                    // TODO: set correct dimension of description Text
-                    // start = (32 + 4).dp
+//                     start = (32 + 4).dp
                 )
             ) {
                 Text(
@@ -97,12 +99,15 @@ fun MxTransaction(
                 )
             }
         }
-        Divider(
-            modifier = Modifier
-                .padding(vertical = 8.dp),
-            thickness = 1.dp,
-            color = Color(232, 232, 232) // E8E8E8
-        )
+        if (showBottomDivider) {
+            Divider(
+                modifier = Modifier
+                    .padding(vertical = 8.dp),
+                thickness = 1.dp,
+                // TODO: add this color to Color.kt
+                color = Color(232, 232, 232) // E8E8E8
+            )
+        }
     }
 }
 
@@ -110,16 +115,24 @@ fun MxTransaction(
 @Composable
 private fun MxTransactionPreview() {
     MXTheme {
-        MxTransaction(
-            transaction = Transaction(
-                title = "Spesa",
-                amount = -24.50f,
-                date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                description = null
-            ),
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(4.dp)
-        )
+                .fillMaxHeight()
+                .background(color = MXColors.Default.bgColor)
+                .padding(12.dp)
+        ) {
+            MxTransaction(
+                transaction = Transaction(
+                    title = "Spesa",
+                    amount = -24.50f,
+                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                    description = null
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
+            )
+        }
     }
 }

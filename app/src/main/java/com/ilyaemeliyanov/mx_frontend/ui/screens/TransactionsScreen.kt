@@ -26,12 +26,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import java.util.Calendar
+import java.util.GregorianCalendar
 
 private const val TAG = "TransactionsScreen"
 
@@ -117,7 +120,27 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
             containerColor = Color.White
         ) {
             RecentTransactions(
-                showTitle = false
+                showTitle = false,
+                transactions = listOf(
+                    Transaction(
+                        title = "Spesa",
+                        amount = -24.50f,
+                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+                        description = "Groceries"
+                    ),
+                    Transaction(
+                        title = "Gym sub",
+                        amount = -69.99f,
+                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
+                        description = "Health"
+                    ),
+                    Transaction(
+                        title = "Salary",
+                        amount = 3125f,
+                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
+                        description = "Work at Google"
+                    )
+                )
             )
         }
     }
