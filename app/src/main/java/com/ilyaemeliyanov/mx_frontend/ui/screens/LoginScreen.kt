@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 private const val TAG = "LoginScreen"
@@ -48,7 +49,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.weight(1f))
         MxRectangularButton(
             onClick = onLoginClick,
-            containerColor = Color.Yellow,
+            containerColor = MXColors.Default.activeColor,
             contentColor = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()

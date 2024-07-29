@@ -1,28 +1,17 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +26,10 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 private const val TAG = "WalletsScreen"
 
 @Composable
-fun WalletsScreen(modifier: Modifier = Modifier) {
+fun WalletsScreen(
+    walletList: List<Wallet>,
+    modifier: Modifier = Modifier
+) {
     Column (modifier = modifier) {
         MxTitle(
             title = "Wallets",
@@ -62,42 +54,15 @@ fun WalletsScreen(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxHeight()
         ) {
-            item {
+            items(walletList.size) { index ->
                 MxWallet(
-                    wallet = Wallet(
-                        name = "PayPal",
-                        totalAmount = 1234.00f,
-                        description = "Wallet for tracing transactions from and to my personal paypal account"
-                    ),
-                    cardColor = Color(red = 105, green = 247, blue = 179),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(168.dp)
-                        .padding(vertical = 8.dp)
-                )
-            }
-            item {
-                MxWallet(
-                    wallet = Wallet(
-                        name = "Credit Card",
-                        totalAmount = 130456.95f,
-                        description = "Credit card related to my swiss bank account"
-                    ),
-                    cardColor = Color(red = 236, green = 247, blue = 105),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(168.dp)
-                        .padding(vertical = 8.dp)
-                )
-            }
-            item {
-                MxWallet(
-                    wallet = Wallet(
-                        name = "Revolut",
-                        totalAmount = 2.95f,
-                        description = "Revolut gold account used for shopping expenses only"
-                    ),
-                    cardColor = Color(red = 243, green = 184, blue = 116),
+                    wallet = walletList[index],
+                    cardColor = when (index % 3) {
+                        0 -> Color(red = 105, green = 247, blue = 179)
+                        1 -> Color(red = 236, green = 247, blue = 105)
+                        2 -> Color(red = 243, green = 184, blue = 116)
+                        else -> Color(red = 105, green = 247, blue = 179)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(168.dp)
@@ -112,8 +77,27 @@ fun WalletsScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun WalletsScreenPreview() {
     MXTheme {
-        WalletsScreen(modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp))
+        WalletsScreen(
+            walletList = listOf(
+                Wallet(
+                    name = "PayPal",
+                    totalAmount = 1234.00f,
+                    description = "Wallet for tracing transactions from and to my personal paypal account"
+                ),
+                Wallet(
+                    name = "Credit Card",
+                    totalAmount = 130456.95f,
+                    description = "Credit card related to my swiss bank account"
+                ),
+                Wallet(
+                    name = "Revolut",
+                    totalAmount = 2.95f,
+                    description = "Revolut gold account used for shopping expenses only"
+                )
+            ),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp)
+        )
     }
 }

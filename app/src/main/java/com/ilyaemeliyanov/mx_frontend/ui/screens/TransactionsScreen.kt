@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -63,6 +61,7 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
         Row (
             modifier = Modifier.fillMaxWidth()
         ) {
+            // TODO: replace with MxDropdownMenu
             MxCircluarButton(
                 onClick = { /*TODO*/ },
                 containerColor = MXColors.Default.activeColor,
@@ -80,6 +79,7 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
                 }
             }
             Spacer(modifier = Modifier.width(24.dp))
+            // TODO: replace with MxDropdownMenu
             MxCircluarButton(
                 onClick = { /*TODO*/ },
                 containerColor = MXColors.Default.activeColor,
@@ -121,7 +121,7 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
         ) {
             RecentTransactions(
                 showTitle = false,
-                transactions = listOf(
+                transactionList = listOf(
                     Transaction(
                         title = "Spesa",
                         amount = -24.50f,

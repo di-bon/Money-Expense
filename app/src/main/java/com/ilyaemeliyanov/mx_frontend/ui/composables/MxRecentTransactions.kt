@@ -23,7 +23,7 @@ import java.util.GregorianCalendar
 
 @Composable
 fun RecentTransactions(
-    transactions: List<Transaction>,
+    transactionList: List<Transaction>,
     modifier: Modifier = Modifier,
     showTitle: Boolean = true
 ) {
@@ -40,10 +40,10 @@ fun RecentTransactions(
 //                Spacer(modifier = Modifier.height(8.dp))
 //            }
         }
-        if (transactions.size > 0) {
-            items(transactions.size) { index ->
+        if (transactionList.size > 0) {
+            items(transactionList.size) { index ->
                 MxTransaction(
-                    transaction = transactions[index],
+                    transaction = transactionList[index],
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp)
@@ -72,7 +72,7 @@ private fun RecentTransactionsPreview() {
                 .padding(12.dp)
         ) {
             RecentTransactions(
-                transactions = listOf(
+                transactionList = listOf(
                     Transaction(
                         title = "Spesa",
                         amount = -24.50f,

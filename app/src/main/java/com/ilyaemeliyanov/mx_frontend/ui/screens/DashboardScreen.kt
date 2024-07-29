@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTransaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
@@ -55,7 +54,7 @@ fun DashboardScreen(
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactions = listOf(
+                transactionList = listOf(
                     Transaction(
                         title = "Spesa",
                         amount = -24.50f,
@@ -110,6 +109,7 @@ private fun DashboardTopBar(
     }
 }
 
+// TODO: replace with MxDropdownMenu
 @Composable
 private fun CurrentWallet(
     onClick: () -> Unit,
