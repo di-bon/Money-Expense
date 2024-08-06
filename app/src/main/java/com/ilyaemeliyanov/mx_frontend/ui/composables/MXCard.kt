@@ -22,7 +22,7 @@ import java.util.GregorianCalendar
  */
 
 @Composable
-fun MxCard(
+fun MXCard(
     modifier: Modifier = Modifier,
     containerColor: Color = Color.Transparent,
     contentColor: Color = Color.Black,
@@ -48,19 +48,19 @@ fun MxCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxCardPreview() {
+private fun MXCardPreview() {
     MXTheme {
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            MxCard(
+            MXCard(
                 containerColor = Color(225, 225, 225),
                 contentColor = Color.Black,
                 modifier = Modifier.padding(16.dp)
             ) {
-                MxTransaction(
+                MXTransaction(
                     transaction = Transaction(
                         title = "MyTransaction",
                         amount = 10.00f,

@@ -22,13 +22,13 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
-fun MxPopup(
+fun MXPopup(
     titleString: String,
     modifier: Modifier = Modifier,
     contentPadding: Dp = 8.dp,
     content: @Composable () -> Unit
 ) {
-    MxCard (
+    MXCard (
         containerColor = Color.White,
         modifier = modifier
     ) {
@@ -52,50 +52,50 @@ fun MxPopup(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxPopupPreview() {
+private fun MXPopupPreview() {
     MXTheme {
         Column (
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(color = MXColors.Default.bgColor)
+                .background(color = MXColors.Default.BgColor)
         ) {
-            MxPopup(
+            MXPopup(
                 titleString = "Create Wallet",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(24.dp)
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                MxInput(
+                MXInput(
                     titleText = "Name",
                     labelText = "Enter your wallet name...",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                MxInput(
+                MXInput(
                     titleText = "Description",
                     labelText = "Enter a short description for your wallet...",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-                MxInput(
+                MXInput(
                     titleText = "Amount",
                     labelText = "Enter the initial amount...",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.padding(vertical = 8.dp)) {
-                    MxRectangularButton(
+                    MXRectangularButton(
                         onClick = { /*TODO*/ },
-                        containerColor = MXColors.Default.primaryColor,
+                        containerColor = MXColors.Default.PrimaryColor,
                         contentColor = Color.White,
                         modifier = Modifier.weight(1f)
                     ) {
                         Text("Cancel")
                     }
                     Spacer(modifier = Modifier.width(24.dp))
-                    MxRectangularButton(
+                    MXRectangularButton(
                         onClick = { /*TODO*/ },
-                        containerColor = MXColors.Default.activeColor,
+                        containerColor = MXColors.Default.ActiveColor,
                         contentColor = Color.Black,
                         modifier = Modifier.weight(1f)
                     ) {

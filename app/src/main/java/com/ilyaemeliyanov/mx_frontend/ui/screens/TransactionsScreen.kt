@@ -24,10 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
@@ -37,11 +38,14 @@ import java.util.GregorianCalendar
 private const val TAG = "TransactionsScreen"
 
 @Composable
-fun TransactionsScreen(modifier: Modifier = Modifier) {
+fun TransactionsScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     Column (
         modifier = modifier
     ) {
-        MxTitle(title = "Transactions", modifier = Modifier.fillMaxWidth()) {
+        MXTitle(title = "Transactions", modifier = Modifier.fillMaxWidth()) {
             MxCircluarButton(
                 onClick = {/* TODO */},
                 modifier = Modifier
@@ -61,10 +65,10 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
         Row (
             modifier = Modifier.fillMaxWidth()
         ) {
-            // TODO: replace with MxDropdownMenu
+            // TODO: replace with MXDropdownMenu
             MxCircluarButton(
                 onClick = { /*TODO*/ },
-                containerColor = MXColors.Default.activeColor,
+                containerColor = MXColors.Default.ActiveColor,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f)
             ) {
@@ -79,10 +83,10 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
                 }
             }
             Spacer(modifier = Modifier.width(24.dp))
-            // TODO: replace with MxDropdownMenu
+            // TODO: replace with MXDropdownMenu
             MxCircluarButton(
                 onClick = { /*TODO*/ },
-                containerColor = MXColors.Default.activeColor,
+                containerColor = MXColors.Default.ActiveColor,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f)
             ) {
@@ -116,7 +120,7 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        MxCard(
+        MXCard(
             containerColor = Color.White
         ) {
             RecentTransactions(
@@ -146,16 +150,16 @@ fun TransactionsScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun TransactionsScreenPreview() {
-    MXTheme {
-        TransactionsScreen(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(color = MXColors.Default.bgColor)
-                .padding(16.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun TransactionsScreenPreview() {
+//    MXTheme {
+//        TransactionsScreen(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//                .background(color = MXColors.Default.BgColor)
+//                .padding(16.dp)
+//        )
+//    }
+//}

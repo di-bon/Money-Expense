@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,14 +22,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
 @Composable
-fun MxSettingsButton(
+fun MXSettingsButton(
     onClick: () -> Unit,
     leftIconImageVector: ImageVector,
     titleString: String,
@@ -39,7 +41,7 @@ fun MxSettingsButton(
     modifier: Modifier = Modifier,
     titleColor: Color = Color.Unspecified
 ) {
-    MxRectangularButton(
+    MXRectangularButton(
         onClick = onClick,
         containerColor = Color.White,
         contentColor = Color.Black,
@@ -67,12 +69,18 @@ fun MxSettingsButton(
             ) {
                 Text(
                     text = titleString,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
                     color = titleColor
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = descriptionString,
+                    style = TextStyle(
+                        fontFamily = euclidCircularA,
+                        fontWeight = FontWeight.Light,
+                        color = MXColors.Default.SecondaryColor
+                    ),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
@@ -91,15 +99,15 @@ fun MxSettingsButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxSettingsButtonPreview() {
+private fun MXSettingsButtonPreview() {
     MXTheme {
         Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MXColors.Default.bgColor)
+                .background(color = MXColors.Default.BgColor)
                 .padding(12.dp)
         ) {
-            MxSettingsButton(
+            MXSettingsButton(
                 onClick = {},
                 leftIconImageVector = Icons.Outlined.Person,
                 titleString = "Change personal info",

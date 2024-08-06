@@ -15,10 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,19 +36,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxSettingsButton
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
+import androidx.navigation.NavController
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSettingsButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXShapes
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 private const val TAG = "SettingsScreen"
 
 @Composable
-fun SettingsScreen(modifier: Modifier = Modifier) {
+fun SettingsScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     LazyColumn (modifier = modifier) {
         item {
-            MxTitle(
+            MXTitle(
                 title = "Settings",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,19 +68,19 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             Column (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(8.dp))
+                    .clip(shape = MXShapes.medium)
                     .background(color = Color.Black)
                     .padding(vertical = 16.dp, horizontal = 12.dp)
             ) {
                 Text(
                     text = "Welcome back,",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
                 Text(
-                    text = "Mario Rossi",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MXColors.Default.activeColor
+                    text = "Mario Rossi", // TODO: Remember to replace with current user
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MXColors.Default.ActiveColor
                 )
             }
         }
@@ -84,9 +94,9 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(text = "General", style = MaterialTheme.typography.titleMedium)
+                Text(text = "General", style = MaterialTheme.typography.labelLarge)
                 Spacer(modifier = Modifier.height(12.dp))
-                MxSettingsButton(
+                MXSettingsButton(
                     onClick = { /*TODO*/ },
                     leftIconImageVector = Icons.Outlined.Person,
                     titleString = "Change personal info",
@@ -94,17 +104,17 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                     rightIconImageVector = Icons.Filled.KeyboardArrowRight
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                MxSettingsButton(
+                MXSettingsButton(
                     onClick = { /*TODO*/ },
-                    leftIconImageVector = Icons.Filled.KeyboardArrowDown, // TODO: set download icon
+                    leftIconImageVector = Icons.Filled.Downloading, // TODO: set download icon
                     titleString = "Export transactions",
                     descriptionString = "Your transactions are available for download in CSV format",
                     rightIconImageVector = Icons.Filled.KeyboardArrowRight
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                MxSettingsButton(
+                MXSettingsButton(
                     onClick = { /*TODO*/ },
-                    leftIconImageVector = Icons.Outlined.ShoppingCart, // TODO: set credit card icon
+                    leftIconImageVector = Icons.Outlined.AttachMoney, // TODO: set credit card icon
                     titleString = "Change currency",
                     descriptionString = "Choose the currency to display your transactions with",
                     rightIconImageVector = Icons.Filled.KeyboardArrowRight
@@ -117,11 +127,11 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                Text(text = "Danger zone", style = MaterialTheme.typography.titleMedium)
+                Text(text = "Danger zone", style = MaterialTheme.typography.labelLarge)
                 Spacer(modifier = Modifier.height(12.dp))
-                MxSettingsButton(
+                MXSettingsButton(
                     onClick = { /*TODO*/ },
-                    leftIconImageVector = Icons.Outlined.Delete, // TODO: set delete account icon
+                    leftIconImageVector = Icons.Outlined.PersonOff, // TODO: set delete account icon
                     titleString = "Close & delete account",
                     titleColor = Color.Red,
                     descriptionString = "Close and delete your account and all related wallets and tra...",
@@ -133,14 +143,14 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun SettingsScreenPreview() {
-    MXTheme {
-        SettingsScreen(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun SettingsScreenPreview() {
+//    MXTheme {
+//        SettingsScreen(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(16.dp)
+//        )
+//    }
+//}

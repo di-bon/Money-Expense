@@ -21,7 +21,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 @Composable
-fun MxTitle(
+fun MXTitle(
     title: String,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
@@ -33,7 +33,7 @@ fun MxTitle(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.headlineLarge
+            style = MaterialTheme.typography.titleMedium
         )
         content()
     }
@@ -41,15 +41,15 @@ fun MxTitle(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxTitlePreview() {
+private fun MXTitlePreview() {
     MXTheme {
         Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = MXColors.Default.bgColor)
+                .background(color = MXColors.Default.BgColor)
                 .padding(12.dp)
         ) {
-            MxTitle(
+            MXTitle(
                 title = "Transactions",
                 modifier = Modifier
                     .padding(16.dp)

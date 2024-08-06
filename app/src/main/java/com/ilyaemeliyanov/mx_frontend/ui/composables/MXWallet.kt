@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,12 +29,12 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 
 @Composable
-fun MxWallet(
+fun MXWallet(
     wallet: Wallet,
     cardColor: Color,
     modifier: Modifier = Modifier
 ) {
-    MxCard(
+    MXCard(
         containerColor = cardColor,
         contentColor = Color.Black,
         modifier = modifier
@@ -106,9 +104,9 @@ fun MxWallet(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxWalletPreview() {
+private fun MXWalletPreview() {
     MXTheme {
-        MxWallet(
+        MXWallet(
             wallet = Wallet(
                 name = "PayPal",
                 totalAmount = 1234.00f,

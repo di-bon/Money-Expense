@@ -21,7 +21,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 fun MxCircluarButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = MXColors.Default.primaryColor,
+    containerColor: Color = MXColors.Default.PrimaryColor,
     contentColor: Color = Color.White,
     content: @Composable () -> Unit
 ) {
@@ -41,7 +41,7 @@ fun MxCircluarButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun MxCircularButtonPreview() {
+private fun MXCircularButtonPreview() {
     MXTheme {
 
         MxCircluarButton(

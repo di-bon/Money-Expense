@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxInput
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
@@ -32,30 +32,30 @@ fun LoginScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = titleString, style = MaterialTheme.typography.displayLarge)
+        Text(text = titleString, style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(24.dp))
         Column {
-            MxInput(
+            MXInput(
                 titleText = "Email",
                 labelText = "Enter your email...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            MxInput(
+            MXInput(
                 titleText = "Password",
                 labelText = "Enter your password...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        MxRectangularButton(
+        MXRectangularButton(
             onClick = onLoginClick,
-            containerColor = MXColors.Default.activeColor,
+            containerColor = MXColors.Default.ActiveColor,
             contentColor = Color.Black,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
-            Text(text = "Log in", style = MaterialTheme.typography.headlineSmall)
+            Text(text = "Log in", style = MaterialTheme.typography.labelLarge)
         }
     }
 }

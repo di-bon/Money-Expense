@@ -32,7 +32,7 @@ fun RecentTransactions(
             item {
                 Text(
                     text = "Recent transactions",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
                 Spacer(modifier = Modifier.height(8.dp))
             }
@@ -42,7 +42,7 @@ fun RecentTransactions(
         }
         if (transactionList.size > 0) {
             items(transactionList.size) { index ->
-                MxTransaction(
+                MXTransaction(
                     transaction = transactionList[index],
                     modifier = Modifier
                         .fillMaxWidth()
@@ -68,7 +68,7 @@ private fun RecentTransactionsPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(color = MXColors.Default.bgColor)
+                .background(color = MXColors.Default.BgColor)
                 .padding(12.dp)
         ) {
             RecentTransactions(

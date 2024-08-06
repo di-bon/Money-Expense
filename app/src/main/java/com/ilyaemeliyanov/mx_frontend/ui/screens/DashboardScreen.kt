@@ -20,14 +20,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.Transaction
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCard
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -35,13 +39,11 @@ private const val TAG = "DashboardScreen"
 
 @Composable
 fun DashboardScreen(
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        DashboardTopBar(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-        )
+        DashboardTopBar()
         // Spacer(modifier = Modifier.height(20.dp))
         DashboardInfo(
             modifier = Modifier
@@ -49,7 +51,7 @@ fun DashboardScreen(
         )
         // Spacer(modifier = Modifier.height(20.dp))
 
-        MxCard(
+        MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
@@ -79,18 +81,18 @@ fun DashboardScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DashboardScreenPreview() {
-    MXTheme {
-        DashboardScreen(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color(246, 246, 246))
-                .padding(24.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun DashboardScreenPreview() {
+//    MXTheme {
+//        DashboardScreen(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .background(color = Color(246, 246, 246))
+//                .padding(24.dp)
+//        )
+//    }
+//}
 
 @Composable
 private fun DashboardTopBar(
@@ -100,7 +102,7 @@ private fun DashboardTopBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        MxTitle(
+        MXTitle(
             title = "Dashboard",
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -109,7 +111,7 @@ private fun DashboardTopBar(
     }
 }
 
-// TODO: replace with MxDropdownMenu
+// TODO: replace with MXDropdownMenu
 @Composable
 private fun CurrentWallet(
     onClick: () -> Unit,
@@ -121,11 +123,12 @@ private fun CurrentWallet(
         color = Color.Transparent
     ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(16.dp)
     ) {
             Text(
                 text = "Wallet name",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.labelMedium
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
@@ -141,54 +144,56 @@ private fun CurrentWallet(
 @Composable
 private fun DashboardInfo(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        MxCard(
-            containerColor = MXColors.Default.activeColor,
-            contentColor = MXColors.Default.primaryColor,
+        MXCard(
+            containerColor = MXColors.Default.ActiveColor,
+            contentColor = MXColors.Default.PrimaryColor,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
         ) {
             Text(
                 text = "Balance",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyLarge
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "\$ 1234.00",
-                style = MaterialTheme.typography.headlineMedium
+                fontFamily = euclidCircularA,
+                fontWeight = FontWeight.Normal,
+                fontSize = 42.sp
             )
         }
         Row(modifier = Modifier.fillMaxWidth()) {
-            MxCard(
-                containerColor = MXColors.Default.primaryColor,
-                contentColor = MXColors.Default.secondaryColor,
+            MXCard(
+                containerColor = MXColors.Default.PrimaryColor,
+                contentColor = MXColors.Default.SecondaryColor,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = "Incomes",
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.labelLarge,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "+ \$ 234.35",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
-            MxCard(
+            MXCard(
                 containerColor = Color.Black,
-                contentColor = MXColors.Default.secondaryColor,
+                contentColor = MXColors.Default.SecondaryColor,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
                     text = "Expenses",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "- \$ 123.45",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
             }

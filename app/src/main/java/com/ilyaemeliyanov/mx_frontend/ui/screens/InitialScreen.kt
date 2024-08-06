@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.graphics.Paint.Style
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,12 +14,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
 private const val TAG = "InitialScreen"
 
@@ -39,21 +44,26 @@ fun InitialScreen(
             Text(
                 text = "Money Expense",
                 lineHeight = 68.sp,
-                style = MaterialTheme.typography.displayLarge
+                style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(
                 text = "Your new journey starts here",
-                style = MaterialTheme.typography.titleLarge
+                style = TextStyle(
+                    fontFamily = euclidCircularA,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 24.sp,
+                    color = Color(151, 151, 151)
+                )
             )
         }
 
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            MxRectangularButton(
+            MXRectangularButton(
                 onClick = onSignUpClick,
-                containerColor = MXColors.Default.primaryColor,
+                containerColor = MXColors.Default.PrimaryColor,
                 contentColor = Color.White,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -62,12 +72,12 @@ fun InitialScreen(
             ) {
                 Text(
                     text = "Sign up",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
-            MxRectangularButton(
+            MXRectangularButton(
                 onClick = onLoginClick,
-                containerColor = MXColors.Default.activeColor,
+                containerColor = MXColors.Default.ActiveColor,
                 contentColor = Color.Black,
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -76,7 +86,7 @@ fun InitialScreen(
             ) {
                 Text(
                     text = "Login",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }
@@ -93,7 +103,7 @@ private fun InitialScreenPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .background(color = MXColors.Default.bgColor)
+                .background(color = MXColors.Default.BgColor)
                 .padding(32.dp)
         )
     }

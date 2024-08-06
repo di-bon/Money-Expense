@@ -17,21 +17,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxTitle
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxWallet
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXWallet
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 private const val TAG = "WalletsScreen"
 
 @Composable
 fun WalletsScreen(
+    navController: NavController,
     walletList: List<Wallet>,
     modifier: Modifier = Modifier
 ) {
     Column (modifier = modifier) {
-        MxTitle(
+        MXTitle(
             title = "Wallets",
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,7 +57,7 @@ fun WalletsScreen(
                 .fillMaxHeight()
         ) {
             items(walletList.size) { index ->
-                MxWallet(
+                MXWallet(
                     wallet = walletList[index],
                     cardColor = when (index % 3) {
                         0 -> Color(red = 105, green = 247, blue = 179)
@@ -72,32 +74,32 @@ fun WalletsScreen(
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun WalletsScreenPreview() {
-    MXTheme {
-        WalletsScreen(
-            walletList = listOf(
-                Wallet(
-                    name = "PayPal",
-                    totalAmount = 1234.00f,
-                    description = "Wallet for tracing transactions from and to my personal paypal account"
-                ),
-                Wallet(
-                    name = "Credit Card",
-                    totalAmount = 130456.95f,
-                    description = "Credit card related to my swiss bank account"
-                ),
-                Wallet(
-                    name = "Revolut",
-                    totalAmount = 2.95f,
-                    description = "Revolut gold account used for shopping expenses only"
-                )
-            ),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp)
-        )
-    }
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//private fun WalletsScreenPreview() {
+//    MXTheme {
+//        WalletsScreen(
+//            walletList = listOf(
+//                Wallet(
+//                    name = "PayPal",
+//                    totalAmount = 1234.00f,
+//                    description = "Wallet for tracing transactions from and to my personal paypal account"
+//                ),
+//                Wallet(
+//                    name = "Credit Card",
+//                    totalAmount = 130456.95f,
+//                    description = "Credit card related to my swiss bank account"
+//                ),
+//                Wallet(
+//                    name = "Revolut",
+//                    totalAmount = 2.95f,
+//                    description = "Revolut gold account used for shopping expenses only"
+//                )
+//            ),
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(32.dp)
+//        )
+//    }
+//}

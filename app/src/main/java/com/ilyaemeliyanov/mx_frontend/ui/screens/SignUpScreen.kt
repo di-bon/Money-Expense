@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxInput
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
 private const val TAG = "RegisterScreen"
@@ -30,37 +30,37 @@ fun RegisterScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Sign up", style = MaterialTheme.typography.displayLarge)
+        Text(text = "Sign up", style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(24.dp))
         Column {
-            MxInput(
+            MXInput(
                 titleText = "First name",
                 labelText = "Enter your first name...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            MxInput(
+            MXInput(
                 titleText = "Last name",
                 labelText = "Enter your last name...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            MxInput(
+            MXInput(
                 titleText = "Email",
                 labelText = "Enter your email...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            MxInput(
+            MXInput(
                 titleText = "Password",
                 labelText = "Enter your password...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
-            MxInput(
+            MXInput(
                 titleText = "Confirm password",
                 labelText = "Enter your password...",
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        MxRectangularButton(
+        MXRectangularButton(
             onClick = onSignUpClick,
             containerColor = Color.Black,
             contentColor = Color.White,
@@ -70,7 +70,7 @@ fun RegisterScreen(
         ) {
             Text(
                 text = "Sign up",
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.labelLarge
             )
         }
     }
