@@ -1,10 +1,8 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,14 +23,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.UserRepository
+import com.ilyaemeliyanov.mx_frontend.data.user.UserViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
+import com.ilyaemeliyanov.mx_frontend.viewmodel.UserViewModel
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -42,6 +44,12 @@ fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val repository = UserRepository()
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(repository))
+
+    userViewModel.loadUserByEmail("john.doe@gmail.com")
+    val user by userViewModel.user
+
     Column(modifier = modifier) {
         DashboardTopBar()
         // Spacer(modifier = Modifier.height(20.dp))
@@ -50,32 +58,14 @@ fun DashboardScreen(
                 .padding(vertical = 12.dp)
         )
         // Spacer(modifier = Modifier.height(20.dp))
+        Text("Welcome back ${user?.email}")
 
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = listOf(
-                    Transaction(
-                        title = "Spesa",
-                        amount = -24.50f,
-                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                        description = "Groceries"
-                    ),
-                    Transaction(
-                        title = "Gym sub",
-                        amount = -69.99f,
-                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
-                        description = "Health"
-                    ),
-                    Transaction(
-                        title = "Salary",
-                        amount = 3125f,
-                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
-                        description = "Work at Google"
-                    )
-                )
+                transactionList = emptyList() // TODO: Add transactions from firebase
             )
         }
     }

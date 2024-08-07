@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.data.Wallet
+import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 
@@ -86,7 +86,7 @@ fun MXWallet(
                 )
             }
             Text(
-                text = StringFormatter.getFormattedAmount(wallet.totalAmount),
+                text = StringFormatter.getFormattedAmount(wallet.amount),
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier
                     .height(IntrinsicSize.Min)
@@ -102,21 +102,21 @@ fun MXWallet(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun MXWalletPreview() {
-    MXTheme {
-        MXWallet(
-            wallet = Wallet(
-                name = "PayPal",
-                totalAmount = 1234.00f,
-                description = "Wallet for tracing transactions from and to my personal paypal account"
-            ),
-            cardColor = Color(red = 105, green = 247, blue = 179),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(32.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun MXWalletPreview() {
+//    MXTheme {
+//        MXWallet(
+//            wallet = Wallet(
+//                name = "PayPal",
+//                amount = 1234.00f,
+//                description = "Wallet for tracing transactions from and to my personal paypal account"
+//            ),
+//            cardColor = Color(red = 105, green = 247, blue = 179),
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(IntrinsicSize.Min)
+//                .padding(32.dp)
+//        )
+//    }
+//}

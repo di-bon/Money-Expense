@@ -12,7 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -46,30 +46,30 @@ fun MXCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun MXCardPreview() {
-    MXTheme {
-        Column (
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            MXCard(
-                containerColor = Color(225, 225, 225),
-                contentColor = Color.Black,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                MXTransaction(
-                    transaction = Transaction(
-                        title = "MyTransaction",
-                        amount = 10.00f,
-                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                        description = null
-                    ),
-                    showBottomDivider = false
-                )
-            }
-        }
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun MXCardPreview() {
+//    MXTheme {
+//        Column (
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//        ) {
+//            MXCard(
+//                containerColor = Color(225, 225, 225),
+//                contentColor = Color.Black,
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                MXTransaction(
+//                    transaction = Transaction(
+//                        title = "MyTransaction",
+//                        amount = 10.00f,
+//                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+//                        description = null
+//                    ),
+//                    showBottomDivider = false
+//                )
+//            }
+//        }
+//    }
+//}

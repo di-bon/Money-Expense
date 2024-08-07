@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXShapes
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
@@ -81,7 +81,7 @@ fun MXTransaction(
                 modifier = Modifier
                     .weight(1f)
             ) {
-                Text(text = transaction.title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                Text(text = transaction.label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
 
                 val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val formattedDate = formatter.format(transaction.date)
@@ -108,7 +108,7 @@ fun MXTransaction(
                 )
             ) {
                 Text(
-                    text = transaction.description ?: "No description",
+                    text = transaction.label ?: "No description",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -125,28 +125,28 @@ fun MXTransaction(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun MXTransactionPreview() {
-    MXTheme {
-        Column (
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(color = MXColors.Default.BgColor)
-                .padding(12.dp)
-        ) {
-            MXTransaction(
-                transaction = Transaction(
-                    title = "Spesa",
-                    amount = -24.50f,
-                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                    description = null
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
-            )
-        }
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun MXTransactionPreview() {
+//    MXTheme {
+//        Column (
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//                .background(color = MXColors.Default.BgColor)
+//                .padding(12.dp)
+//        ) {
+//            MXTransaction(
+//                transaction = Transaction(
+//                    title = "Spesa",
+//                    amount = -24.50f,
+//                    date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+//                    description = null
+//                ),
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(4.dp)
+//            )
+//        }
+//    }
+//}

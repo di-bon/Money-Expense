@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
     kotlin("kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -68,8 +69,12 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:$room_version")
 
+    // Firebase
+    val firebase_version = "32.1.1"
+    implementation("com.google.firebase:firebase-bom:$firebase_version")
+
     // Firestore
-    val firestore_version = "22.0.1"
+    val firestore_version = "24.4.3"
     implementation("com.google.firebase:firebase-firestore:$firestore_version")
 
     implementation(libs.androidx.core.ktx)
@@ -80,8 +85,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-//    implementation(libs.androidx.lifecycle.viewmodel.compose)
-//    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

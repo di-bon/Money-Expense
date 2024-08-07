@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,16 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.ilyaemeliyanov.mx_frontend.data.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -126,24 +123,24 @@ fun TransactionsScreen(
             RecentTransactions(
                 showTitle = false,
                 transactionList = listOf(
-                    Transaction(
-                        title = "Spesa",
-                        amount = -24.50f,
-                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-                        description = "Groceries"
-                    ),
-                    Transaction(
-                        title = "Gym sub",
-                        amount = -69.99f,
-                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
-                        description = "Health"
-                    ),
-                    Transaction(
-                        title = "Salary",
-                        amount = 3125f,
-                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
-                        description = "Work at Google"
-                    )
+//                    Transaction(
+//                        title = "Spesa",
+//                        amount = -24.50f,
+//                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
+//                        description = "Groceries"
+//                    ),
+//                    Transaction(
+//                        title = "Gym sub",
+//                        amount = -69.99f,
+//                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
+//                        description = "Health"
+//                    ),
+//                    Transaction(
+//                        title = "Salary",
+//                        amount = 3125f,
+//                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
+//                        description = "Work at Google"
+//                    )
                 )
             )
         }
