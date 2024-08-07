@@ -4,8 +4,8 @@ import java.util.Date
 
 // TODO: add currency
 data class Transaction (
-    val title: String,
+    val label: String,
     val amount: Float,
     val date: Date,
-    val description: String?
+    val wallet: Wallet
 )

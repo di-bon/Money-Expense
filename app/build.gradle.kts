@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
+    kotlin("kapt")
 }
 
 android {
@@ -51,12 +53,24 @@ android {
 
 dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
-    val nav_version = "2.7.7"
 
+    // Navigation
+    val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    // Material UI 3
     val materialui_ext_version = "1.6.8"
     implementation("androidx.compose.material:material-icons-extended:$materialui_ext_version")
+
+    // ROOM
+    val room_version = "2.4.3"
+    implementation("androidx.room:room-runtime:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // Firestore
+    val firestore_version = "22.0.1"
+    implementation("com.google.firebase:firebase-firestore:$firestore_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
