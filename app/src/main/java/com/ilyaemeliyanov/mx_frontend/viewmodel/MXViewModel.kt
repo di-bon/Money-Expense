@@ -31,10 +31,19 @@ import kotlinx.coroutines.sync.withLock
 class MXViewModel(
     private val repository: UserRepository
 ) : ViewModel() {
-    // Defining the state
-    val user = mutableStateOf<User?>(null)
-    var wallets = mutableListOf<Wallet>()
-    var transactions = mutableListOf<Transaction>()
+
+    // Defining the state for user, wallets and transaction
+    var user by mutableStateOf<User?>(null)
+    var wallets by mutableStateOf<List<Wallet>>(emptyList())
+    var transactions by mutableStateOf<List<Transaction>>(emptyList())
+
+    // Defining the state for general info
+    var balance by mutableStateOf(0.0f)
+    var income by mutableStateOf(0.0f)
+    var expenses by mutableStateOf(0.0f)
+
+    // Defining selected items
+    var selectedWallet by mutableStateOf<Wallet?>(null)
 
     suspend fun loadData(email: String) {
         viewModelScope.launch {
@@ -45,9 +54,10 @@ class MXViewModel(
     suspend fun loadUserByEmail(email: String) {
         viewModelScope.launch {
             repository.getUserByEmail(email) { fetchedUser ->
-                user.value = fetchedUser
+                user = fetchedUser
                 viewModelScope.launch {
-                    loadWalletsByUser(user.value)
+                    wallets = emptyList()
+                    loadWalletsByUser(user)
                 }
             }
         }
@@ -55,10 +65,10 @@ class MXViewModel(
 
     suspend fun loadWalletsByUser(user: User?) {
         if (user != null) {
-            wallets.clear()
+            transactions = emptyList()
             user?.wallets?.forEach { walletRef ->
                 repository.getWalletByDocRef(walletRef) { fetchedWallet ->
-                    if (fetchedWallet != null) wallets.add(fetchedWallet)
+                    if (fetchedWallet != null) wallets += fetchedWallet
                     viewModelScope.launch {
                         loadTransactionsByWallet(fetchedWallet!!)
                     }
@@ -69,11 +79,14 @@ class MXViewModel(
 
     suspend fun loadTransactionsByWallet(wallet: Wallet) {
         viewModelScope.launch {
-            transactions.clear()
             repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
-                if (fetchedTransactions.isNotEmpty()) transactions.addAll(fetchedTransactions)
+                if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
             }
         }
     }
+
+//    fun setSelectedWallet(wallet: Wallet) {
+//        selectedWallet = wallet
+//    }
 
 }

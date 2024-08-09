@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
@@ -34,6 +35,7 @@ import com.ilyaemeliyanov.mx_frontend.data.user.UserRepository
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
@@ -41,25 +43,21 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
-private const val TAG = "DashboardScreen"
-
 @Composable
 fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val repository = UserRepository()
-    val mxViewModel: MXViewModel = viewModel(factory = MXViewModelFactory(repository))
+    val mxViewModel: MXViewModel = viewModel(factory = MXViewModelFactory(UserRepository()))
 
-    var user by remember { mxViewModel.user }
-    var wallets = remember { mxViewModel.wallets }
-    var transactions = remember { mxViewModel.transactions }
+    val user = mxViewModel.user
+    val wallets = mxViewModel.wallets
+    val transactions = mxViewModel.transactions
 
     LaunchedEffect(Unit) {
         val email = "john.doe@gmail.com"
         mxViewModel.loadData(email)
     }
-
 
     Column(modifier = modifier) {
         DashboardTopBar()
@@ -69,36 +67,26 @@ fun DashboardScreen(
                 .padding(vertical = 12.dp)
         )
         // Spacer(modifier = Modifier.height(20.dp))
-        Text("Welcome back ${mxViewModel.user.value?.email}")
+        Text("Welcome back ${user?.email}")
 
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = mxViewModel.transactions // TODO: Add transactions from firebase
+                transactionList = transactions
             )
         }
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun DashboardScreenPreview() {
-//    MXTheme {
-//        DashboardScreen(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .background(color = Color(246, 246, 246))
-//                .padding(24.dp)
-//        )
-//    }
-//}
-
 @Composable
 private fun DashboardTopBar(
     modifier: Modifier = Modifier
 ) {
+    val mxViewModel: MXViewModel = viewModel(factory = MXViewModelFactory(UserRepository()))
+    val wallets = mxViewModel.wallets
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -107,7 +95,14 @@ private fun DashboardTopBar(
             title = "Dashboard",
             modifier = Modifier.fillMaxWidth()
         ) {
-            CurrentWallet(onClick = {})
+            MXDropdownMenu(label = "Wallet", items = wallets.map { wallet -> wallet.name }, selectedItem = null) {item ->
+                for (wallet in wallets) {
+                    if (wallet.name == item) {
+                        mxViewModel.selectedWallet = wallet
+                    }
+                }
+//                mxViewModel.selectedWallet = item
+            }
         }
     }
 }
@@ -144,6 +139,11 @@ private fun CurrentWallet(
 
 @Composable
 private fun DashboardInfo(modifier: Modifier = Modifier) {
+    val mxViewModel: MXViewModel = viewModel(factory = MXViewModelFactory(UserRepository()))
+    val balance = mxViewModel.balance
+    val income = mxViewModel.income
+    val expenses = mxViewModel.expenses
+
     Column(modifier = modifier) {
         MXCard(
             containerColor = MXColors.Default.ActiveColor,
@@ -158,7 +158,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "\$ 1234.00",
+                text = "\$ ${balance}", // TODO: format balance to add .2f at the end
                 fontFamily = euclidCircularA,
                 fontWeight = FontWeight.Normal,
                 fontSize = 42.sp
@@ -171,12 +171,12 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Incomes",
+                    text = "Income",
                     style = MaterialTheme.typography.labelLarge,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "+ \$ 234.35",
+                    text = "+ \$ ${income}", // TODO: format to add .2f at the end
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
@@ -193,7 +193,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "- \$ 123.45",
+                    text = "- \$ ${expenses}", // TODO: format to add .2f at the end
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
