@@ -74,7 +74,7 @@ dependencies {
     implementation("com.google.firebase:firebase-bom:$firebase_version")
 
     // Firestore
-    val firestore_version = "24.4.3"
+    val firestore_version = "25.0.0"
     implementation("com.google.firebase:firebase-firestore:$firestore_version")
 
     implementation(libs.androidx.core.ktx)

@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,17 +29,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.user.UserRepository
-import com.ilyaemeliyanov.mx_frontend.data.user.UserViewModelFactory
+import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
-import com.ilyaemeliyanov.mx_frontend.viewmodel.UserViewModel
-import java.util.Calendar
-import java.util.GregorianCalendar
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 private const val TAG = "DashboardScreen"
 
@@ -45,10 +49,17 @@ fun DashboardScreen(
     modifier: Modifier = Modifier
 ) {
     val repository = UserRepository()
-    val userViewModel: UserViewModel = viewModel(factory = UserViewModelFactory(repository))
+    val mxViewModel: MXViewModel = viewModel(factory = MXViewModelFactory(repository))
 
-    userViewModel.loadUserByEmail("john.doe@gmail.com")
-    val user by userViewModel.user
+    var user by remember { mxViewModel.user }
+    var wallets = remember { mxViewModel.wallets }
+    var transactions = remember { mxViewModel.transactions }
+
+    LaunchedEffect(Unit) {
+        val email = "john.doe@gmail.com"
+        mxViewModel.loadData(email)
+    }
+
 
     Column(modifier = modifier) {
         DashboardTopBar()
@@ -58,14 +69,14 @@ fun DashboardScreen(
                 .padding(vertical = 12.dp)
         )
         // Spacer(modifier = Modifier.height(20.dp))
-        Text("Welcome back ${user?.email}")
+        Text("Welcome back ${mxViewModel.user.value?.email}")
 
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = emptyList() // TODO: Add transactions from firebase
+                transactionList = mxViewModel.transactions // TODO: Add transactions from firebase
             )
         }
     }

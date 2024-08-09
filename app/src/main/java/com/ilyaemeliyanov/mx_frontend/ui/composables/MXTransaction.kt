@@ -108,7 +108,7 @@ fun MXTransaction(
                 )
             ) {
                 Text(
-                    text = transaction.label ?: "No description",
+                    text = transaction.description ?: "No description",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

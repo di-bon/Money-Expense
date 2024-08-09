@@ -9,4 +9,8 @@ data class Wallet (
     val name: String,
     val amount: Float,
     val description: String?
-)
+) {
+    override fun toString(): String {
+        return "Wallet=($id, $name, $amount, $description)"
+    }
+}
