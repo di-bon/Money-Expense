@@ -77,6 +77,10 @@ dependencies {
     val firestore_version = "25.0.0"
     implementation("com.google.firebase:firebase-firestore:$firestore_version")
 
+    // Animation
+    val animation_version = "1.5.0"
+    implementation("androidx.compose.animation:animation:$animation_version")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,16 +1,14 @@
-package com.ilyaemeliyanov.mx_frontend.data.user
+package com.ilyaemeliyanov.mx_frontend.viewmodel
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import kotlinx.coroutines.tasks.await
-import java.sql.Timestamp
 import java.util.Date
 
-class UserRepository {
+class MXRepository {
     private val firestore = FirebaseFirestore.getInstance()
     private val usersCollection = firestore.collection("users")
     private val transactionsCollection = firestore.collection("transactions")

@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +30,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -39,6 +41,10 @@ fun TransactionsScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+
+    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
+    val transactions = mxViewModel.transactions
+
     Column (
         modifier = modifier
     ) {
@@ -72,9 +78,9 @@ fun TransactionsScreen(
                 Row (
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    Text(text = "Filer by")
+                    Text(text = "Filter by")
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "Filter By")
                 }
@@ -90,7 +96,7 @@ fun TransactionsScreen(
                 Row (
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(text = "Sort by")
                     Spacer(modifier = Modifier.weight(1f))
@@ -122,26 +128,7 @@ fun TransactionsScreen(
         ) {
             RecentTransactions(
                 showTitle = false,
-                transactionList = listOf(
-//                    Transaction(
-//                        title = "Spesa",
-//                        amount = -24.50f,
-//                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-//                        description = "Groceries"
-//                    ),
-//                    Transaction(
-//                        title = "Gym sub",
-//                        amount = -69.99f,
-//                        date = GregorianCalendar(2024, Calendar.MARCH, 27).time,
-//                        description = "Health"
-//                    ),
-//                    Transaction(
-//                        title = "Salary",
-//                        amount = 3125f,
-//                        date = GregorianCalendar(2024, Calendar.MARCH, 7).time,
-//                        description = "Work at Google"
-//                    )
-                )
+                transactionList = transactions
             )
         }
     }
