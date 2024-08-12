@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +30,13 @@ fun RegisterScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
@@ -36,26 +47,36 @@ fun RegisterScreen(
             MXInput(
                 titleText = "First name",
                 labelText = "Enter your first name...",
+                text = firstName,
+                onTextChange = { value -> firstName = value },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             MXInput(
                 titleText = "Last name",
                 labelText = "Enter your last name...",
+                text = lastName,
+                onTextChange = { value -> lastName = value },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             MXInput(
                 titleText = "Email",
                 labelText = "Enter your email...",
+                text = email,
+                onTextChange = { value -> email = value },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             MXInput(
                 titleText = "Password",
                 labelText = "Enter your password...",
+                text = password,
+                onTextChange = { value -> password = value },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
             MXInput(
                 titleText = "Confirm password",
                 labelText = "Enter your password...",
+                text = confirmPassword,
+                onTextChange = { value -> confirmPassword = value },
                 modifier = Modifier.padding(vertical = 8.dp)
             )
         }

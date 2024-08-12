@@ -14,7 +14,7 @@ data class User (
     val lastName: String,
     val password: String,
     val transactions: List<DocumentReference>,
-    val wallets: List<DocumentReference>
+    var wallets: List<DocumentReference>
 ) {
     override fun toString(): String {
         return "User=($email, $firstName, $lastName, $transactions, $wallets)"

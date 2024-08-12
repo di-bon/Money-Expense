@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +43,7 @@ fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
 
     val user = mxViewModel.user
     val wallets = mxViewModel.wallets
@@ -73,7 +74,7 @@ fun DashboardScreen(
 private fun DashboardTopBar(
     modifier: Modifier = Modifier
 ) {
-    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
     val wallets = mxViewModel.wallets
 
     Row(
@@ -128,7 +129,7 @@ private fun CurrentWallet(
 
 @Composable
 private fun DashboardInfo(modifier: Modifier = Modifier) {
-    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
     val balance = mxViewModel.balance
     val income = mxViewModel.income
     val expenses = mxViewModel.expenses
