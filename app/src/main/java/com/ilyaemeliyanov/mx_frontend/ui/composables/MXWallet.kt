@@ -115,7 +115,8 @@ fun MXWallet(
                             id = wallet.id,
                             name = name,
                             amount = amount.toFloat(), // TODO: Truncate to .2f (for how the floating point numbers work Firestore doesn't save the exact passed value)
-                            description = description
+                            description = description,
+                            ref = null,
                         )
                         mxViewModel.updateWallet(newWallet)
                     }

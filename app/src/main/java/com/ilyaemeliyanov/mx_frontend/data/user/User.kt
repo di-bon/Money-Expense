@@ -13,7 +13,7 @@ data class User (
     val firstName: String,
     val lastName: String,
     val password: String,
-    val transactions: List<DocumentReference>,
+    var transactions: List<DocumentReference>,
     var wallets: List<DocumentReference>
 ) {
     override fun toString(): String {

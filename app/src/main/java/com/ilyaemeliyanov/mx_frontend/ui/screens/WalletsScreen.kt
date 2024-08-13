@@ -113,7 +113,7 @@ fun WalletsScreen(
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
                     showContextDialog = false
-                    val wallet = Wallet(id = "", name = name, amount = amount.toFloat(), description = description)
+                    val wallet = Wallet(id = "", name = name, amount = amount.toFloat(), description = description, ref = null)
                     mxViewModel.saveWallet(wallet)
                 }
             ) {

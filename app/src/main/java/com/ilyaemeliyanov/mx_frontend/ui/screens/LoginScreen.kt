@@ -17,19 +17,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
 private const val TAG = "LoginScreen"
 
 @Composable
 fun LoginScreen(
     onLoginClick: () -> Unit,
-    titleString: String,
     modifier: Modifier = Modifier
 ) {
 
@@ -40,7 +43,7 @@ fun LoginScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = titleString, style = MaterialTheme.typography.titleLarge)
+        Text(text = "Login", style = TextStyle(fontFamily = euclidCircularA, fontWeight = FontWeight.SemiBold, fontSize = 64.sp))
         Spacer(modifier = Modifier.height(24.dp))
         Column {
             MXInput(
@@ -78,7 +81,6 @@ private fun LoginScreenPreview() {
     MXTheme {
         LoginScreen(
             onLoginClick = {},
-            titleString = "Log in",
             modifier = Modifier
                 .background(color = Color(246, 246, 246))
                 .padding(32.dp)

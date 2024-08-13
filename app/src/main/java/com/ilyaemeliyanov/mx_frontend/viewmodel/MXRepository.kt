@@ -39,13 +39,16 @@ class MXRepository {
             id = id,
             name = data?.get("name") as? String ?: "null",
             amount = document?.getDouble("amount")?.toFloat() ?: 0.0f,
-            description = data?.get("description") as? String ?: "No description provided..."
+            description = data?.get("description") as? String ?: "No description provided...",
+            ref = document.reference
         )
         callback(wallet)
     }
 
     suspend fun getTransactionsByWallet(wallet: Wallet, callback: (List<Transaction>) -> Unit) {
-        val documentSnapshots = transactionsCollection.whereEqualTo("wallet", wallet.id).get().await()
+        val walletRef = walletsCollection.document(wallet.id)
+
+        val documentSnapshots = transactionsCollection.whereEqualTo("wallet", walletRef).get().await()
         val transactions: MutableList<Transaction> = mutableListOf()
         for (document in documentSnapshots) {
             val id = document.id
@@ -56,7 +59,7 @@ class MXRepository {
                 description = data.get("description") as? String ?: "null",
                 amount = document.getDouble("amount")?.toFloat() ?: 0.0f,
                 date = document.getTimestamp("date")?.toDate() ?: Date(),
-                wallet = wallet
+                wallet = wallet,
            ))
         }
         callback(transactions)
@@ -123,14 +126,23 @@ class MXRepository {
             }
     }
 
-    fun saveTransaction(transaction: Transaction) {
+    fun saveTransaction(transaction: Transaction, callback: (DocumentReference?) -> Unit) {
+        val transactionData = mutableMapOf<String, Any?>().apply {
+            put("label", transaction.label)
+            put("description", transaction.description)
+            put("amount", transaction.amount)
+            put("date", transaction.date)
+            put("wallet", transaction.wallet.ref) // replace the wallet with its reference for future linkage
+        }
         transactionsCollection
-            .add(transaction)
+            .add(transactionData)
             .addOnSuccessListener { docRef ->
                 Log.d("Firestore", "Transaction item added with ID: ${docRef.id}")
+                callback(docRef)
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error adding transaction item", e)
+                callback(null)
             }
     }
 
@@ -148,17 +160,19 @@ class MXRepository {
             }
     }
 
-    fun deleteTransaction(transaction: Transaction) {
+    fun deleteTransaction(transaction: Transaction, callback: (DocumentReference?) -> Unit) {
         val docRef = transactionsCollection.document(transaction.id)
 
         // Update the existing document in collection with the specified wallet
         docRef
             .delete()
-            .addOnSuccessListener { docRef ->
+            .addOnSuccessListener {
                 Log.d("Firestore", "Transaction item deleted")
+                callback(docRef)
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error deleting transaction item", e)
+                callback(null)
             }
     }
 

@@ -9,12 +9,12 @@ import java.util.Date
 // TODO: add currency
 @Entity
 data class Transaction (
-    @PrimaryKey val id: String,
+    @PrimaryKey var id: String,
     val label: String,
     val description: String,
     val amount: Float,
     val date: Date,
-    val wallet: Wallet
+    val wallet: Wallet,
 ) {
     override fun toString(): String {
         return "Transaction=($id, $label, $amount, $date, ${wallet.toString()})"

@@ -65,10 +65,25 @@ val spaceGrotesk = FontFamily(
 )
 
 private val MXTypography = Typography(
+    headlineLarge = TextStyle(
+        fontFamily = euclidCircularA,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = euclidCircularA,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = euclidCircularA,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+    ),
     titleLarge = TextStyle(
         fontFamily = euclidCircularA,
         fontWeight = FontWeight.Medium,
-        fontSize = 64.sp,
+        fontSize = 24.sp, // obliged to use 24.sp and not 64.sp because otherwise date picker title too large
     ),
     titleMedium = TextStyle(
         fontFamily = euclidCircularA,

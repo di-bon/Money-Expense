@@ -81,6 +81,10 @@ dependencies {
     val animation_version = "1.5.0"
     implementation("androidx.compose.animation:animation:$animation_version")
 
+    // Date picker
+    implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
+    implementation("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

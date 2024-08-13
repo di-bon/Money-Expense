@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -97,7 +98,10 @@ class MXViewModel(
             viewModelScope.launch {
                 repository.saveWallet(wallet) { walletRef ->
                     // Update UI
-                    if (walletRef != null) wallets += wallet
+                    if (walletRef != null) {
+                        wallet.ref = walletRef
+                        wallets += wallet
+                    }
                     // Update User
                     user?.wallets = user?.wallets?.plus(walletRef!!) ?: emptyList<DocumentReference>()
                     updateUser(user)
@@ -151,7 +155,17 @@ class MXViewModel(
         if (transaction != null) {
             viewModelScope.launch {
                 // REMEMBER: pass the docref for the wallet and not the wallet itself
-                repository.saveTransaction(transaction)
+                repository.saveTransaction(transaction) { transactionRef ->
+                    if (transactionRef != null) {
+                        // Update local transactions
+                        transaction.id = transactionRef.id
+                        transactions += transaction
+
+                        // Update the user.transactions references
+                        user?.transactions = user?.transactions?.plus(transactionRef) ?: emptyList<DocumentReference>()
+                        updateUser(user)
+                    }
+                }
             }
         }
     }
@@ -168,7 +182,14 @@ class MXViewModel(
     fun deleteTransaction(transaction: Transaction?) {
         if (transaction != null) {
             viewModelScope.launch {
-                repository.deleteTransaction(transaction)
+                repository.deleteTransaction(transaction) {transactionRef ->
+                   if (transactionRef != null) {
+                       transactions -= transaction
+
+                       user?.transactions = user?.transactions?.minus(transactionRef) ?: emptyList()
+                       updateUser(user)
+                   }
+                }
             }
         }
     }

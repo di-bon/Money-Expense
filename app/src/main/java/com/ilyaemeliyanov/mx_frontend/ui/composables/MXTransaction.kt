@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -52,20 +53,20 @@ fun MXTransaction(
 
     Column (
         modifier = modifier
-            .clickable {
-                isExpanded = !isExpanded
-            }
+            .background(Color.White)
+            .fillMaxSize()
+            .clip(MXShapes.medium)
+            .clickable { isExpanded = !isExpanded }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(4.dp)
         ) {
             Icon(
                 imageVector = if (isExpanded) Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowRight, // TODO: change icons
                 contentDescription = null,
                 modifier = Modifier
-                    // .padding(4.dp)
                     .width(32.dp)
-                // .rotate(-90f)
             )
             Spacer(modifier = Modifier.width(4.dp))
 
@@ -104,7 +105,7 @@ fun MXTransaction(
                 .fillMaxWidth()
                 .padding(
                     top = 8.dp,
-//                     start = (32 + 4).dp
+                    start = 16.dp,
                 )
             ) {
                 Text(

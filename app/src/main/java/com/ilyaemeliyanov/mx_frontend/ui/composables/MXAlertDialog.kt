@@ -30,6 +30,7 @@ fun MXAlertDialog(
     content: @Composable () -> Unit
 ) {
     AlertDialog(
+        modifier = Modifier.fillMaxWidth(),
         onDismissRequest = onDismiss,
         title = { Text(title, style = TextStyle(fontFamily = spaceGrotesk, fontSize = 30.sp, fontWeight = FontWeight.Normal)) },
         text = {
