@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
@@ -112,7 +113,7 @@ private fun MXSettingsButtonPreview() {
                 leftIconImageVector = Icons.Outlined.Person,
                 titleString = "Change personal info",
                 descriptionString = "Here you can change your firstname, lastname and password",
-                rightIconImageVector = Icons.Filled.KeyboardArrowRight,
+                rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(88.dp)

@@ -31,8 +31,6 @@ fun MXInput(
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-
     Column(modifier = modifier) {
         Text(text = titleText)
 //        Spacer(modifier = Modifier.height(4.dp))
@@ -50,22 +48,24 @@ fun MXInput(
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//private fun MXInputPreview() {
-//    MXTheme {
-//        Column (
-//            modifier = Modifier
-//                .fillMaxHeight()
-//                .background(color = MXColors.Default.BgColor)
-//        ) {
-//            MXInput(
-//                modifier = Modifier
-//                    .padding(16.dp)
-//                    .fillMaxWidth(),
-//                titleText = "First name",
-//                labelText = "Enter your first name..."
-//            )
-//        }
-//    }
-//}
+@Preview(showBackground = true)
+@Composable
+private fun MXInputPreview() {
+    MXTheme {
+        Column (
+            modifier = Modifier
+                .fillMaxHeight()
+                .background(color = MXColors.Default.BgColor)
+        ) {
+            MXInput(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                titleText = "First name",
+                labelText = "Enter your first name...",
+                text = "",
+                onTextChange = {}
+            )
+        }
+    }
+}
