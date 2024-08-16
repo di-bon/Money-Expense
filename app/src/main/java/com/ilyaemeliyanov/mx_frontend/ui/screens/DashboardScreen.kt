@@ -37,6 +37,8 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
+import kotlin.math.max
+import kotlin.math.min
 
 @Composable
 fun DashboardScreen(
@@ -64,7 +66,7 @@ fun DashboardScreen(
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = transactions
+                transactionList = transactions.subList(0, max(0, min(transactions.size, 10)))
             )
         }
     }
