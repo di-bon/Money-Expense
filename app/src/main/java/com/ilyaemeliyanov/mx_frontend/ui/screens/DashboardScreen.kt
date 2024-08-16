@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,10 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -35,6 +30,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
+import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import kotlin.math.max
@@ -150,7 +146,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "\$ ${balance}", // TODO: format balance to add .2f at the end
+                text = "\$ ${StringFormatter.getFormattedAmount(balance)}", // TODO: format balance to add .2f at the end
                 fontFamily = euclidCircularA,
                 fontWeight = FontWeight.Normal,
                 fontSize = 42.sp
@@ -168,7 +164,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "+ \$ ${income}", // TODO: format to add .2f at the end
+                    text = "+ \$ ${StringFormatter.getFormattedAmount(income)}", // TODO: format to add .2f at the end
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
@@ -185,7 +181,7 @@ private fun DashboardInfo(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "- \$ ${expenses}", // TODO: format to add .2f at the end
+                    text = "- \$ ${StringFormatter.getFormattedAmount(expenses)}", // TODO: format to add .2f at the end
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )

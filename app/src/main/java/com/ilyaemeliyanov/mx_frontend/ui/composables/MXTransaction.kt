@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,16 +30,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXShapes
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.GregorianCalendar
 import java.util.Locale
 
 @Composable
@@ -94,7 +89,7 @@ fun MXTransaction(
                 )
             }
             Text(
-                text = StringFormatter.getFormattedAmount(transaction.amount),
+                text = if (transaction.amount >= 0f) "+ \$ ${StringFormatter.getFormattedAmount(transaction.amount)}" else "- \$ ${StringFormatter.getFormattedAmount(transaction.amount)}",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier
