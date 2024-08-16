@@ -53,34 +53,51 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MXDropdownMenu (
-    label: String = "Item",
     items: List<String>,
     selectedItem: String?,
-    onItemSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String = "Item",
+    showIcon: Boolean = true,
+    onItemSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(selectedItem) }
 
-    Row() {
-        Box(
-            modifier = Modifier
-                .pointerInput(true) {
-                    detectTapGestures(
-                        onPress = {
-                            expanded = true
-                        }
-                    )
+    Row(modifier = modifier
+        .pointerInput(true) {
+            detectTapGestures(
+                onPress = {
+                    expanded = true
                 }
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.height(100.dp)) {
+            )
+        }
+    ) {
+//        Box(
+//            modifier = Modifier
+//                .pointerInput(true) {
+//                    detectTapGestures(
+//                        onPress = {
+//                            expanded = true
+//                        }
+//                    )
+//                }
+//        )
+//        {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+//                modifier = Modifier.height(100.dp)
+            ) {
                 Text(
-                    selected ?: "Select ${label.lowercase()}",
+                    text = "$label: $selected" ?: "Select ${label.lowercase()}",
                     style = MaterialTheme.typography.labelMedium,
                 )
-                Icon(
-                    Icons.Filled.ArrowDropDown,
-                    contentDescription = null,
-                )
+                if (showIcon) {
+                    Icon(
+                        Icons.Filled.ArrowDropDown,
+                        contentDescription = null,
+                    )
+                }
             }
         }
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier
@@ -92,6 +109,34 @@ fun MXDropdownMenu (
                     text = { Text(item) },
                     onClick = { expanded = false; selected = item; onItemSelected(item) })
                 Divider()
+            }
+        }
+//    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MXDropdownMenuPreview() {
+    MXTheme {
+        var currentItem by remember {
+            mutableStateOf("1")
+        }
+
+        MXCard(
+            containerColor = MXColors.Default.ActiveColor,
+            contentColor = Color.Black,
+            modifier = Modifier.padding(24.dp)
+        ) {
+            MXDropdownMenu(
+                label = "Test",
+                items = listOf(
+                    "1",
+                    "2",
+                    "3"
+                ),
+                selectedItem = currentItem
+            ) {
+                currentItem = it
             }
         }
     }

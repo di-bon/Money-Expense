@@ -139,7 +139,9 @@ fun MXApp() {
             }
             composable(Screens.Transactions.route) {
                 // call our composable screens here
-                TransactionsScreen(navController = navController)
+                TransactionsScreen(
+//                    navController = navController
+                )
             }
             composable(Screens.Settings.route) {
                 //call our composable screens here
