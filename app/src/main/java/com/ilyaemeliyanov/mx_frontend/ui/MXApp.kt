@@ -123,7 +123,7 @@ fun MXApp() {
                 }
             }
         }
-    ) { it ->
+    ) { innerPadding ->
         //We need to setup our NavHost in here
         NavHost(
             navController = navController,
@@ -131,21 +131,31 @@ fun MXApp() {
             modifier = Modifier.padding(vertical = 20.dp, horizontal = 20.dp)) {
             composable(Screens.Dashboard.route) {
                 //call our composable screens here
-                DashboardScreen(navController = navController)
+                DashboardScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
+                )
             }
             composable(Screens.Wallets.route) {
                 //call our composable screens here
-                WalletsScreen(navController = navController)
+                WalletsScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
+                )
             }
             composable(Screens.Transactions.route) {
                 // call our composable screens here
                 TransactionsScreen(
+                    modifier = Modifier.padding(innerPadding),
 //                    navController = navController
                 )
             }
             composable(Screens.Settings.route) {
                 //call our composable screens here
-                SettingsScreen(navController = navController)
+                SettingsScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    navController = navController
+                )
             }
         }
 

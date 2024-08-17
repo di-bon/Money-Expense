@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -62,7 +63,16 @@ fun DashboardScreen(
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = transactions.subList(0, max(0, min(transactions.size, 10)))
+                transactionList = if (transactions.isNotEmpty() && mxViewModel.selectedWallet != null) {
+                    transactions
+                        .filter { transaction ->
+                            transaction.wallet == mxViewModel.selectedWallet
+                        }
+                        .take(10)
+                } else {
+                    transactions
+                        .take(10)
+                }
             )
         }
     }
@@ -73,7 +83,7 @@ private fun DashboardTopBar(
     modifier: Modifier = Modifier
 ) {
     val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
-    val wallets = mxViewModel.wallets
+    val wallets = listOf(null) + mxViewModel.wallets
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -83,9 +93,10 @@ private fun DashboardTopBar(
             title = "Dashboard",
             modifier = Modifier.fillMaxWidth()
         ) {
-            MXDropdownMenu(label = "Wallet", items = wallets.map { wallet -> wallet.name }, selectedItem = null) {item ->
+            MXDropdownMenu(label = "Wallet", items = wallets.map { wallet -> wallet?.name ?: "All wallets" }, selectedItem = "All wallets") { item ->
+                mxViewModel.selectedWallet = null
                 for (wallet in wallets) {
-                    if (wallet.name == item) {
+                    if (wallet?.name == item) {
                         mxViewModel.selectedWallet = wallet
                     }
                 }
