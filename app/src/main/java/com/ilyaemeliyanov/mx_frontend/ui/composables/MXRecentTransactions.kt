@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -46,6 +48,16 @@ fun RecentTransactions(
     var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
 
+    var isLoading by remember {
+        mutableStateOf(true)
+    }
+    LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
+        if (mxViewModel.transactions.isEmpty()) {
+            delay(10000) // set max of 10000 ms
+        }
+        isLoading = false
+    }
+
     Column() {
         LazyColumn (modifier = modifier) {
             if (showTitle) {
@@ -57,30 +69,23 @@ fun RecentTransactions(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-            if (transactionList.size > 0) {
-                items(transactionList) { transaction ->
-                    SwipeToDeleteContainer(
-                        onDelete = {
-                            if(!showAlertDialog) {
-                                showAlertDialog = true
-                                selectedTransaction = transactionList.find { it.id == transaction.id }
-                            }
+            items(20) {
+                ShimmerListItem(isLoading = isLoading, content = {})
+            }
+            items(transactionList) { transaction ->
+                SwipeToDeleteContainer(
+                    onDelete = {
+                        if(!showAlertDialog) {
+                            showAlertDialog = true
+                            selectedTransaction = transactionList.find { it.id == transaction.id }
                         }
-                    ) {
-                        MXTransaction(
-                            transaction = transaction
-                        )
                     }
-                }
-            } else {
-                item {
-                    Text(
-                        text = "No transactions",
-                        style = MaterialTheme.typography.bodyMedium
+                ) {
+                    MXTransaction(
+                        transaction = transaction
                     )
                 }
             }
-
         }
 
         if (showAlertDialog) {
