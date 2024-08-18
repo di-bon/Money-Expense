@@ -92,8 +92,6 @@ class MXViewModel(
         }
     }
 
-    // TODO:
-    //  1. Wallet CRUD operations both on ROOM and Firestore
     fun saveWallet(wallet: Wallet?) {
         if (wallet != null) {
             viewModelScope.launch {
@@ -138,14 +136,26 @@ class MXViewModel(
             viewModelScope.launch {
                 repository.deleteWallet(wallet) { walletRef ->
                     if (walletRef != null) {
-                        // Update UI
-                        val newWallets = wallets.filter {
-                            it.id != wallet.id
-                        }
-                        wallets = newWallets
                         // Update User
                         user?.wallets = user?.wallets?.filter { it != walletRef } ?: emptyList()
+                        val filteredTransactions = transactions?.filter { it.wallet.id != wallet.id } ?: emptyList()
+                        user?.transactions = user?.transactions?.filter {
+                            if (filteredTransactions != null) {
+                                for (t in filteredTransactions) {
+                                    if (it.id != t.id) false
+                                }
+                                true
+                            }
+                            false
+                        } ?: emptyList()
                         updateUser(user)
+
+                        // Update wallets UI
+                        val newWallets = wallets.filter { it.id != wallet.id }
+                        wallets = newWallets
+
+                        // Update transactions UI
+                        transactions = filteredTransactions
 
                         // Delete transactions
                         viewModelScope.launch {
@@ -157,8 +167,6 @@ class MXViewModel(
         }
     }
 
-    // TODO:
-    //  2. Transaction CRUD operations both on ROOM and Firestore
     fun saveTransaction(transaction: Transaction?) {
         if (transaction != null) {
             viewModelScope.launch {

@@ -1,6 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -30,8 +32,12 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXShapes
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
+import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter
+import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.exportToCSV
+import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.toCSV
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -41,6 +47,7 @@ fun SettingsScreen(
 
     val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
 
+    val context = LocalContext.current
     var user = mxViewModel.user
 
     LazyColumn (modifier = modifier) {
@@ -97,9 +104,19 @@ fun SettingsScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 MXSettingsButton(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                        val csvData = mxViewModel.transactions.toCSV()
+                        val file = exportToCSV(context, "transactions", csvData)
+                        file?.let {
+                            // Handle successful export, show Toast with the path for the exported file
+                            Toast.makeText(context, "CSV exported to ${it.absolutePath}", Toast.LENGTH_LONG).show()
+                        } ?: run {
+                            // Handle failure
+                            Toast.makeText(context, "Failed to export CSV", Toast.LENGTH_LONG).show()
+                        }
+                    },
                     leftIconImageVector = Icons.Filled.Downloading, // TODO: set download icon
-                    titleString = "Export transactions",
+                    titleString = "Export transactions in CSV",
                     descriptionString = "Your transactions are available for download in CSV format",
                     rightIconImageVector = Icons.Filled.KeyboardArrowRight
                 )

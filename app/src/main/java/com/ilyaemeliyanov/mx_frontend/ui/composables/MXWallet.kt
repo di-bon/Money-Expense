@@ -46,7 +46,8 @@ fun MXWallet(
 
     val mxViewModel = remember { MXViewModelSingleton.getInstance() }
 
-    var showContextDialog by remember { mutableStateOf(false) }
+    var showEditContextDialog by remember { mutableStateOf(false) }
+    var showDeleteContextDialog by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf(wallet.name) }
     var description by remember { mutableStateOf(wallet.description ?: "") }
     var amount by remember { mutableStateOf(wallet.amount.toString()) }
@@ -73,7 +74,7 @@ fun MXWallet(
                         .fillMaxHeight()
                         .padding(10.dp)
                         .clip(RoundedCornerShape(30.dp))
-                        .clickable { showContextDialog = true }
+                        .clickable { showEditContextDialog = true }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
@@ -83,7 +84,7 @@ fun MXWallet(
                         .fillMaxHeight()
                         .padding(10.dp)
                         .clip(RoundedCornerShape(20.dp))
-                        .clickable { mxViewModel.deleteWallet(wallet) }
+                        .clickable { showDeleteContextDialog = true }
                 )
             }
             Text(
@@ -100,14 +101,14 @@ fun MXWallet(
                 maxLines = 2
             )
 
-            if (showContextDialog) {
+            if (showEditContextDialog) {
                 MXAlertDialog(
                     "Edit Wallet",
                     confirmLabel = "Update",
                     dismissLabel = "Cancel",
-                    onDismiss = { showContextDialog = false },
+                    onDismiss = { showEditContextDialog = false },
                     onConfirm = {
-                        showContextDialog = false
+                        showEditContextDialog = false
                         val newWallet = Wallet(
                             id = wallet.id,
                             name = name,
@@ -140,6 +141,21 @@ fun MXWallet(
                         onTextChange = { value -> amount = value },
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
+                }
+            }
+
+            if (showDeleteContextDialog) {
+                MXAlertDialog(
+                    "Delete Wallet",
+                    confirmLabel = "Delete",
+                    dismissLabel = "Cancel",
+                    onDismiss = { showDeleteContextDialog = false },
+                    onConfirm = {
+                        showDeleteContextDialog = false
+                        mxViewModel.deleteWallet(wallet)
+                    }
+                ) {
+                    Text("Are you sure you want to delete this wallet?\n\nAll the associated transactions will be delete as well", style = MaterialTheme.typography.labelMedium)
                 }
             }
         }
