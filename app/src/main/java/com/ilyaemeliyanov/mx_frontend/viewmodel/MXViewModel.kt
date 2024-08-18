@@ -128,11 +128,8 @@ class MXViewModel(
 
     private fun updateWalletBalance(wallet: Wallet, lastTransaction: Transaction) {
         viewModelScope.launch {
-            repository.updateWallet(wallet) { wallet ->
-                if (wallet != null) {
-                    wallet.amount += lastTransaction.amount
-                }
-            }
+            wallet.amount += lastTransaction.amount
+            repository.updateWallet(wallet) { }
         }
     }
 
