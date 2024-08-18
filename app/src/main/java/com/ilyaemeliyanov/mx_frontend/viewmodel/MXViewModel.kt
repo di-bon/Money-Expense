@@ -175,7 +175,7 @@ class MXViewModel(
                     }
                 }
             }
-            updateWalletBalance(transaction.wallet, transaction)
+            updateWalletBalance(transaction.wallet, transaction) // TODO: leave this here? move it away?
         }
     }
 

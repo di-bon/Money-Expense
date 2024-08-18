@@ -30,22 +30,31 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 private const val TAG = "RegisterScreen"
 
 @Composable
-fun RegisterScreen(
+fun SignUpScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
+    // ---
+    // TODO: to be replaced by UiState class
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
+    // ---
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Sign up", style = TextStyle(fontFamily = euclidCircularA, fontWeight = FontWeight.SemiBold, fontSize = 64.sp))
+        Text(
+            text = "Sign up",
+            style = TextStyle(
+                fontFamily = euclidCircularA,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 64.sp)
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Column {
             MXInput(
@@ -103,9 +112,11 @@ fun RegisterScreen(
 
 @Preview(showBackground = true)
 @Composable
-private fun RegisterScreenPreview() {
+private fun SignUpScreenPreview() {
     MXTheme {
-        RegisterScreen({}, modifier = Modifier
+        SignUpScreen(
+            onSignUpClick = {},
+            modifier = Modifier
             .background(color = Color(246, 246, 246))
             .padding(32.dp)
             .fillMaxWidth()
