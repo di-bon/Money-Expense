@@ -36,7 +36,6 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
 

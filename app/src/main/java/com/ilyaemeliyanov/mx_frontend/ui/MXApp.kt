@@ -24,18 +24,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.WalletsScreen
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelFactory
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 sealed class Screens(val route: String) {
@@ -133,28 +130,31 @@ fun MXApp() {
                 //call our composable screens here
                 DashboardScreen(
                     modifier = Modifier.padding(innerPadding),
-                    navController = navController
+                    getLast10Transactions = mxViewModel::getLast10Transactions,
+                    onWalletSelection = mxViewModel::setSelectedWallet,
+                    getIncome = mxViewModel::getIncome,
+                    getExpenses = mxViewModel::getExpenses,
+                    getCurrentWalletTransactions = mxViewModel::getCurrentWalletTransactions,
                 )
             }
             composable(Screens.Wallets.route) {
                 //call our composable screens here
                 WalletsScreen(
                     modifier = Modifier.padding(innerPadding),
-                    navController = navController
                 )
             }
             composable(Screens.Transactions.route) {
                 // call our composable screens here
                 TransactionsScreen(
+                    getFilteredAndSortedTransactions = mxViewModel::getFilteredAndSortedTransactions,
+                    getBalance = mxViewModel::getBalance,
                     modifier = Modifier.padding(innerPadding),
-//                    navController = navController
                 )
             }
             composable(Screens.Settings.route) {
                 //call our composable screens here
                 SettingsScreen(
                     modifier = Modifier.padding(innerPadding),
-                    navController = navController
                 )
             }
         }

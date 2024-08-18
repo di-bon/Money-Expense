@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,6 +42,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
@@ -51,7 +53,8 @@ private const val TAG = "TransactionsScreen"
 
 @Composable
 fun TransactionsScreen(
-//    navController: NavController,
+    getFilteredAndSortedTransactions: (List<Transaction>, String, String) -> List<Transaction>,
+    getBalance: (List<Transaction>) -> Float,
     modifier: Modifier = Modifier
 ) {
 
@@ -70,11 +73,13 @@ fun TransactionsScreen(
     var currentFilter by remember { mutableStateOf("None") }
     var currentSortCriteria by remember { mutableStateOf("Newest") }
 
-    var desiredTransactions = getDesiredTransactions(allTransactions, currentFilter, currentSortCriteria)
+    val filteredAndSortedTransactions = getFilteredAndSortedTransactions(allTransactions, currentFilter, currentSortCriteria)
 
-    var totalSum by remember {
-        mutableStateOf(0f)
-    }
+//    var totalSum by remember {
+//        mutableStateOf(0f)
+//    }
+
+    val totalSum = getBalance(filteredAndSortedTransactions)
 
     Column (
         modifier = modifier.fillMaxHeight()
@@ -150,9 +155,10 @@ fun TransactionsScreen(
                             brush = SolidColor(Color.Gray),
                             shape = RoundedCornerShape(8.dp)
                         )
-                        .padding(horizontal = 16.dp)
+                        .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
                     ) {
-                        MXDropdownMenu(items = walletNames ?: emptyList(), selectedItem = walletName) {
+                        MXDropdownMenu(items = walletNames ?: emptyList(), selectedItem = walletName, showLabel = false) {
                             walletName = it
                         }
                     }
@@ -223,24 +229,6 @@ fun TransactionsScreen(
                 }
             }
             Spacer(modifier = Modifier.width(24.dp))
-            // TODO: replace with MXDropdownMenu
-
-//            MxCircluarButton(
-//                onClick = { /*TODO*/ },
-//                containerColor = MXColors.Default.ActiveColor,
-//                contentColor = Color.Black,
-//                modifier = Modifier.weight(1f)
-//            ) {
-//                Row (
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp, vertical = 8.dp)
-//                ) {
-//                    Text(text = "Sort by")
-//                    Spacer(modifier = Modifier.weight(1f))
-//                    Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "Filter By")
-//                }
-//            }
 
             MXCard (
                 containerColor = MXColors.Default.ActiveColor,
@@ -275,7 +263,7 @@ fun TransactionsScreen(
                 .background(color = Color.Black)
         ) {
             Text(
-                text = "Sum: ${desiredTransactions.fold(0.0) { sum, transaction -> sum + transaction.amount }.toFloat()}",
+                text = if (totalSum >= 0f) "Sum: + \$ ${StringFormatter.getFormattedAmount(totalSum)}" else "Sum: - \$ ${StringFormatter.getFormattedAmount(totalSum)}",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
@@ -289,44 +277,10 @@ fun TransactionsScreen(
         ) {
             RecentTransactions(
                 showTitle = false,
-                transactionList = getDesiredTransactions(allTransactions, currentFilter, currentSortCriteria)
-//                transactionList = transactions,
-//                transactionList = listOf(
-//                        Transaction(
-//                        id = "",
-//                        label = "test",
-//                        description = "boh",
-//                        amount = 100f,
-//                        date = GregorianCalendar(2024, Calendar.APRIL, 4).time,
-//                        wallet = Wallet(
-//                            id = "",
-//                            name = "name",
-//                            amount = 200f,
-//                            description = "description",
-//                            ref = null
-//                        )
-//                    )
-//                )
+                transactionList = filteredAndSortedTransactions
             )
         }
     }
-}
-
-private fun getDesiredTransactions(transactionList: List<Transaction>, filter: String, sort: String): List<Transaction> {
-    var result: List<Transaction> = when (filter) {
-        "Positive" -> transactionList.filter { it.amount >= 0 }
-        "Negative" -> transactionList.filter { it.amount < 0 }
-        else -> transactionList
-    }
-
-   result = when (sort) {
-        "Oldest" -> result.sortedBy { it.date }
-        "Biggest" -> result.sortedByDescending { abs(it.amount) }
-        "Smallest" -> result.sortedBy { abs(it.amount) }
-        else -> result.sortedByDescending { it.date }
-    }
-
-    return result
 }
 
 @Preview(showBackground = true)
@@ -334,6 +288,8 @@ private fun getDesiredTransactions(transactionList: List<Transaction>, filter: S
 private fun TransactionsScreenPreview() {
     MXTheme {
         TransactionsScreen(
+            getFilteredAndSortedTransactions = { transactions, s1, s2 -> transactions},
+            getBalance = { 0.0f },
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()

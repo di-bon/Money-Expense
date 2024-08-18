@@ -9,7 +9,7 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 data class Wallet (
     @PrimaryKey val id: String,
     val name: String,
-    val amount: Float,
+    var amount: Float,
     val description: String?,
     var ref: DocumentReference?,
 ) {

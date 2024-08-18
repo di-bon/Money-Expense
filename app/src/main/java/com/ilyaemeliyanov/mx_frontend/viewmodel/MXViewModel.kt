@@ -11,6 +11,7 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 // OLD STUFF TO INTEGRATE WITH THIS CLASS
 //class MxViewModel : ViewModel() {
@@ -125,6 +126,16 @@ class MXViewModel(
         }
     }
 
+    private fun updateWalletBalance(wallet: Wallet, lastTransaction: Transaction) {
+        viewModelScope.launch {
+            repository.updateWallet(wallet) { wallet ->
+                if (wallet != null) {
+                    wallet.amount += lastTransaction.amount
+                }
+            }
+        }
+    }
+
     fun deleteWallet(wallet: Wallet?) {
         if (wallet != null) {
             viewModelScope.launch {
@@ -167,6 +178,7 @@ class MXViewModel(
                     }
                 }
             }
+            updateWalletBalance(transaction.wallet, transaction)
         }
     }
 
@@ -192,5 +204,81 @@ class MXViewModel(
                 }
             }
         }
+    }
+
+    fun getLast10Transactions(transactions: List<Transaction>): List<Transaction> {
+        return if (transactions.isNotEmpty() && selectedWallet != null) {
+            transactions
+                .filter { transaction ->
+                    transaction.wallet == selectedWallet
+                }
+                .take(10)
+        } else {
+            transactions
+                .take(10)
+        }
+    }
+
+    fun setSelectedWallet(item: String): Unit {
+        selectedWallet = null
+        for (wallet in wallets) {
+            if (wallet.name == item) {
+                selectedWallet = wallet
+            }
+        }
+    }
+
+    fun getIncome(transactions: List<Transaction>): Float {
+        return transactions
+            .fold(0.0) { sum, transaction ->
+                if (transaction.amount >= 0) {
+                    sum + transaction.amount
+                } else {
+                    sum
+                }
+            }.toFloat()
+    }
+
+    fun getExpenses(transactions: List<Transaction>): Float {
+        return transactions
+            .fold(0.0) { sum, transaction ->
+                if (transaction.amount <= 0) {
+                    sum + transaction.amount
+                } else {
+                    sum
+                }
+            }.toFloat()
+    }
+
+    fun getBalance(transactions: List<Transaction>): Float {
+        return transactions
+            .fold(0.0) { sum, transaction ->
+                sum + transaction.amount
+            }.toFloat()
+    }
+
+    fun getCurrentWalletTransactions(transactions: List<Transaction>): List<Transaction> {
+        return if (selectedWallet != null) {
+            transactions.filter { transaction -> transaction.wallet == selectedWallet }
+        } else {
+            transactions
+        }
+    }
+
+    fun getFilteredAndSortedTransactions(transactionList: List<Transaction>, filter: String, sort: String): List<Transaction> {
+        var result: List<Transaction> = when (filter) {
+            "Positive" -> transactionList.filter { it.amount >= 0 }
+            "Negative" -> transactionList.filter { it.amount < 0 }
+            else -> transactionList
+        }
+
+        result = when (sort) {
+            "Oldest" -> result.sortedBy { it.date }
+            "Biggest" -> result.sortedByDescending { abs(it.amount) }
+            "Smallest" -> result.sortedBy { abs(it.amount) }
+            else -> result.sortedByDescending { it.date }
+        }
+
+        return result
     }
 }
