@@ -51,7 +51,6 @@ private const val TAG = "WalletsScreen"
 
 @Composable
 fun WalletsScreen(
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
 

@@ -42,7 +42,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
-    navController: NavController,
     modifier: Modifier = Modifier
 ) {
 

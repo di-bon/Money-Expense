@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -39,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -58,38 +60,44 @@ fun MXDropdownMenu (
     modifier: Modifier = Modifier,
     label: String = "Item",
     showIcon: Boolean = true,
+    showLabel: Boolean = true,
     onItemSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(selectedItem) }
 
     Row(modifier = modifier
-        .pointerInput(true) {
-            detectTapGestures(
-                onPress = {
-                    expanded = true
-                }
-            )
-        }
-    ) {
-//        Box(
-//            modifier = Modifier
-//                .pointerInput(true) {
-//                    detectTapGestures(
-//                        onPress = {
-//                            expanded = true
-//                        }
-//                    )
+//        .pointerInput(true) {
+//            detectTapGestures(
+//                onPress = {
+//                    expanded = true
 //                }
-//        )
-//        {
+//            )
+//        }
+    ) {
+        Box(
+            modifier = Modifier
+                .pointerInput(true) {
+                    detectTapGestures(
+                        onPress = {
+                            expanded = true
+                        }
+                    )
+                }
+        )
+        {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
 //                modifier = Modifier.height(100.dp)
             ) {
+                val textToShow = when (showLabel) {
+                    true -> "$label: $selected"
+                    false -> "$selected"
+                }
                 Text(
-                    text = "$label: $selected" ?: "Select ${label.lowercase()}",
+                    text = textToShow,
+//                    text = "$label: $selected" ?: "Select ${label.lowercase()}",
                     style = MaterialTheme.typography.labelMedium,
                 )
                 if (showIcon) {
@@ -100,10 +108,14 @@ fun MXDropdownMenu (
                 }
             }
         }
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier
-            .background(Color.White)
-            .width(200.dp)
-            .padding(8.dp)) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .background(Color.White)
+                .width(200.dp)
+                .padding(8.dp)
+        ) {
             items.forEach { item ->
                 DropdownMenuItem(
                     text = { Text(item) },
@@ -111,7 +123,7 @@ fun MXDropdownMenu (
                 Divider()
             }
         }
-//    }
+    }
 }
 
 @Preview(showBackground = true)
