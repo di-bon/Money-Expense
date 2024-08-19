@@ -9,7 +9,7 @@ object CSVConverter {
     fun List<Transaction>.toCSV(): String {
         val header = "Label,Description,Amount,Date,Wallet"
         val csvRows = this.joinToString("\n") { transaction ->
-            "${transaction.label},${transaction.description},${transaction.amount},${transaction.date},${transaction.wallet.name}"
+            "${transaction.label},${transaction.description},${transaction.amount},${StringFormatter.getStringFromDate(transaction.date)},${transaction.wallet.name}"
         }
         return "$header\n$csvRows"
     }

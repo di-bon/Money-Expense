@@ -27,10 +27,9 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
-private const val TAG = "RegisterScreen"
 
 @Composable
-fun RegisterScreen(
+fun SignUpScreen(
     onSignUpClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -105,7 +104,7 @@ fun RegisterScreen(
 @Composable
 private fun RegisterScreenPreview() {
     MXTheme {
-        RegisterScreen({}, modifier = Modifier
+        SignUpScreen({}, modifier = Modifier
             .background(color = Color(246, 246, 246))
             .padding(32.dp)
             .fillMaxWidth()

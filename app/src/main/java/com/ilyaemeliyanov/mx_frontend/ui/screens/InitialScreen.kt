@@ -44,7 +44,7 @@ fun InitialScreen(
             Text(
                 text = "Money Expense",
                 lineHeight = 68.sp,
-                style = MaterialTheme.typography.titleLarge
+                style = TextStyle(fontFamily = euclidCircularA, fontWeight = FontWeight.Medium, fontSize = 64.sp)
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(

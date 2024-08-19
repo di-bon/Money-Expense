@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,8 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
+import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
+import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
 //import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXIcons

@@ -30,6 +30,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
+import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.WalletsScreen
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
