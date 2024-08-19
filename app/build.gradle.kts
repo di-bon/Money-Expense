@@ -54,6 +54,7 @@ android {
 
 dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.firebase.auth.ktx)
 
     // Navigation
     val nav_version = "2.7.7"
@@ -76,6 +77,14 @@ dependencies {
     // Firestore
     val firestore_version = "25.0.0"
     implementation("com.google.firebase:firebase-firestore:$firestore_version")
+
+    // Firebase auth
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-auth")
 
     // Animation
     val animation_version = "1.5.0"

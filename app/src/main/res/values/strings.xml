@@ -2,4 +2,7 @@
     <string name="app_name">MX</string>
     <string name="initial_screen">Initial screen</string>
     <string name="dashboard_screen">Dashboard</string>
+    <string name="initialscreenroute">InitialScreenRoute</string>
+    <string name="loginscreenroute">LoginScreenRoute</string>
+    <string name="signupscreenroute">SignUpScreenRoute</string>
 </resources>

@@ -279,12 +279,6 @@ class MXViewModel(
     }
 
     fun deleteTransaction(transaction: Transaction?) {
-        var i: Int = 0
-        for (t in transactions) {
-            Log.d(TAG, "transaction $i: $t")
-            i++
-        }
-
         if (transaction != null) {
             viewModelScope.launch {
                 repository.deleteTransaction(transaction) {transactionRef ->
@@ -297,11 +291,6 @@ class MXViewModel(
                    }
                 }
             }
-        }
-        i = 0
-        for (t in transactions) {
-            Log.d(TAG, "transaction $i: $t")
-            i++
         }
     }
 
