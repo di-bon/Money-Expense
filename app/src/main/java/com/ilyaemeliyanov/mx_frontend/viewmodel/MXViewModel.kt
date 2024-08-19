@@ -10,7 +10,13 @@ import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
+import com.ilyaemeliyanov.mx_frontend.ui.UiState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
+import java.util.Date
 import kotlin.math.abs
 
 // OLD STUFF TO INTEGRATE WITH THIS CLASS
@@ -25,9 +31,72 @@ import kotlin.math.abs
 //
 //}
 
+private const val TAG = "MXViewModel"
+
 class MXViewModel(
     private val repository: MXRepository
 ) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(UiState())
+    val uiState: StateFlow<UiState> = _uiState
+
+    // Data to create a new transaction
+    var transactionLabel: String by mutableStateOf("")
+    var transactionDescription: String by mutableStateOf("")
+    var transactionAmount: String by mutableStateOf("")
+    var transactionDate: Date by mutableStateOf(Date())
+
+    var email: String by mutableStateOf("")
+
+    fun updateCurrentWallet(walletName: String) {
+        _uiState.update {
+            it.copy(
+                currentWalletName = walletName
+            )
+        }
+    }
+
+    fun updateCurrentFilter(newFilter: String) {
+        _uiState.update {
+            it.copy(
+                currentFilter = newFilter,
+                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+                    it.allTransactions,
+                    newFilter,
+                    it.currentSortingCriteria
+                )
+            )
+        }
+    }
+
+    fun updateCurrentSortingCriteria(newSortingCriteria: String) {
+        _uiState.update {
+            it.copy(
+                currentSortingCriteria = newSortingCriteria,
+                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+                    it.allTransactions,
+                    it.currentFilter,
+                    newSortingCriteria
+                )
+            )
+        }
+    }
+
+    fun createAndSaveTransaction() {
+        val wallet = wallets.find { it.name == _uiState.value.currentWalletName }
+        // TODO: validate input
+        if (wallet != null) {
+            val transaction = Transaction(
+                id = "",
+                label = transactionLabel,
+                description = transactionDescription,
+                amount = transactionAmount.toFloat(),
+                date = transactionDate,
+                wallet = wallet,
+            )
+            saveTransaction(transaction)
+        }
+    }
 
     // Defining the state for user, wallets and transaction
     var user by mutableStateOf<User?>(null)
@@ -43,13 +112,31 @@ class MXViewModel(
     var selectedWallet by mutableStateOf<Wallet?>(null)
 
     suspend fun loadData(email: String) {
-        viewModelScope.launch {
+//        viewModelScope.launch {
             loadUserByEmail(email)
+
+//        }
+    }
+
+    fun updateData() {
+        _uiState.update {
+            Log.d(TAG, "Updating uiState")
+            it.copy(
+                user = user,
+                wallets = wallets,
+                walletNames = wallets.map { wallet -> wallet.name },
+                allTransactions = transactions,
+                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+                    transactions,
+                    _uiState.value.currentFilter,
+                    _uiState.value.currentSortingCriteria
+                )
+            )
         }
     }
 
     suspend fun loadUserByEmail(email: String) {
-        viewModelScope.launch {
+//        viewModelScope.launch {
             repository.getUserByEmail(email) { fetchedUser ->
                 user = fetchedUser
                 viewModelScope.launch {
@@ -57,13 +144,13 @@ class MXViewModel(
                     loadWalletsByUser(user)
                 }
             }
-        }
+//        }
     }
 
     suspend fun loadWalletsByUser(user: User?) {
         if (user != null) {
             transactions = emptyList()
-            user?.wallets?.forEach { walletRef ->
+            user.wallets.forEach { walletRef ->
                 repository.getWalletByDocRef(walletRef) { fetchedWallet ->
                     if (fetchedWallet != null) wallets += fetchedWallet
                     viewModelScope.launch {
@@ -75,11 +162,11 @@ class MXViewModel(
     }
 
     suspend fun loadTransactionsByWallet(wallet: Wallet) {
-        viewModelScope.launch {
+//        viewModelScope.launch {
             repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
                 if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
             }
-        }
+//        }
     }
 
     fun updateUser(u: User?) {
@@ -211,6 +298,27 @@ class MXViewModel(
         }
     }
 
+    fun getFilteredAndSortedTransactions(
+        transactionList: List<Transaction>,
+        filter: String,
+        sort: String
+    ): List<Transaction> {
+        var result: List<Transaction> = when (filter) {
+            "Positive" -> transactionList.filter { it.amount >= 0 }
+            "Negative" -> transactionList.filter { it.amount < 0 }
+            else -> transactionList
+        }
+
+        result = when (sort) {
+            "Oldest" -> result.sortedBy { it.date }
+            "Biggest" -> result.sortedByDescending { abs(it.amount) }
+            "Smallest" -> result.sortedBy { abs(it.amount) }
+            else -> result.sortedByDescending { it.date }
+        }
+
+        return result
+    }
+
     fun getLast10Transactions(transactions: List<Transaction>): List<Transaction> {
         return if (transactions.isNotEmpty() && selectedWallet != null) {
             transactions
@@ -268,22 +376,5 @@ class MXViewModel(
         } else {
             transactions
         }
-    }
-
-    fun getFilteredAndSortedTransactions(transactionList: List<Transaction>, filter: String, sort: String): List<Transaction> {
-        var result: List<Transaction> = when (filter) {
-            "Positive" -> transactionList.filter { it.amount >= 0 }
-            "Negative" -> transactionList.filter { it.amount < 0 }
-            else -> transactionList
-        }
-
-        result = when (sort) {
-            "Oldest" -> result.sortedBy { it.date }
-            "Biggest" -> result.sortedByDescending { abs(it.amount) }
-            "Smallest" -> result.sortedBy { abs(it.amount) }
-            else -> result.sortedByDescending { it.date }
-        }
-
-        return result
     }
 }

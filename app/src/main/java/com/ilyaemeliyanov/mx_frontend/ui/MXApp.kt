@@ -1,7 +1,9 @@
 package com.ilyaemeliyanov.barmanager.ui.theme
 
 import android.util.Log
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
@@ -17,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -33,7 +37,8 @@ import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.WalletsScreen
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
+
+private const val TAG = "MXApp"
 
 sealed class Screens(val route: String) {
     object Dashboard: Screens("dashboard_route")
@@ -74,26 +79,29 @@ data class BottomNavigationItem(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MXApp() {
+fun MXApp(
+    mxViewModel: MXViewModel
+) {
     var navSelectedItem by remember { mutableStateOf(0) }
     val navController = rememberNavController()
 
-    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+//    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+//    val mxViewModel: MXViewModel = viewModel()
     LaunchedEffect(Unit) {
         val email = "john.doe@gmail.com"
+        mxViewModel.email = email
         mxViewModel.loadData(email)
-        Log.d("MXAPP", mxViewModel.user.toString())
+        Log.d(TAG, mxViewModel.user.toString())
     }
+    mxViewModel.updateData()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar {
                 //getting the list of bottom navigation items for our data class
-                BottomNavigationItem().bottomNavigationItems().forEachIndexed {index,navigationItem ->
-
+                BottomNavigationItem().bottomNavigationItems().forEachIndexed { index, navigationItem ->
                     //iterating all items with their respective indexes
                     NavigationBarItem(
                         selected = index == navSelectedItem,
@@ -129,12 +137,9 @@ fun MXApp() {
             composable(Screens.Dashboard.route) {
                 //call our composable screens here
                 DashboardScreen(
+                    mxViewModel = mxViewModel,
+                    uiState = mxViewModel.uiState.collectAsState().value,
                     modifier = Modifier.padding(innerPadding),
-                    getLast10Transactions = mxViewModel::getLast10Transactions,
-                    onWalletSelection = mxViewModel::setSelectedWallet,
-                    getIncome = mxViewModel::getIncome,
-                    getExpenses = mxViewModel::getExpenses,
-                    getCurrentWalletTransactions = mxViewModel::getCurrentWalletTransactions,
                 )
             }
             composable(Screens.Wallets.route) {
@@ -146,9 +151,14 @@ fun MXApp() {
             composable(Screens.Transactions.route) {
                 // call our composable screens here
                 TransactionsScreen(
-                    getFilteredAndSortedTransactions = mxViewModel::getFilteredAndSortedTransactions,
-                    getBalance = mxViewModel::getBalance,
-                    modifier = Modifier.padding(innerPadding),
+//                    getFilteredAndSortedTransactions = mxViewModel::getFilteredAndSortedTransactions,
+//                    getBalance = mxViewModel::getBalance,
+                    uiState = mxViewModel.uiState.collectAsState().value,
+                    mxViewModel = mxViewModel,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth()
+                        .padding(innerPadding),
                 )
             }
             composable(Screens.Settings.route) {

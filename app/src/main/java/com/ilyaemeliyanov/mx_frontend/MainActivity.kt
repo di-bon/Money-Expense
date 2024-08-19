@@ -1,37 +1,38 @@
 package com.ilyaemeliyanov.mx_frontend
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.runtime.collectAsState
 import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
-import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
+import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 //import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXIcons
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 // TODO: merge this class with ui/MxAppOld.kt
+
+private const val TAG = "MainActivity"
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MXTheme {
-                MXApp()
+                val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
+//                Log.d(TAG, "Instantiating TransactionsScreen")
+//                TransactionsScreen(
+//                    uiState = vm.uiState.collectAsState().value,
+//                    mxViewModel = vm
+//                )
+//                Log.d(TAG, "TransactionsScreen instantiated.")
+
+                MXApp(
+                    mxViewModel = mxViewModel
+                )
+
 //                InitialScreen(
 //                    onLoginClick = { /*TODO*/ },
 //                    onSignUpClick = { /*TODO*/ },
