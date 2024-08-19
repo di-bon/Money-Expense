@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 import java.util.Date
 import kotlin.math.abs
 
@@ -34,6 +33,7 @@ import kotlin.math.abs
 private const val TAG = "MXViewModel"
 
 class MXViewModel(
+    private val email: String,
     private val repository: MXRepository
 ) : ViewModel() {
 
@@ -45,45 +45,45 @@ class MXViewModel(
     var transactionDescription: String by mutableStateOf("")
     var transactionAmount: String by mutableStateOf("")
     var transactionDate: Date by mutableStateOf(Date())
+    var transactionWalletName: String by mutableStateOf("")
 
-    var email: String by mutableStateOf("")
+//    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
-    fun updateCurrentWallet(walletName: String) {
-        _uiState.update {
-            it.copy(
-                currentWalletName = walletName
-            )
+    init {
+        Log.d(TAG, "init() called")
+        viewModelScope.launch {
+            loadData(email)
         }
     }
 
     fun updateCurrentFilter(newFilter: String) {
         _uiState.update {
             it.copy(
-                currentFilter = newFilter,
-                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-                    it.allTransactions,
-                    newFilter,
-                    it.currentSortingCriteria
-                )
+                currentFilter = newFilter
             )
         }
+//        filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+//            transactionList = transactions,
+//            filter = _uiState.value.currentFilter,
+//            sort = _uiState.value.currentFilter
+//        )
     }
 
     fun updateCurrentSortingCriteria(newSortingCriteria: String) {
         _uiState.update {
             it.copy(
                 currentSortingCriteria = newSortingCriteria,
-                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-                    it.allTransactions,
-                    it.currentFilter,
-                    newSortingCriteria
-                )
             )
         }
+//        filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+//            transactionList = transactions,
+//            filter = _uiState.value.currentFilter,
+//            sort = _uiState.value.currentFilter
+//        )
     }
 
     fun createAndSaveTransaction() {
-        val wallet = wallets.find { it.name == _uiState.value.currentWalletName }
+        val wallet = wallets.find { it.name == transactionWalletName }
         // TODO: validate input
         if (wallet != null) {
             val transaction = Transaction(
@@ -94,7 +94,14 @@ class MXViewModel(
                 date = transactionDate,
                 wallet = wallet,
             )
+            Log.d(TAG, "count before: ${transactions.size}")
             saveTransaction(transaction)
+            Log.d(TAG, "count after: ${transactions.size}")
+//            filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+//                transactionList = transactions,
+//                filter = _uiState.value.currentFilter,
+//                sort = _uiState.value.currentSortingCriteria
+//            )
         }
     }
 
@@ -114,25 +121,7 @@ class MXViewModel(
     suspend fun loadData(email: String) {
 //        viewModelScope.launch {
             loadUserByEmail(email)
-
 //        }
-    }
-
-    fun updateData() {
-        _uiState.update {
-            Log.d(TAG, "Updating uiState")
-            it.copy(
-                user = user,
-                wallets = wallets,
-                walletNames = wallets.map { wallet -> wallet.name },
-                allTransactions = transactions,
-                filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-                    transactions,
-                    _uiState.value.currentFilter,
-                    _uiState.value.currentSortingCriteria
-                )
-            )
-        }
     }
 
     suspend fun loadUserByEmail(email: String) {
@@ -166,6 +155,11 @@ class MXViewModel(
             repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
                 if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
             }
+//            filteredAndSortedTransactions = getFilteredAndSortedTransactions(
+//                transactionList = transactions,
+//                filter = _uiState.value.currentFilter,
+//                sort = _uiState.value.currentFilter
+//            )
 //        }
     }
 
@@ -211,6 +205,7 @@ class MXViewModel(
         }
     }
 
+    // TODO: fix it, doesn't work
     private fun updateWalletBalance(wallet: Wallet, lastTransaction: Transaction) {
         viewModelScope.launch {
             wallet.amount += lastTransaction.amount
@@ -270,7 +265,7 @@ class MXViewModel(
                     }
                 }
             }
-            updateWalletBalance(transaction.wallet, transaction) // TODO: leave this here? move it away?
+//            updateWalletBalance(transaction.wallet, transaction) // TODO: leave this here? move it away?
         }
     }
 
@@ -330,6 +325,7 @@ class MXViewModel(
             transactions
                 .take(10)
         }
+            .sortedByDescending { it.date }
     }
 
     fun setSelectedWallet(item: String): Unit {
@@ -363,12 +359,12 @@ class MXViewModel(
             }.toFloat()
     }
 
-    fun getBalance(transactions: List<Transaction>): Float {
-        return transactions
-            .fold(0.0) { sum, transaction ->
-                sum + transaction.amount
-            }.toFloat()
-    }
+//    fun getBalance(transactions: List<Transaction>): Float {
+//        return transactions
+//            .fold(0.0) { sum, transaction ->
+//                sum + transaction.amount
+//            }.toFloat()
+//    }
 
     fun getCurrentWalletTransactions(transactions: List<Transaction>): List<Transaction> {
         return if (selectedWallet != null) {

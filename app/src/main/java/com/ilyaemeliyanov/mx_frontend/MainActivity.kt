@@ -9,6 +9,7 @@ import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 //import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
@@ -21,7 +22,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MXTheme {
-                val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
+                val mxViewModel: MXViewModel = MXViewModel(
+                    email = "john.doe@gmail.com",
+                    repository = MXRepository()
+                )
+//                val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
 //                Log.d(TAG, "Instantiating TransactionsScreen")
 //                TransactionsScreen(
 //                    uiState = vm.uiState.collectAsState().value,

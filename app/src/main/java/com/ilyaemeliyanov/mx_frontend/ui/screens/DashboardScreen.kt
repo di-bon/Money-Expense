@@ -43,23 +43,23 @@ fun DashboardScreen(
     Column(modifier = modifier) {
         DashboardTopBar(
             onWalletSelection = mxViewModel::setSelectedWallet,
-            uiState = uiState
+            mxViewModel = mxViewModel
         )
         DashboardInfo(
             getIncome = mxViewModel::getIncome,
             getExpenses = mxViewModel::getExpenses,
-            uiState = uiState,
+            mxViewModel = mxViewModel,
             modifier = Modifier
                 .padding(vertical = 12.dp)
         )
-        Text("Welcome back ${uiState.user?.email}")
+        Text("Welcome back ${mxViewModel.user?.email}")
 
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = mxViewModel.getLast10Transactions(uiState.allTransactions),
+                transactionList = mxViewModel.getLast10Transactions(mxViewModel.transactions),
             )
         }
     }
@@ -68,10 +68,10 @@ fun DashboardScreen(
 @Composable
 private fun DashboardTopBar(
     onWalletSelection: (String) -> Unit,
-    uiState: UiState,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val wallets = listOf(null) + uiState.wallets
+    val wallets = listOf(null) + mxViewModel.wallets
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -95,14 +95,14 @@ private fun DashboardTopBar(
 
 @Composable
 private fun DashboardInfo(
-    uiState: UiState,
     getIncome: (List<Transaction>) -> Float,
     getExpenses: (List<Transaction>) -> Float,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val income = getIncome(uiState.allTransactions)
-    val expenses = getExpenses(uiState.allTransactions)
-    val balance = income - expenses
+    val income = getIncome(mxViewModel.transactions)
+    val expenses = getExpenses(mxViewModel.transactions)
+    val balance = expenses + income
 
     Column(modifier = modifier) {
         MXCard(
@@ -170,7 +170,7 @@ private fun DashboardInfoPreview() {
         DashboardInfo(
             getIncome = mxViewModel::getIncome,
             getExpenses = mxViewModel::getExpenses,
-            uiState = mxViewModel.uiState.collectAsState().value,
+            mxViewModel = mxViewModel,
             modifier = Modifier
                 .padding(16.dp)
         )

@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,7 +32,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
@@ -60,6 +58,14 @@ fun TransactionsScreen(
     modifier: Modifier = Modifier
 ) {
     var showContextDialog by remember { mutableStateOf(false) }
+
+    val filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
+        transactionList = mxViewModel.transactions,
+        filter = uiState.currentFilter,
+        sort = uiState.currentSortingCriteria
+    )
+
+    val sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
 
     Column (
         modifier = modifier
@@ -88,19 +94,6 @@ fun TransactionsScreen(
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
                     mxViewModel.createAndSaveTransaction()
-//                    val wallet = mxViewModel.wallets.find { it.name == uiState.currentWalletName }
-//                    // TODO: validate input
-//                    if (wallet != null) {
-//                        val transaction = Transaction(
-//                            id = "",
-//                            label = mxViewModel.transactionLabel,
-//                            description = mxViewModel.transactionDescription,
-//                            amount = mxViewModel.transactionAmount.toFloat(),
-//                            date = mxViewModel.transactionDate,
-//                            wallet = wallet,
-//                        )
-//                        mxViewModel.saveTransaction(transaction)
-//                    }
                     showContextDialog = false
                 }
             ) {
@@ -142,11 +135,11 @@ fun TransactionsScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         MXDropdownMenu(
-                            items = uiState.walletNames,
-                            selectedItem = uiState.currentWalletName,
+                            items = mxViewModel.wallets.map { it.name },
+                            selectedItem = mxViewModel.transactionWalletName,
                             showLabel = false
                         ) {
-                            mxViewModel.updateCurrentWallet(it)
+                            mxViewModel.transactionWalletName = it
                         }
                     }
                 }
@@ -232,9 +225,9 @@ fun TransactionsScreen(
                 .background(color = Color.Black)
         ) {
             Text(
-                text = if (uiState.sum >= 0f)
-                    "Sum: + \$ ${StringFormatter.getFormattedAmount(uiState.sum)}"
-                    else "Sum: - \$ ${StringFormatter.getFormattedAmount(uiState.sum)}",
+                text = if (sum >= 0f)
+                    "Sum: + \$ ${StringFormatter.getFormattedAmount(sum)}"
+                    else "Sum: - \$ ${StringFormatter.getFormattedAmount(sum)}",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
@@ -248,7 +241,7 @@ fun TransactionsScreen(
         ) {
             RecentTransactions(
                 showTitle = false,
-                transactionList = uiState.filteredAndSortedTransactions
+                transactionList = filteredAndSortedTransactions
             )
         }
     }

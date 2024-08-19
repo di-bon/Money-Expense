@@ -88,13 +88,14 @@ fun MXApp(
 
 //    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
 //    val mxViewModel: MXViewModel = viewModel()
-    LaunchedEffect(Unit) {
-        val email = "john.doe@gmail.com"
-        mxViewModel.email = email
-        mxViewModel.loadData(email)
-        Log.d(TAG, mxViewModel.user.toString())
-    }
-    mxViewModel.updateData()
+//    LaunchedEffect(Unit) {
+//        val email = "john.doe@gmail.com"
+//        mxViewModel.loadData(email)
+//        Log.d(TAG, mxViewModel.user.toString())
+//    }
+//    mxViewModel.updateData()
+
+//    mxViewModel.printUiState()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
