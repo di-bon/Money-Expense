@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.R
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
@@ -29,12 +30,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
 private const val TAG = "InitialScreen"
-
-enum class AuthScreens(@StringRes val title: Int) {
-    InitialScreen(title = R.string.initialscreenroute),
-    LoginScreen(title = R.string.loginscreenroute),
-    SignUpScreen(title = R.string.signupscreenroute)
-}
 
 @Composable
 fun InitialScreen(
