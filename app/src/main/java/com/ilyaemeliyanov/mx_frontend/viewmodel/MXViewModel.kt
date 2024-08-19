@@ -108,7 +108,7 @@ class MXViewModel(
     // Defining the state for user, wallets and transaction
     var user by mutableStateOf<User?>(null)
     var wallets by mutableStateOf<List<Wallet>>(emptyList())
-    var transactions by mutableStateOf<List<Transaction>>(emptyList())
+    var transactions by mutableStateOf(listOf<Transaction>())
 
     // Defining the state for general info
     var balance by mutableStateOf(0.0f)
@@ -279,10 +279,17 @@ class MXViewModel(
     }
 
     fun deleteTransaction(transaction: Transaction?) {
+        var i: Int = 0
+        for (t in transactions) {
+            Log.d(TAG, "transaction $i: $t")
+            i++
+        }
+
         if (transaction != null) {
             viewModelScope.launch {
                 repository.deleteTransaction(transaction) {transactionRef ->
                    if (transactionRef != null) {
+                       Log.d(TAG, "Removing element form list")
                        transactions -= transaction
 
                        user?.transactions = user?.transactions?.minus(transactionRef) ?: emptyList()
@@ -290,6 +297,11 @@ class MXViewModel(
                    }
                 }
             }
+        }
+        i = 0
+        for (t in transactions) {
+            Log.d(TAG, "transaction $i: $t")
+            i++
         }
     }
 
