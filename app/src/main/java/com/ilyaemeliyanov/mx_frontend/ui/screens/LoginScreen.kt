@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,20 +23,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 
 private const val TAG = "LoginScreen"
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit,
+    navController: NavController,
+    mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
-
+    // TODO: move to viewModel?
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -63,7 +69,17 @@ fun LoginScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
         MXRectangularButton(
-            onClick = onLoginClick,
+            onClick = {
+                // TODO: input validation
+                mxAuthViewModel.logIn(email = email, password = password) {
+                    res, error ->
+                    if (res) {
+                        Log.d(TAG, "Login successful")
+                    } else {
+                        Log.d(TAG, "Login failed: $error")
+                    }
+                }
+            },
             containerColor = MXColors.Default.ActiveColor,
             contentColor = Color.Black,
             modifier = Modifier
@@ -80,7 +96,8 @@ fun LoginScreen(
 private fun LoginScreenPreview() {
     MXTheme {
         LoginScreen(
-            onLoginClick = {},
+            navController = rememberNavController(),
+            mxAuthViewModel = MXAuthViewModel(),
             modifier = Modifier
                 .background(color = Color(246, 246, 246))
                 .padding(32.dp)

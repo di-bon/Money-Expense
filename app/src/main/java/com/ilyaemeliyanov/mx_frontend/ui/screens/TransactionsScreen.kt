@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -20,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +31,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDatePicker
@@ -45,44 +46,30 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import java.util.Date
-import kotlin.math.abs
 
 private const val TAG = "TransactionsScreen"
 
 @Composable
 fun TransactionsScreen(
-    getFilteredAndSortedTransactions: (List<Transaction>, String, String) -> List<Transaction>,
-    getBalance: (List<Transaction>) -> Float,
+    uiState: UiState,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-
-    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
-    val allTransactions = mxViewModel.transactions
-
     var showContextDialog by remember { mutableStateOf(false) }
-    var label by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
-    var date: Date? by remember { mutableStateOf(null) }
 
-    val walletNames = mxViewModel.wallets?.map { it.name }
-    var walletName by remember { mutableStateOf("Select wallet...") }
+    val filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
+        transactionList = mxViewModel.transactions,
+        filter = uiState.currentFilter,
+        sort = uiState.currentSortingCriteria
+    )
 
-    var currentFilter by remember { mutableStateOf("None") }
-    var currentSortCriteria by remember { mutableStateOf("Newest") }
-
-    val filteredAndSortedTransactions = getFilteredAndSortedTransactions(allTransactions, currentFilter, currentSortCriteria)
-
-//    var totalSum by remember {
-//        mutableStateOf(0f)
-//    }
-
-    val totalSum = getBalance(filteredAndSortedTransactions)
+    val sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
 
     Column (
-        modifier = modifier.fillMaxHeight()
+        modifier = modifier
+//            .fillMaxHeight()
     ) {
         MXTitle(title = "Transactions", modifier = Modifier.fillMaxWidth()) {
             MxCircluarButton(
@@ -106,41 +93,30 @@ fun TransactionsScreen(
                 confirmLabel = "Create",
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
-                    val wallet = mxViewModel.wallets.find { it.name == walletName }
-                    // TODO: validate input
-                    if (wallet != null) {
-                        val transaction = Transaction(
-                            id = "",
-                            label = label,
-                            description = description,
-                            amount = amount.toFloat(),
-                            date = date ?: Date(),
-                            wallet = wallet,
-                        )
-                        mxViewModel.saveTransaction(transaction)
-                    }
+                    mxViewModel.createAndSaveTransaction()
                     showContextDialog = false
-                }) {
+                }
+            ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 MXInput(
                     titleText = "Label",
                     labelText = "Enter transaction label...",
-                    text = label,
-                    onTextChange = { label = it },
+                    text = mxViewModel.transactionLabel,
+                    onTextChange = { mxViewModel.transactionLabel = it },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 MXInput(
                     titleText = "Description",
                     labelText = "Enter a short transaction description...",
-                    text = description,
-                    onTextChange = { value -> description = value },
+                    text = mxViewModel.transactionDescription,
+                    onTextChange = { mxViewModel.transactionDescription = it },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 MXInput(
                     titleText = "Amount",
                     labelText = "Enter transaction value...",
-                    text = amount,
-                    onTextChange = { value -> amount = value },
+                    text = mxViewModel.transactionAmount,
+                    onTextChange = { mxViewModel.transactionAmount = it },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
@@ -158,8 +134,12 @@ fun TransactionsScreen(
                         .padding(horizontal = 16.dp),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        MXDropdownMenu(items = walletNames ?: emptyList(), selectedItem = walletName, showLabel = false) {
-                            walletName = it
+                        MXDropdownMenu(
+                            items = mxViewModel.wallets.map { it.name },
+                            selectedItem = mxViewModel.transactionWalletName,
+                            showLabel = false
+                        ) {
+                            mxViewModel.transactionWalletName = it
                         }
                     }
                 }
@@ -171,23 +151,16 @@ fun TransactionsScreen(
                     Box(modifier = Modifier
                         .fillMaxWidth()
                     ) {
-                        if (date == null) {
-                           MXDatePicker(date = "Select date") {
-                               Log.d("Transaction Date", it.toString())
-                               date = getDateFromString(it) ?: Date()
-                           } // Convert info from string to date
-                        } else {
-                            MXDatePicker(
-                                getStringFromDate(date ?: Date())
-                            ) {date = getDateFromString(it) ?: Date() }
+                        MXDatePicker(
+                            getStringFromDate(mxViewModel.transactionDate)
+                        ) {
+                            mxViewModel.transactionDate = getDateFromString(it) ?: Date()
                         }
                     }
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
-
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -196,8 +169,6 @@ fun TransactionsScreen(
                 .fillMaxWidth()
                 .height(48.dp)
         ) {
-            // TODO: replace with MXDropdownMenu
-
             MXCard(
                 containerColor = MXColors.Default.ActiveColor,
                 contentColor = Color.Black,
@@ -205,15 +176,6 @@ fun TransactionsScreen(
                     .weight(1f)
                     .fillMaxHeight()
             ) {
-//                Row (
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp, vertical = 8.dp)
-//                ) {
-//                    Text(text = "Filter by")
-//                    Spacer(modifier = Modifier.weight(1f))
-//                    Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = "Filter By")
-//                }
                 MXDropdownMenu(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -223,9 +185,9 @@ fun TransactionsScreen(
                         "Positive",
                         "Negative"
                     ),
-                    selectedItem = currentFilter
+                    selectedItem = uiState.currentFilter
                 ) {
-                    currentFilter = it
+                    mxViewModel.updateCurrentFilter(it)
                 }
             }
             Spacer(modifier = Modifier.width(24.dp))
@@ -247,9 +209,9 @@ fun TransactionsScreen(
                         "Biggest",
                         "Smallest"
                     ),
-                    selectedItem = currentSortCriteria
+                    selectedItem = uiState.currentSortingCriteria
                 ) {
-                    currentSortCriteria = it
+                    mxViewModel.updateCurrentSortingCriteria(it)
                 }
             }
         }
@@ -263,7 +225,9 @@ fun TransactionsScreen(
                 .background(color = Color.Black)
         ) {
             Text(
-                text = if (totalSum >= 0f) "Sum: + \$ ${StringFormatter.getFormattedAmount(totalSum)}" else "Sum: - \$ ${StringFormatter.getFormattedAmount(totalSum)}",
+                text = if (sum >= 0f)
+                    "Sum: + \$ ${StringFormatter.getFormattedAmount(sum)}"
+                    else "Sum: - \$ ${StringFormatter.getFormattedAmount(sum)}",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)
@@ -287,9 +251,10 @@ fun TransactionsScreen(
 @Composable
 private fun TransactionsScreenPreview() {
     MXTheme {
+        val vm: MXViewModel = viewModel()
         TransactionsScreen(
-            getFilteredAndSortedTransactions = { transactions, s1, s2 -> transactions},
-            getBalance = { 0.0f },
+            mxViewModel = vm,
+            uiState = vm.uiState.collectAsState().value,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -30,43 +32,34 @@ import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
+private const val TAG = "DashboardScreen"
+
 @Composable
 fun DashboardScreen(
-    getLast10Transactions: (List<Transaction>) -> List<Transaction>,
-    onWalletSelection: (String) -> Unit,
-    getIncome: (List<Transaction>) -> Float,
-    getExpenses: (List<Transaction>) -> Float,
-    getCurrentWalletTransactions: (List<Transaction>) -> List<Transaction>,
+    mxViewModel: MXViewModel,
+    uiState: UiState,
     modifier: Modifier = Modifier
 ) {
-
-    // ---
-    // TODO: to be replaced by UiState class
-    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
-    val user = mxViewModel.user
-    val wallets = mxViewModel.wallets
-    val transactions = mxViewModel.transactions
-    // ---
-
     Column(modifier = modifier) {
         DashboardTopBar(
-            onWalletSelection = onWalletSelection
+            onWalletSelection = mxViewModel::setSelectedWallet,
+            mxViewModel = mxViewModel
         )
         DashboardInfo(
-            walletTransactions = getCurrentWalletTransactions(mxViewModel.transactions),
-            getIncome = getIncome,
-            getExpenses = getExpenses,
+            getIncome = mxViewModel::getIncome,
+            getExpenses = mxViewModel::getExpenses,
+            mxViewModel = mxViewModel,
             modifier = Modifier
                 .padding(vertical = 12.dp)
         )
-        Text("Welcome back ${user?.email}")
+        Text("Welcome back ${mxViewModel.user?.email}")
 
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
         ) {
             RecentTransactions(
-                transactionList = getLast10Transactions(mxViewModel.transactions)
+                transactionList = mxViewModel.getLast10Transactions(mxViewModel.transactions),
             )
         }
     }
@@ -75,9 +68,9 @@ fun DashboardScreen(
 @Composable
 private fun DashboardTopBar(
     onWalletSelection: (String) -> Unit,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
     val wallets = listOf(null) + mxViewModel.wallets
 
     Row(
@@ -100,53 +93,16 @@ private fun DashboardTopBar(
     }
 }
 
-// TODO: delete 'CurrentWaller' function
-//@Composable
-//private fun CurrentWallet(
-//    onClick: () -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    Surface(
-//        onClick = onClick,
-//        modifier = modifier,
-//        color = Color.Transparent
-//    ) {
-//    Row(
-//        verticalAlignment = Alignment.CenterVertically,
-//        modifier = Modifier.padding(16.dp)
-//    ) {
-//            Text(
-//                text = "Wallet name",
-//                style = MaterialTheme.typography.labelMedium
-//            )
-//            Spacer(modifier = Modifier.width(4.dp))
-//            Icon(
-//                imageVector = Icons.Filled.KeyboardArrowDown,
-//                contentDescription = "Change current wallet",
-//                modifier = Modifier
-//                    .size(16.dp)
-//            )
-//        }
-//    }
-//}
-
 @Composable
 private fun DashboardInfo(
-    walletTransactions: List<Transaction>,
     getIncome: (List<Transaction>) -> Float,
     getExpenses: (List<Transaction>) -> Float,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-
-    // Unused variables
-//    val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
-//    val balance = mxViewModel.balance
-//    val income = mxViewModel.income
-//    val expenses = mxViewModel.expenses
-
-    val income = getIncome(walletTransactions)
-    val expenses = getExpenses(walletTransactions)
-    val balance = income - expenses
+    val income = getIncome(mxViewModel.transactions)
+    val expenses = getExpenses(mxViewModel.transactions)
+    val balance = expenses + income
 
     Column(modifier = modifier) {
         MXCard(
@@ -163,7 +119,6 @@ private fun DashboardInfo(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = if (balance >= 0f) "+ \$ ${StringFormatter.getFormattedAmount(balance)}" else "- \$ ${StringFormatter.getFormattedAmount(balance)}",
-//                text = "\$ ${StringFormatter.getFormattedAmount(balance)}",
                 fontFamily = euclidCircularA,
                 fontWeight = FontWeight.Normal,
                 fontSize = 42.sp
@@ -211,10 +166,11 @@ private fun DashboardInfo(
 @Composable
 private fun DashboardInfoPreview() {
     MXTheme {
+        val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
         DashboardInfo(
-            walletTransactions = listOf(),
-            getIncome = { 0.0f },
-            getExpenses = { 0.0f },
+            getIncome = mxViewModel::getIncome,
+            getExpenses = mxViewModel::getExpenses,
+            mxViewModel = mxViewModel,
             modifier = Modifier
                 .padding(16.dp)
         )
