@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
@@ -40,6 +41,7 @@ fun LoginScreen(
     mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
+    // TODO: move to viewModel?
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -68,6 +70,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.weight(1f))
         MXRectangularButton(
             onClick = {
+                // TODO: input validation
                 mxAuthViewModel.logIn(email = email, password = password) {
                     res, error ->
                     if (res) {
@@ -92,13 +95,14 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     MXTheme {
-//        LoginScreen(
-//            onLoginClick = {},
-//            modifier = Modifier
-//                .background(color = Color(246, 246, 246))
-//                .padding(32.dp)
-//                .fillMaxWidth()
-//                .fillMaxHeight()
-//        )
+        LoginScreen(
+            navController = rememberNavController(),
+            mxAuthViewModel = MXAuthViewModel(),
+            modifier = Modifier
+                .background(color = Color(246, 246, 246))
+                .padding(32.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        )
     }
 }

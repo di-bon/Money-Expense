@@ -32,7 +32,7 @@ class MXAuthViewModel : ViewModel() {
         }
     }
 
-    fun signIn(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+    fun logIn(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             try {
                 auth.signInWithEmailAndPassword(email, password)
@@ -51,22 +51,5 @@ class MXAuthViewModel : ViewModel() {
 
     fun signOut() {
         auth.signOut()
-    }
-
-    fun logIn(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
-        viewModelScope.launch {
-            try {
-                auth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            onResult(true, null)
-                        } else {
-                            onResult(false, task.exception?.message)
-                        }
-                    }
-            } catch (e: Exception) {
-                onResult(false, e.message)
-            }
-        }
     }
 }

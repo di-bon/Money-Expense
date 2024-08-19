@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
@@ -131,14 +132,14 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreenPreview() {
     MXTheme {
-//        SignUpScreen(
-//            auth = Firebase.auth,
-//            onSignUpClick = {},
-//            modifier = Modifier
-//                .background(color = Color(246, 246, 246))
-//                .padding(32.dp)
-//                .fillMaxWidth()
-//                .fillMaxHeight()
-//        )
+        SignUpScreen(
+            navController = rememberNavController(),
+            mxAuthViewModel = MXAuthViewModel(),
+            modifier = Modifier
+                .background(color = Color(246, 246, 246))
+                .padding(32.dp)
+                .fillMaxWidth()
+                .fillMaxHeight()
+        )
     }
 }

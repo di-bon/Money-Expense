@@ -48,9 +48,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         // Initialize Firebase Auth
         auth = Firebase.auth
-        val mxAuthViewModel: MXAuthViewModel = MXAuthViewModel()
+
+        val mxAuthViewModel = MXAuthViewModel()
 
         setContent {
             MXTheme {
@@ -72,7 +74,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     composable(route = AuthScreens.InitialScreen.name) {
                         InitialScreen(
-                            mxAuthViewModel = mxAuthViewModel,
                             navController = navController,
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -105,23 +106,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-//                val mxViewModel: MXViewModel = MXViewModel(
-//                    email = "john.doe@gmail.com",
-//                    repository = MXRepository()
-//                )
-
-//                MXApp(
-//                    mxViewModel = mxViewModel
-//                )
-
-//                InitialScreen(
-//                    mxAuthViewModel = mxAuthViewModel,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .fillMaxHeight()
-//                        .background(color = MXColors.Default.BgColor)
-//                        .padding(32.dp)
-//                )
             }
         }
     }
