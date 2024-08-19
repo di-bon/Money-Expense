@@ -1,5 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,21 +24,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 
-private const val TAG = "RegisterScreen"
+private const val TAG = "SignUpScreen"
 
 @Composable
 fun SignUpScreen(
-    onSignUpClick: () -> Unit,
+    navController: NavController,
+    mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
 
     // ---
-    // TODO: to be replaced by UiState class
+    // TODO: to be replaced by viewModel class
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -95,7 +102,17 @@ fun SignUpScreen(
         }
         Spacer(modifier = Modifier.weight(1f))
         MXRectangularButton(
-            onClick = onSignUpClick,
+            onClick = {
+                // TODO: validate input
+                        mxAuthViewModel.signUp(email, password) {
+                            res, error ->
+                            if (res) {
+                                Log.d(TAG, "Success")
+                            } else {
+                                Log.d(TAG, "Fail: $error")
+                            }
+                        }
+                      },
             containerColor = Color.Black,
             contentColor = Color.White,
             modifier = Modifier
@@ -114,13 +131,14 @@ fun SignUpScreen(
 @Composable
 private fun SignUpScreenPreview() {
     MXTheme {
-        SignUpScreen(
-            onSignUpClick = {},
-            modifier = Modifier
-            .background(color = Color(246, 246, 246))
-            .padding(32.dp)
-            .fillMaxWidth()
-            .fillMaxHeight()
-        )
+//        SignUpScreen(
+//            auth = Firebase.auth,
+//            onSignUpClick = {},
+//            modifier = Modifier
+//                .background(color = Color(246, 246, 246))
+//                .padding(32.dp)
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//        )
     }
 }
