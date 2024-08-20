@@ -26,12 +26,14 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 private const val TAG = "LoginScreen"
 
@@ -39,6 +41,7 @@ private const val TAG = "LoginScreen"
 fun LoginScreen(
     navController: NavController,
     mxAuthViewModel: MXAuthViewModel,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
     // TODO: move to viewModel?
@@ -71,12 +74,27 @@ fun LoginScreen(
         MXRectangularButton(
             onClick = {
                 // TODO: input validation
+                var result = false
                 mxAuthViewModel.logIn(email = email, password = password) {
                     res, error ->
+                    result = res
                     if (res) {
                         Log.d(TAG, "Login successful")
+                        mxViewModel.email = email
+                        navController.navigate(AuthScreens.MXApp.name) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
+                        }
                     } else {
                         Log.d(TAG, "Login failed: $error")
+                    }
+                }
+                if (result) {
+                    navController.navigate(AuthScreens.MXApp.name) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
                 }
             },
@@ -91,18 +109,18 @@ fun LoginScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun LoginScreenPreview() {
-    MXTheme {
-        LoginScreen(
-            navController = rememberNavController(),
-            mxAuthViewModel = MXAuthViewModel(),
-            modifier = Modifier
-                .background(color = Color(246, 246, 246))
-                .padding(32.dp)
-                .fillMaxWidth()
-                .fillMaxHeight()
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun LoginScreenPreview() {
+//    MXTheme {
+//        LoginScreen(
+//            navController = rememberNavController(),
+//            mxAuthViewModel = MXAuthViewModel(),
+//            modifier = Modifier
+//                .background(color = Color(246, 246, 246))
+//                .padding(32.dp)
+//                .fillMaxWidth()
+//                .fillMaxHeight()
+//        )
+//    }
+//}

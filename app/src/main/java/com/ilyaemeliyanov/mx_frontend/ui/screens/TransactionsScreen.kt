@@ -40,7 +40,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
-import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
@@ -239,7 +239,7 @@ fun TransactionsScreen(
         MXCard(
             containerColor = Color.White
         ) {
-            RecentTransactions(
+            MXRecentTransactions(
                 showTitle = false,
                 transactionList = filteredAndSortedTransactions
             )

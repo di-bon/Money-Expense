@@ -60,6 +60,8 @@ dependencies {
     val nav_version = "2.7.7"
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    implementation("androidx.compose.material:material:1.6.8")
+
     // Material UI 3
     val materialui_ext_version = "1.6.8"
     implementation("androidx.compose.material:material-icons-extended:$materialui_ext_version")

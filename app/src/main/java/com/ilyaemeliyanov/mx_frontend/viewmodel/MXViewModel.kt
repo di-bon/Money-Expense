@@ -33,12 +33,13 @@ import kotlin.math.abs
 private const val TAG = "MXViewModel"
 
 class MXViewModel(
-    private val email: String,
     private val repository: MXRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
+
+    lateinit var email: String
 
     // Data to create a new transaction
     var transactionLabel: String by mutableStateOf("")
@@ -49,12 +50,12 @@ class MXViewModel(
 
 //    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
-    init {
-        Log.d(TAG, "init() called")
-        viewModelScope.launch {
-            loadData(email)
-        }
-    }
+//    init {
+//        Log.d(TAG, "init() called")
+//        viewModelScope.launch {
+//            loadData(email)
+//        }
+//    }
 
     fun updateCurrentFilter(newFilter: String) {
         _uiState.update {
@@ -161,6 +162,22 @@ class MXViewModel(
 //                sort = _uiState.value.currentFilter
 //            )
 //        }
+    }
+
+    fun createAndSaveUser(email: String, firstName: String, lastName: String, password: String) {
+        val user: User = User(
+            id = "",
+            email = email,
+            firstName = firstName,
+            lastName = lastName,
+            password = password,
+            transactions = listOf(),
+            wallets = listOf()
+        )
+        this.user = user
+        repository.saveUser(user) { userRef ->
+
+        }
     }
 
     fun updateUser(u: User?) {
@@ -299,20 +316,22 @@ class MXViewModel(
         filter: String,
         sort: String
     ): List<Transaction> {
-        var result: List<Transaction> = when (filter) {
-            "Positive" -> transactionList.filter { it.amount >= 0 }
-            "Negative" -> transactionList.filter { it.amount < 0 }
-            else -> transactionList
-        }
-
-        result = when (sort) {
-            "Oldest" -> result.sortedBy { it.date }
-            "Biggest" -> result.sortedByDescending { abs(it.amount) }
-            "Smallest" -> result.sortedBy { abs(it.amount) }
-            else -> result.sortedByDescending { it.date }
-        }
-
-        return result
+        return transactionList
+            .filter {
+                when(filter) {
+                    "Positive" -> it.amount >= 0
+                    "Negative" -> it.amount < 0
+                    else -> true
+                }
+            }
+            .let { filtered ->
+                when (sort) {
+                    "Oldest" -> filtered.sortedBy { it.date }
+                    "Biggest" -> filtered.sortedByDescending { abs(it.amount) }
+                    "Smallest" -> filtered.sortedBy { abs(it.amount) }
+                    else -> filtered.sortedByDescending { it.date }
+                }
+            }
     }
 
     fun getLast10Transactions(transactions: List<Transaction>): List<Transaction> {

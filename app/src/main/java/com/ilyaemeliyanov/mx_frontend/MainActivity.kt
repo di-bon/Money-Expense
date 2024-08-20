@@ -6,12 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -45,6 +48,7 @@ import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
+import com.ilyaemeliyanov.mx_frontend.ui.screens.TestScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 //import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
@@ -61,7 +65,8 @@ private const val TAG = "MainActivity"
 enum class AuthScreens(@StringRes val title: Int) {
     InitialScreen(title = R.string.initialscreenroute),
     LoginScreen(title = R.string.loginscreenroute),
-    SignUpScreen(title = R.string.signupscreenroute)
+    SignUpScreen(title = R.string.signupscreenroute),
+    MXApp(title = R.string.mxapproute)
 }
 
 class MainActivity : ComponentActivity() {
@@ -75,6 +80,8 @@ class MainActivity : ComponentActivity() {
 
         val mxAuthViewModel = MXAuthViewModel()
 
+        val mxViewModel = MXViewModel(MXRepository())
+
         setContent {
             MXTheme {
                 val navController: NavHostController = rememberNavController()
@@ -83,9 +90,14 @@ class MainActivity : ComponentActivity() {
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 // Get the name of the current screen
                 val currentScreen = AuthScreens.valueOf(
-                    backStackEntry?.destination?.route ?: AuthScreens.InitialScreen.name
+                    backStackEntry?.destination?.route ?: AuthScreens.MXApp.name
                 )
 
+//                Column (
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .fillMaxHeight()
+//                ) {
                 NavHost(
                     navController = navController,
                     startDestination = AuthScreens.InitialScreen.name,
@@ -107,8 +119,9 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             navController = navController,
                             mxAuthViewModel = mxAuthViewModel,
+                            mxViewModel = mxViewModel,
                             modifier = Modifier
-                                .background(color = Color(246, 246, 246))
+                                .background(color = MXColors.Default.BgColor)
                                 .padding(32.dp)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
@@ -120,15 +133,33 @@ class MainActivity : ComponentActivity() {
                             mxAuthViewModel = mxAuthViewModel,
 //                            navigateUp = navController::navigateUp,
 //                            canNavigateBack = navController.previousBackStackEntry != null,
+                            mxViewModel = mxViewModel,
                             modifier = Modifier
-                                .background(color = Color(246, 246, 246))
+                                .background(color = MXColors.Default.BgColor)
                                 .padding(32.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        )
+                    }
+                    composable(route = AuthScreens.MXApp.name) {
+//                            TestScreen(modifier = Modifier
+//                                .height(400.dp))
+                        MXApp(
+//                                navController = navController,
+                            mxViewModel = mxViewModel,
+                            modifier = Modifier
+                                .background(color = MXColors.Default.BgColor)
+//                                    .padding(32.dp)
+//                                .padding(32.dp)
+//                                .height(800.dp)
+//                                .width(500.dp)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
                         )
                     }
                 }
             }
+//            }
         }
     }
 

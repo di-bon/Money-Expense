@@ -5,4 +5,5 @@
     <string name="initialscreenroute">InitialScreenRoute</string>
     <string name="loginscreenroute">LoginScreenRoute</string>
     <string name="signupscreenroute">SignUpScreenRoute</string>
+    <string name="mxapproute">MXAppRoute</string>
 </resources>

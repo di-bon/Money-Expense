@@ -15,12 +15,13 @@ class MXAuthViewModel : ViewModel() {
     // LiveData for observing authentication state
     val user = auth.currentUser
 
-    fun signUp(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+    fun signUp(email: String, password: String, firstName: String, lastName: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             try {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+
                             onResult(true, null)
                         } else {
                             onResult(false, task.exception?.message)
