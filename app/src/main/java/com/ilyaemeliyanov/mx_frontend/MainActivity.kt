@@ -42,7 +42,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
-import com.ilyaemeliyanov.mx_frontend.ui.screens.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
