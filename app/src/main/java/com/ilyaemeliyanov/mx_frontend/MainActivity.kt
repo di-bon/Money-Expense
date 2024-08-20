@@ -4,18 +4,34 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,7 +42,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
-import com.ilyaemeliyanov.mx_frontend.ui.screens.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
@@ -42,6 +57,12 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 // TODO: merge this class with ui/MxAppOld.kt
 
 private const val TAG = "MainActivity"
+
+enum class AuthScreens(@StringRes val title: Int) {
+    InitialScreen(title = R.string.initialscreenroute),
+    LoginScreen(title = R.string.loginscreenroute),
+    SignUpScreen(title = R.string.signupscreenroute)
+}
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
@@ -83,7 +104,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(route = AuthScreens.LoginScreen.name) {
-                        val context = LocalContext.current
                         LoginScreen(
                             navController = navController,
                             mxAuthViewModel = mxAuthViewModel,
@@ -98,6 +118,8 @@ class MainActivity : ComponentActivity() {
                         SignUpScreen(
                             navController = navController,
                             mxAuthViewModel = mxAuthViewModel,
+//                            navigateUp = navController::navigateUp,
+//                            canNavigateBack = navController.previousBackStackEntry != null,
                             modifier = Modifier
                                 .background(color = Color(246, 246, 246))
                                 .padding(32.dp)
@@ -110,6 +132,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // TODO: decide what to do with this unused Composable
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun MXTopAppBar(
+        currentScreen: AuthScreens,
+        canNavigateBack: Boolean,
+        navigateUp: () -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        TopAppBar(
+            title = {  },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = MXColors.Default.BgColor
+            ),
+            modifier = modifier,
+            navigationIcon = {
+                if (canNavigateBack) {
+                    IconButton(onClick = navigateUp) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back button"
+                        )
+                    }
+                }
+            }
+        )
+    }
+
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -120,19 +170,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun MoneyExpensePreview() {
-//    MXTheme {
-//        MxApp(modifier = Modifier.padding(16.dp))
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//private fun MXScreenPreview() {
-//    MXTheme {
-//        MXScreen()
-//    }
-//}
