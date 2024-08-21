@@ -66,15 +66,7 @@ fun MXDropdownMenu (
     var expanded by remember { mutableStateOf(false) }
     var selected by remember { mutableStateOf(selectedItem) }
 
-    Row(modifier = modifier
-//        .pointerInput(true) {
-//            detectTapGestures(
-//                onPress = {
-//                    expanded = true
-//                }
-//            )
-//        }
-    ) {
+    Row(modifier = modifier) {
         Box(
             modifier = Modifier
                 .pointerInput(true) {
@@ -89,7 +81,6 @@ fun MXDropdownMenu (
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
-//                modifier = Modifier.height(100.dp)
             ) {
                 val textToShow = when (showLabel) {
                     true -> "$label: $selected"

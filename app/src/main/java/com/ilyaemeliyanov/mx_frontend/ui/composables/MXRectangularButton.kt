@@ -56,6 +56,7 @@ private fun MXRectangularButtonPreview() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
+                    .padding(4.dp)
             ) {
                 Text(
                     text = "Text",

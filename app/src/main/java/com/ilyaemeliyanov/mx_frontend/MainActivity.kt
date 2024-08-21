@@ -44,28 +44,26 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
+import com.ilyaemeliyanov.mx_frontend.ui.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
-//import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 // TODO: merge this class with ui/MxAppOld.kt
 
 private const val TAG = "MainActivity"
 
 enum class AuthScreens(@StringRes val title: Int) {
-    InitialScreen(title = R.string.initialscreenroute),
-    LoginScreen(title = R.string.loginscreenroute),
-    SignUpScreen(title = R.string.signupscreenroute),
-    MXApp(title = R.string.mxapproute)
+    InitialScreen(title = R.string.initial_screen_route),
+    LoginScreen(title = R.string.login_screen_route),
+    SignUpScreen(title = R.string.signup_screen_route),
+    MXApp(title = R.string.mx_app_route)
 }
 
 class MainActivity : ComponentActivity() {
@@ -94,7 +92,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = AuthScreens.InitialScreen.name,
+                    startDestination = AuthScreens.MXApp.name, // TODO: change based on the login user
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())

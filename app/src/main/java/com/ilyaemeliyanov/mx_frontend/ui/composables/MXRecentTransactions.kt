@@ -33,63 +33,51 @@ fun MXRecentTransactions(
     var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
 
-//    var isLoading by remember {
-//        mutableStateOf(true)
-//    }
-//    LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
-//        if (mxViewModel.transactions.isEmpty()) {
-//            delay(10000) // set max of 10000 ms
-//        }
-//        isLoading = false
-//    }
-
-//    Column(modifier = modifier) {
-        LazyColumn (modifier = modifier) {
-            if (showTitle) {
-                item {
-                    Text(
-                        text = "Recent transactions",
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
+    LazyColumn (modifier = modifier) {
+        if (showTitle) {
+            item {
+                Text(
+                    text = "Recent transactions",
+                    style = MaterialTheme.typography.labelLarge
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            if (isLoading) {
-                items(20) {
-                    ShimmerListItem(isLoading = isLoading, content = {})
-                }
-            } else {
-                items(transactionList) { transaction ->
-                    SwipeToDeleteContainer(
-                        onDelete = {
-                            if (!showAlertDialog) {
-                                showAlertDialog = true
-                                selectedTransaction =
-                                    transactionList.find { it.id == transaction.id }
-                            }
+        }
+        if (isLoading) {
+            items(20) {
+                ShimmerListItem(isLoading = isLoading, content = {})
+            }
+        } else {
+            items(transactionList) { transaction ->
+                SwipeToDeleteContainer(
+                    onDelete = {
+                        if (!showAlertDialog) {
+                            showAlertDialog = true
+                            selectedTransaction =
+                                transactionList.find { it.id == transaction.id }
                         }
-                    ) {
-                        MXTransaction(
-                            transaction = transaction
-                        )
                     }
+                ) {
+                    MXTransaction(
+                        transaction = transaction
+                    )
                 }
             }
         }
+    }
 
-        if (showAlertDialog) {
-            MXAlertDialog(
-                title = "Confirm deletion",
-                dismissLabel = "Cancel",
-                confirmLabel = "Confirm",
-                onDismiss = { showAlertDialog = false },
-                onConfirm = {
-                    Log.d("SELECTED", selectedTransaction.toString())
-                    mxViewModel.deleteTransaction(selectedTransaction)
-                    showAlertDialog = false
-                }) {
-                Text("Are you sure you want to delete this transaction?")
-            }
+    if (showAlertDialog) {
+        MXAlertDialog(
+            title = "Confirm deletion",
+            dismissLabel = "Cancel",
+            confirmLabel = "Confirm",
+            onDismiss = { showAlertDialog = false },
+            onConfirm = {
+                Log.d("SELECTED", selectedTransaction.toString())
+                mxViewModel.deleteTransaction(selectedTransaction)
+                showAlertDialog = false
+            }) {
+            Text("Are you sure you want to delete this transaction?")
         }
-//    }
+    }
 }

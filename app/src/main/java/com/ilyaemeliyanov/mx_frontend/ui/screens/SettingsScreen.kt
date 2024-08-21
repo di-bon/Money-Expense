@@ -51,7 +51,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val user = mxViewModel.user
 
-    LazyColumn (modifier = modifier) {
+    LazyColumn (modifier = Modifier.padding(32.dp)) {
         item {
             MXTitle(
                 title = "Settings",

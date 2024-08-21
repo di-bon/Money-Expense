@@ -1,6 +1,7 @@
-package com.ilyaemeliyanov.barmanager.ui.theme
+package com.ilyaemeliyanov.mx_frontend.ui
 
 import android.util.Log
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -38,6 +39,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ilyaemeliyanov.mx_frontend.R
 import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
@@ -49,11 +51,11 @@ import kotlinx.coroutines.delay
 
 private const val TAG = "MXApp"
 
-sealed class Screens(val route: String) {
-    object Dashboard: Screens("dashboard_route")
-    object Wallets: Screens("wallets_route")
-    object Transactions: Screens("transactions_route")
-    object Settings: Screens("settings_route")
+enum class Screens(@StringRes val title: Int) {
+    DashboardScreen(title = R.string.dashboard_screen_route),
+    WalletsScreen(title = R.string.wallets_screen_route),
+    TransactionsScreen(title = R.string.transactions_screen_route),
+    SettingsScreen(title = R.string.settings_screen_route),
 }
 
 @Composable
@@ -61,8 +63,6 @@ fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
         modifier = Modifier
             .height(80.dp)
-//            .height(64.dp)
-//            .padding(vertical = 4.dp)
         ,
         backgroundColor = MXColors.Default.BgColor
     ) {
@@ -95,42 +95,6 @@ fun BottomNavigationBar(navController: NavHostController) {
                 }
             )
         }
-
-//        items.forEachIndexed { index, screen ->
-//            NavigationBarItem(
-//                icon = {
-//                    Icon(
-//                        screen.icon,
-//                        contentDescription = screen.label
-//                    )
-//                },
-//                label = { Text(screen.label) },
-//                selected = currentRoute == screen,
-////                onClick = {
-////                    if (currentRoute != screen) {
-////                        navController.navigate(screen) {
-////                            // Avoid multiple copies of the same destination
-////                            popUpTo(navController.graph.startDestinationId) {
-////                                saveState = true
-////                            }
-////                            // Avoid building up a large stack of destinations
-////                            launchSingleTop = true
-////                            restoreState = true
-////                        }
-////                    }
-////                }
-//                onClick = {
-//                    navSelectedItem = index
-//                    bottomNavController.navigate(navigationItem.route) {
-//                        popUpTo(bottomNavController.graph.findStartDestination().id) {
-//                            saveState = true
-//                        }
-//                        launchSingleTop = true
-//                        restoreState = true
-//                    }
-//                }
-//            )
-//        }
     }
 }
 
@@ -144,22 +108,22 @@ data class BottomNavigationItem(
             BottomNavigationItem(
                 label = "Dashboard",
                 icon = Icons.Filled.Home,
-                route = Screens.Dashboard.route
+                route = Screens.DashboardScreen.name
             ),
             BottomNavigationItem(
                 label = "Wallets",
                 icon = Icons.Filled.CreditCard,
-                route = Screens.Wallets.route
+                route = Screens.WalletsScreen.name
             ),
             BottomNavigationItem(
                 label = "Transactions",
                 icon = Icons.AutoMirrored.Default.CompareArrows,
-                route = Screens.Transactions.route
+                route = Screens.TransactionsScreen.name
             ),
             BottomNavigationItem(
                 label = "Settings",
                 icon = Icons.Filled.Settings,
-                route = Screens.Settings.route
+                route = Screens.SettingsScreen.name
             ),
         )
     }
@@ -168,18 +132,14 @@ data class BottomNavigationItem(
 
 @Composable
 fun MXApp(
-//    navController: NavHostController,
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    Log.d(TAG, "Made it to MXApp")
 
-    var navSelectedItem by remember { mutableStateOf(0) }
     val bottomNavController = rememberNavController()
+    val uiState = mxViewModel.uiState.collectAsState()
 
-    var isLoading by remember {
-        mutableStateOf(true)
-    }
+    var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
         if (mxViewModel.transactions.isEmpty()) {
             delay(10000) // set max of 10000 ms
@@ -187,18 +147,13 @@ fun MXApp(
         isLoading = false
     }
 
-//    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
-//    val mxViewModel: MXViewModel = viewModel()
     LaunchedEffect(Unit) {
-//        val email = "john.doe@gmail.com"
-//        mxViewModel.email = "dibon.francesco@gmail.com"
-//        mxViewModel.email = "john.doe@gmail.com"
+        // TODO: change to logged in user
+        mxViewModel.email = "johnny.depp@gmail.com"
 
         // If this screen is the first one to be loaded, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
         isLoading = false
-        Log.d(TAG, mxViewModel.user.toString())
-        Log.d(TAG, "Wallets: ${mxViewModel.wallets}")
     }
 
     Column(
@@ -208,49 +163,38 @@ fun MXApp(
         Box(modifier = Modifier.weight(1f)) {
             NavHost(
                 navController = bottomNavController,
-                startDestination = Screens.Dashboard.route,
+                startDestination = Screens.DashboardScreen.name,
                 modifier = Modifier
 //                .padding(vertical = 20.dp, horizontal = 20.dp)
                     .fillMaxHeight()
             ) {
-                composable(Screens.Dashboard.route) {
+                composable(Screens.DashboardScreen.name) {
                     //call our composable screens here
                     DashboardScreen(
                         mxViewModel = mxViewModel,
-                        uiState = mxViewModel.uiState.collectAsState().value,
-                        isLoading = isLoading,
-                        modifier = Modifier
-                            .padding(32.dp)
+                        uiState = uiState.value,
+                        isLoading = isLoading
                     )
                 }
-                composable(Screens.Wallets.route) {
+                composable(Screens.WalletsScreen.name) {
                     //call our composable screens here
                     WalletsScreen(
                         mxViewModel = mxViewModel,
-                        modifier = Modifier
-                            .padding(32.dp)
+                        uiState = uiState.value
                     )
                 }
-                composable(Screens.Transactions.route) {
+                composable(Screens.TransactionsScreen.name) {
                     // call our composable screens here
                     TransactionsScreen(
-//                    getFilteredAndSortedTransactions = mxViewModel::getFilteredAndSortedTransactions,
-//                    getBalance = mxViewModel::getBalance,
-                        uiState = mxViewModel.uiState.collectAsState().value,
                         mxViewModel = mxViewModel,
-                        isLoading = isLoading,
-                        modifier = Modifier
-                            .padding(32.dp)
-                            .fillMaxHeight()
-                            .fillMaxWidth()
+                        uiState = uiState.value,
+                        isLoading = isLoading
                     )
                 }
-                composable(Screens.Settings.route) {
+                composable(Screens.SettingsScreen.name) {
                     //call our composable screens here
                     SettingsScreen(
-                        mxViewModel = mxViewModel,
-                        modifier = Modifier
-                            .padding(32.dp)
+                        mxViewModel = mxViewModel
                     )
                 }
             }
@@ -258,83 +202,4 @@ fun MXApp(
         // Bottom Navigation
         BottomNavigationBar(navController = bottomNavController)
     }
-
-//    Scaffold(
-//        contentWindowInsets = WindowInsets(0.dp),
-//        modifier = modifier,
-//        bottomBar = {
-//            NavigationBar {
-//                //getting the list of bottom navigation items for our data class
-//                BottomNavigationItem().bottomNavigationItems().forEachIndexed { index, navigationItem ->
-//                    //iterating all items with their respective indexes
-//                    NavigationBarItem(
-//                        selected = index == navSelectedItem,
-//                        label = {
-//                            Text(navigationItem.label, style = MaterialTheme.typography.labelSmall)
-//                        },
-//                        icon = {
-//                            Icon(
-//                                navigationItem.icon,
-//                                contentDescription = navigationItem.label
-//                            )
-//                        },
-//                        onClick = {
-//                            navSelectedItem = index
-//                            bottomNavController.navigate(navigationItem.route) {
-//                                popUpTo(bottomNavController.graph.findStartDestination().id) {
-//                                    saveState = true
-//                                }
-//                                launchSingleTop = true
-//                                restoreState = true
-//                            }
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    ) { innerPadding ->
-////        We need to setup our NavHost in here
-//        NavHost(
-//            navController = bottomNavController,
-//            startDestination = Screens.Dashboard.route,
-//            modifier = Modifier
-//                .padding(innerPadding)
-////                .padding(vertical = 20.dp, horizontal = 20.dp)
-//                .fillMaxHeight()
-//        ) {
-//            composable(Screens.Dashboard.route) {
-//                //call our composable screens here
-//                DashboardScreen(
-//                    mxViewModel = mxViewModel,
-//                    uiState = mxViewModel.uiState.collectAsState().value,
-//                    modifier = Modifier.padding(innerPadding),
-//                )
-//            }
-//            composable(Screens.Wallets.route) {
-//                //call our composable screens here
-//                WalletsScreen(
-//                    modifier = Modifier.padding(innerPadding),
-//                )
-//            }
-//            composable(Screens.Transactions.route) {
-//                // call our composable screens here
-//                TransactionsScreen(
-////                    getFilteredAndSortedTransactions = mxViewModel::getFilteredAndSortedTransactions,
-////                    getBalance = mxViewModel::getBalance,
-//                    uiState = mxViewModel.uiState.collectAsState().value,
-//                    mxViewModel = mxViewModel,
-//                    modifier = Modifier
-//                        .fillMaxHeight()
-//                        .fillMaxWidth()
-//                        .padding(innerPadding),
-//                )
-//            }
-//            composable(Screens.Settings.route) {
-//                //call our composable screens here
-//                SettingsScreen(
-//                    modifier = Modifier.padding(innerPadding),
-//                )
-//            }
-//        }
-//    }
 }

@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">MX</string>
-    <string name="initial_screen">Initial screen</string>
-    <string name="dashboard_screen">Dashboard</string>
-    <string name="initialscreenroute">InitialScreenRoute</string>
-    <string name="loginscreenroute">LoginScreenRoute</string>
-    <string name="signupscreenroute">SignUpScreenRoute</string>
-    <string name="mxapproute">MXAppRoute</string>
+    <string name="initial_screen_route">InitialScreen</string>
+    <string name="signup_screen_route">SignUpScreenRoute</string>
+    <string name="login_screen_route">LoginScreenRoute</string>
+    <string name="mx_app_route">MXAppRoute</string>
+    <string name="dashboard_screen_route">DashboardScreeRoute</string>
+    <string name="wallets_screen_route">WalletsScreenRoute</string>
+    <string name="transactions_screen_route">TransactionsScreeRoute</string>
+    <string name="settings_screen_route">SettingsScreenRoute</string>
 </resources>

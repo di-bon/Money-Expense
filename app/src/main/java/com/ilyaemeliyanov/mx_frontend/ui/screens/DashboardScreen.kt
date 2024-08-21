@@ -34,16 +34,13 @@ import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
-private const val TAG = "DashboardScreen"
-
 @Composable
 fun DashboardScreen(
     mxViewModel: MXViewModel,
     uiState: UiState,
     isLoading: Boolean,
-    modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = Modifier.padding(32.dp)) {
         DashboardTopBar(
             onWalletSelection = mxViewModel::setSelectedWallet,
             mxViewModel = mxViewModel
@@ -55,7 +52,6 @@ fun DashboardScreen(
             modifier = Modifier
                 .padding(vertical = 12.dp)
         )
-        Text("Welcome back ${mxViewModel.user?.email}")
 
         MXCard(
             containerColor = Color.White,
@@ -77,7 +73,7 @@ private fun DashboardTopBar(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val wallets = listOf(null) + mxViewModel.wallets
+    val wallets = mxViewModel.wallets ?: emptyList()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

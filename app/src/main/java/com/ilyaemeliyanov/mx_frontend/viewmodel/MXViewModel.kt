@@ -11,6 +11,7 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
+import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -47,6 +48,7 @@ class MXViewModel(
     var transactionAmount: String by mutableStateOf("")
     var transactionDate: Date by mutableStateOf(Date())
     var transactionWalletName: String by mutableStateOf("")
+    var transactionType: TransactionType by mutableStateOf(TransactionType.EXPENSE)
 
 //    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
@@ -87,11 +89,13 @@ class MXViewModel(
         val wallet = wallets.find { it.name == transactionWalletName }
         // TODO: validate input
         if (wallet != null) {
+            val transactionValue = abs(transactionAmount.toFloat())
+            val amount = if (transactionType == TransactionType.INCOME) transactionValue else -transactionValue
             val transaction = Transaction(
                 id = "",
                 label = transactionLabel,
                 description = transactionDescription,
-                amount = transactionAmount.toFloat(),
+                amount = amount,
                 date = transactionDate,
                 wallet = wallet,
             )

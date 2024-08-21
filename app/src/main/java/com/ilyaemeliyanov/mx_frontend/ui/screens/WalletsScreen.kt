@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
+import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
@@ -53,7 +54,7 @@ private const val TAG = "WalletsScreen"
 @Composable
 fun WalletsScreen(
     mxViewModel: MXViewModel,
-    modifier: Modifier = Modifier
+    uiState: UiState
 ) {
 
 //    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
@@ -64,7 +65,8 @@ fun WalletsScreen(
     var description by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
-    Column (modifier = modifier.fillMaxHeight()) {
+    Column (modifier = Modifier
+        .padding(32.dp)) {
         MXTitle(
             title = "Wallets",
             modifier = Modifier

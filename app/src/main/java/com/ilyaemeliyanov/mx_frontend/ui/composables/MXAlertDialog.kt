@@ -33,12 +33,10 @@ fun MXAlertDialog(
     confirmLabel: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
-    modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
     AlertDialog(
         modifier = Modifier.fillMaxWidth(),
-//        modifier = modifier,
         onDismissRequest = onDismiss,
         title = { Text(title, style = TextStyle(fontFamily = spaceGrotesk, fontSize = 30.sp, fontWeight = FontWeight.Normal)) },
         text = {
@@ -92,9 +90,6 @@ private fun MXAlertDialogPreview() {
         ) {
             MXAlertDialog(
                 title = "Create Wallet",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
                 dismissLabel = "",
                 confirmLabel = "",
                 onDismiss = {},

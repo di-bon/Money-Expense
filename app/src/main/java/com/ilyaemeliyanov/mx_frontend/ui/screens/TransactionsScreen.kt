@@ -2,6 +2,7 @@ package com.ilyaemeliyanov.mx_frontend.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,11 +42,13 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
+import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import java.util.Date
 
@@ -53,10 +56,9 @@ private const val TAG = "TransactionsScreen"
 
 @Composable
 fun TransactionsScreen(
-    uiState: UiState,
     mxViewModel: MXViewModel,
+    uiState: UiState,
     isLoading: Boolean,
-    modifier: Modifier = Modifier
 ) {
     var showContextDialog by remember { mutableStateOf(false) }
 
@@ -69,8 +71,8 @@ fun TransactionsScreen(
     val sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
 
     Column (
-        modifier = modifier
-//            .fillMaxHeight()
+        modifier = Modifier
+            .padding(32.dp)
     ) {
         MXTitle(title = "Transactions", modifier = Modifier.fillMaxWidth()) {
             MxCircluarButton(
@@ -98,6 +100,25 @@ fun TransactionsScreen(
                     showContextDialog = false
                 }
             ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                    MXRectangularButton(
+                        modifier = Modifier.padding(4.dp),
+                        containerColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
+                        contentColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.PrimaryColor else Color.White,
+                        onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }) {
+                        Text("Expense")
+                    }
+                    MXRectangularButton(
+                        modifier = Modifier.padding(4.dp),
+                        containerColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
+                        contentColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.PrimaryColor else Color.White,
+                        onClick = { mxViewModel.transactionType = TransactionType.INCOME }
+                    ) {
+                        Text("Income")
+                    }
+                }
+                
                 Spacer(modifier = Modifier.height(8.dp))
                 MXInput(
                     titleText = "Label",
@@ -137,7 +158,7 @@ fun TransactionsScreen(
                     ) {
                         MXDropdownMenu(
                             items = mxViewModel.wallets.map { it.name },
-                            selectedItem = mxViewModel.transactionWalletName,
+                            selectedItem = "Select wallet...",
                             showLabel = false
                         ) {
                             mxViewModel.transactionWalletName = it
@@ -159,6 +180,10 @@ fun TransactionsScreen(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(8.dp))
+
+
+
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -258,11 +283,6 @@ private fun TransactionsScreenPreview() {
             mxViewModel = vm,
             uiState = vm.uiState.collectAsState().value,
             isLoading = false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(color = MXColors.Default.BgColor)
-                .padding(16.dp)
         )
     }
 }
