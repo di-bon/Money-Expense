@@ -27,8 +27,8 @@ class MXRepository {
             firstName = data?.get("firstName") as? String ?: "null",
             lastName = data?.get("lastName") as? String ?: "null",
             password = data?.get("password") as? String ?: "null",
-            wallets = data?.get("wallets") as? List<DocumentReference> ?: emptyList(),
-            transactions = data?.get("transactions") as? List<DocumentReference> ?: emptyList()
+            wallets = (documentSnapshot.get("wallets") as? List<DocumentReference>)?.toList() ?: emptyList(),
+            transactions = (documentSnapshot.get("transactions") as? List<DocumentReference>)?.toList() ?: emptyList(),
         )
         callback(user)
     }
@@ -82,6 +82,8 @@ class MXRepository {
 
     fun updateUser(user: User, callback: (User?) -> Unit) {
         val docRef = usersCollection.document(user.id)
+
+        Log.d("MXRepository", user.transactions.toString())
 
         // Update the existing document in collection with the specified user
         docRef

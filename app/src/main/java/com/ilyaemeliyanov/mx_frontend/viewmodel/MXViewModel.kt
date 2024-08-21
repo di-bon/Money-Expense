@@ -124,21 +124,17 @@ class MXViewModel(
     var selectedWallet by mutableStateOf<Wallet?>(null)
 
     suspend fun loadData(email: String) {
-//        viewModelScope.launch {
-            loadUserByEmail(email)
-//        }
+        loadUserByEmail(email)
     }
 
     suspend fun loadUserByEmail(email: String) {
-//        viewModelScope.launch {
-            repository.getUserByEmail(email) { fetchedUser ->
-                user = fetchedUser
-                viewModelScope.launch {
-                    wallets = emptyList()
-                    loadWalletsByUser(user)
-                }
+        repository.getUserByEmail(email) { fetchedUser ->
+            user = fetchedUser
+            viewModelScope.launch {
+                wallets = emptyList()
+                loadWalletsByUser(user)
             }
-//        }
+        }
     }
 
     suspend fun loadWalletsByUser(user: User?) {
@@ -170,7 +166,7 @@ class MXViewModel(
     }
 
     fun createAndSaveUser(email: String, firstName: String, lastName: String, password: String) {
-        val user: User = User(
+        val user = User(
             id = "",
             email = email,
             firstName = firstName,
@@ -189,9 +185,10 @@ class MXViewModel(
         if (u != null) {
             viewModelScope.launch {
                 repository.updateUser(u) { newUser ->
-                    user = newUser
+                    user = newUser?.copy()
                 }
             }
+            Log.d("New User", user.toString())
         }
     }
 
@@ -307,8 +304,8 @@ class MXViewModel(
                    if (transactionRef != null) {
                        Log.d(TAG, "Removing element form list")
                        transactions -= transaction
-
-                       user?.transactions = user?.transactions?.minus(transactionRef) ?: emptyList()
+                       Log.d("Delete Transaction", user.toString())
+                       user?.transactions = user?.transactions?.filter { it.id != transactionRef.id } ?: emptyList()
                        updateUser(user)
                    }
                 }

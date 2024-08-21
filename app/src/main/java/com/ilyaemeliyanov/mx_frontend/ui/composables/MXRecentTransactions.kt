@@ -17,19 +17,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import kotlinx.coroutines.delay
 
 @Composable
 fun MXRecentTransactions(
+    mxViewModel: MXViewModel,
     transactionList: List<Transaction>,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
     showTitle: Boolean = true
 ) {
-
-    val mxViewModel = MXViewModelSingleton.getInstance()
-
     var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
 
@@ -73,7 +72,7 @@ fun MXRecentTransactions(
             confirmLabel = "Confirm",
             onDismiss = { showAlertDialog = false },
             onConfirm = {
-                Log.d("SELECTED", selectedTransaction.toString())
+                Log.d("MXRecentTransactions", selectedTransaction.toString())
                 mxViewModel.deleteTransaction(selectedTransaction)
                 showAlertDialog = false
             }) {

@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
@@ -61,14 +63,22 @@ fun TransactionsScreen(
     isLoading: Boolean,
 ) {
     var showContextDialog by remember { mutableStateOf(false) }
-
-    val filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
+    var filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
         transactionList = mxViewModel.transactions,
         filter = uiState.currentFilter,
         sort = uiState.currentSortingCriteria
     )
+    var sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
 
-    val sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
+    LaunchedEffect(mxViewModel.transactions) {
+        filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
+            transactionList = mxViewModel.transactions,
+            filter = uiState.currentFilter,
+            sort = uiState.currentSortingCriteria
+        )
+        sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
+    }
+
 
     Column (
         modifier = Modifier
@@ -266,6 +276,7 @@ fun TransactionsScreen(
             containerColor = Color.White
         ) {
             MXRecentTransactions(
+                mxViewModel = mxViewModel,
                 showTitle = false,
                 transactionList = filteredAndSortedTransactions,
                 isLoading = isLoading

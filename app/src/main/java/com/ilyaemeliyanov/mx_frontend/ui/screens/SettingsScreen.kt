@@ -18,6 +18,7 @@ import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -78,7 +79,7 @@ fun SettingsScreen(
                     color = Color.White
                 )
                 Text(
-                    text = "${user?.firstName} ${user?.lastName}", // TODO: Remember to replace with current user
+                    text = "${user?.firstName} ${user?.lastName}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MXColors.Default.ActiveColor
                 )

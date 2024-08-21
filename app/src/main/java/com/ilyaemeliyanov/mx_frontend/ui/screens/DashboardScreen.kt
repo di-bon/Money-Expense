@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +42,16 @@ fun DashboardScreen(
     uiState: UiState,
     isLoading: Boolean,
 ) {
+    var last10Transactions = mxViewModel.getLast10Transactions(mxViewModel.transactions)
+
+    LaunchedEffect(mxViewModel.transactions) {
+        last10Transactions = mxViewModel.getFilteredAndSortedTransactions(
+            transactionList = mxViewModel.transactions,
+            filter = uiState.currentFilter,
+            sort = uiState.currentSortingCriteria
+        )
+    }
+
     Column(modifier = Modifier.padding(32.dp)) {
         DashboardTopBar(
             onWalletSelection = mxViewModel::setSelectedWallet,
@@ -58,7 +70,8 @@ fun DashboardScreen(
             contentColor = Color.Black
         ) {
             MXRecentTransactions(
-                transactionList = mxViewModel.getLast10Transactions(mxViewModel.transactions),
+                mxViewModel = mxViewModel,
+                transactionList = last10Transactions,
                 isLoading = isLoading,
                 modifier = Modifier
                     .fillMaxHeight()
