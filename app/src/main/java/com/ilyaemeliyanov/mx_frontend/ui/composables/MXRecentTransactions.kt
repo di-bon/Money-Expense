@@ -32,6 +32,8 @@ fun MXRecentTransactions(
     var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
 
+    var isRemoved by remember { mutableStateOf(false) }
+
     LazyColumn (modifier = modifier) {
         if (showTitle) {
             item {
@@ -49,6 +51,8 @@ fun MXRecentTransactions(
         } else {
             items(transactionList) { transaction ->
                 SwipeToDeleteContainer(
+                    isRemoved = isRemoved,
+                    onIsRemoveChange = { isRemoved = it },
                     onDelete = {
                         if (!showAlertDialog) {
                             showAlertDialog = true

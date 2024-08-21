@@ -2,6 +2,8 @@ package com.ilyaemeliyanov.mx_frontend.ui.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
@@ -41,32 +43,36 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToDeleteContainer(
+    isRemoved: Boolean,
+    onIsRemoveChange: (Boolean) -> Unit,
     onDelete: () -> Unit,
     animationDuration: Int = 500,
     content: @Composable () -> Unit,
 ) {
-    var isRemoved by remember { mutableStateOf(false) }
     val state = rememberDismissState(
         confirmValueChange = { value ->
             if (value == DismissValue.DismissedToStart) {
-                isRemoved = true
+                onIsRemoveChange(true)
                 true
             } else {
-                isRemoved = false
+                onIsRemoveChange(true)
                 false
             }
         }
     )
 
-    LaunchedEffect(key1 = isRemoved) {
+    LaunchedEffect(isRemoved) {
        if (isRemoved) {
            delay(animationDuration.toLong())
            onDelete()
+       } else {
+           state.reset()
        }
     }
 
     AnimatedVisibility(
         visible = !isRemoved,
+        enter = expandVertically(animationSpec = tween(durationMillis = animationDuration), expandFrom = Alignment.Bottom) + fadeIn(),
         exit = shrinkVertically(animationSpec = tween(durationMillis = animationDuration), shrinkTowards = Alignment.Top) + fadeOut()
     ) {
         SwipeToDismiss(
