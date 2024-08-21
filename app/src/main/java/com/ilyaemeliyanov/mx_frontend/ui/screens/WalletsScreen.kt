@@ -45,16 +45,18 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXWallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 private const val TAG = "WalletsScreen"
 
 @Composable
 fun WalletsScreen(
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
 
-    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
+//    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
     val wallets = mxViewModel.wallets
 
     var showContextDialog by remember {mutableStateOf(false)}
@@ -146,8 +148,6 @@ fun WalletsScreen(
                 }
             }
         }
-
-
     }
 }
 

@@ -40,7 +40,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
-import com.ilyaemeliyanov.mx_frontend.ui.composables.RecentTransactions
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
@@ -55,6 +55,7 @@ private const val TAG = "TransactionsScreen"
 fun TransactionsScreen(
     uiState: UiState,
     mxViewModel: MXViewModel,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
     var showContextDialog by remember { mutableStateOf(false) }
@@ -239,9 +240,10 @@ fun TransactionsScreen(
         MXCard(
             containerColor = Color.White
         ) {
-            RecentTransactions(
+            MXRecentTransactions(
                 showTitle = false,
-                transactionList = filteredAndSortedTransactions
+                transactionList = filteredAndSortedTransactions,
+                isLoading = isLoading
             )
         }
     }
@@ -255,6 +257,7 @@ private fun TransactionsScreenPreview() {
         TransactionsScreen(
             mxViewModel = vm,
             uiState = vm.uiState.collectAsState().value,
+            isLoading = false,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()

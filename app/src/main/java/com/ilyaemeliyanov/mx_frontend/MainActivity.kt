@@ -6,12 +6,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -61,7 +64,8 @@ private const val TAG = "MainActivity"
 enum class AuthScreens(@StringRes val title: Int) {
     InitialScreen(title = R.string.initialscreenroute),
     LoginScreen(title = R.string.loginscreenroute),
-    SignUpScreen(title = R.string.signupscreenroute)
+    SignUpScreen(title = R.string.signupscreenroute),
+    MXApp(title = R.string.mxapproute)
 }
 
 class MainActivity : ComponentActivity() {
@@ -75,6 +79,8 @@ class MainActivity : ComponentActivity() {
 
         val mxAuthViewModel = MXAuthViewModel()
 
+        val mxViewModel = MXViewModel(MXRepository())
+
         setContent {
             MXTheme {
                 val navController: NavHostController = rememberNavController()
@@ -83,7 +89,7 @@ class MainActivity : ComponentActivity() {
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 // Get the name of the current screen
                 val currentScreen = AuthScreens.valueOf(
-                    backStackEntry?.destination?.route ?: AuthScreens.InitialScreen.name
+                    backStackEntry?.destination?.route ?: AuthScreens.MXApp.name
                 )
 
                 NavHost(
@@ -107,8 +113,9 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             navController = navController,
                             mxAuthViewModel = mxAuthViewModel,
+                            mxViewModel = mxViewModel,
                             modifier = Modifier
-                                .background(color = Color(246, 246, 246))
+                                .background(color = MXColors.Default.BgColor)
                                 .padding(32.dp)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
@@ -120,9 +127,22 @@ class MainActivity : ComponentActivity() {
                             mxAuthViewModel = mxAuthViewModel,
 //                            navigateUp = navController::navigateUp,
 //                            canNavigateBack = navController.previousBackStackEntry != null,
+                            mxViewModel = mxViewModel,
                             modifier = Modifier
-                                .background(color = Color(246, 246, 246))
+                                .background(color = MXColors.Default.BgColor)
                                 .padding(32.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        )
+                    }
+                    composable(route = AuthScreens.MXApp.name) {
+//                            TestScreen(modifier = Modifier
+//                                .height(400.dp))
+                        MXApp(
+//                                navController = navController,
+                            mxViewModel = mxViewModel,
+                            modifier = Modifier
+                                .background(color = MXColors.Default.BgColor)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
                         )
@@ -130,34 +150,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    // TODO: decide what to do with this unused Composable
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun MXTopAppBar(
-        currentScreen: AuthScreens,
-        canNavigateBack: Boolean,
-        navigateUp: () -> Unit,
-        modifier: Modifier = Modifier
-    ) {
-        TopAppBar(
-            title = {  },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = MXColors.Default.BgColor
-            ),
-            modifier = modifier,
-            navigationIcon = {
-                if (canNavigateBack) {
-                    IconButton(onClick = navigateUp) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back button"
-                        )
-                    }
-                }
-            }
-        )
     }
 
     public override fun onStart() {

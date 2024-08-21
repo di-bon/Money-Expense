@@ -5,7 +5,7 @@ object MXViewModelSingleton {
 
     fun getInstance(): MXViewModel {
         if (instance == null) {
-           instance = MXViewModel(email = "john.doe@gmail.com", repository = MXRepository())
+           instance = MXViewModel(repository = MXRepository())
         }
         return instance!!
     }

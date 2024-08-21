@@ -36,11 +36,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 private const val TAG = "SignUpScreen"
 
@@ -48,6 +50,7 @@ private const val TAG = "SignUpScreen"
 fun SignUpScreen(
     navController: NavController,
     mxAuthViewModel: MXAuthViewModel,
+    mxViewModel: MXViewModel,
 //    canNavigateBack: Boolean,
 //    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -131,15 +134,28 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.weight(1f))
         MXRectangularButton(
             onClick = {
+//                navController.navigate(AuthScreens.MXApp.name)
                 // TODO: validate input
-                        mxAuthViewModel.signUp(email, password) {
-                            res, error ->
-                            if (res) {
-                                Log.d(TAG, "Success")
-                            } else {
-                                Log.d(TAG, "Fail: $error")
+                mxAuthViewModel.signUp(email, password, firstName, lastName) {
+                    res, error ->
+                    if (res) {
+                        Log.d(TAG, "Success")
+                        mxViewModel.email = email
+                        mxViewModel.createAndSaveUser(
+                            email = email,
+                            firstName = firstName,
+                            lastName = lastName,
+                            password = password
+                        )
+                        navController.navigate(AuthScreens.MXApp.name) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
                             }
                         }
+                    } else {
+                        Log.d(TAG, "Fail: $error")
+                    }
+                }
                       },
             containerColor = Color.Black,
             contentColor = Color.White,

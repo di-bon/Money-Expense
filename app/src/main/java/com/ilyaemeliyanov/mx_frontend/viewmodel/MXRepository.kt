@@ -9,6 +9,8 @@ import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 
+private const val TAG = "MXRepository"
+
 class MXRepository {
     private val firestore = FirebaseFirestore.getInstance()
     private val usersCollection = firestore.collection("users")
@@ -63,6 +65,19 @@ class MXRepository {
            ))
         }
         callback(transactions)
+    }
+
+    fun saveUser(user: User, callback: (DocumentReference?) -> Unit) {
+        usersCollection
+            .add(user)
+            .addOnSuccessListener { userRef ->
+                Log.d(TAG, "User saved with id ${userRef.id}")
+                callback(userRef)
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Error updating user item ${e.message}")
+                callback(null)
+            }
     }
 
     fun updateUser(user: User, callback: (User?) -> Unit) {
