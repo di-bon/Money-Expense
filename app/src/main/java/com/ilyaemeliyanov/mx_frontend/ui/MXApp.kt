@@ -191,10 +191,13 @@ fun MXApp(
     LaunchedEffect(Unit) {
 //        val email = "john.doe@gmail.com"
 //        mxViewModel.email = "dibon.francesco@gmail.com"
-        mxViewModel.email = "john.doe@gmail.com"
+//        mxViewModel.email = "john.doe@gmail.com"
+
+        // If this screen is the first one to be loaded, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
         isLoading = false
         Log.d(TAG, mxViewModel.user.toString())
+        Log.d(TAG, "Wallets: ${mxViewModel.wallets}")
     }
 
     Column(
@@ -222,6 +225,7 @@ fun MXApp(
                 composable(Screens.Wallets.route) {
                     //call our composable screens here
                     WalletsScreen(
+                        mxViewModel = mxViewModel,
                         modifier = Modifier
                             .padding(32.dp)
                     )
@@ -243,6 +247,7 @@ fun MXApp(
                 composable(Screens.Settings.route) {
                     //call our composable screens here
                     SettingsScreen(
+                        mxViewModel = mxViewModel,
                         modifier = Modifier
                             .padding(32.dp)
                     )

@@ -108,7 +108,7 @@ class MXViewModel(
 
     // Defining the state for user, wallets and transaction
     var user by mutableStateOf<User?>(null)
-    var wallets by mutableStateOf<List<Wallet>>(emptyList())
+    var wallets by mutableStateOf<List<Wallet>>(listOf<Wallet>())
     var transactions by mutableStateOf(listOf<Transaction>())
 
     // Defining the state for general info
@@ -142,6 +142,7 @@ class MXViewModel(
             transactions = emptyList()
             user.wallets.forEach { walletRef ->
                 repository.getWalletByDocRef(walletRef) { fetchedWallet ->
+                    Log.d(TAG, "FetchedWallet: $fetchedWallet")
                     if (fetchedWallet != null) wallets += fetchedWallet
                     viewModelScope.launch {
                         loadTransactionsByWallet(fetchedWallet!!)

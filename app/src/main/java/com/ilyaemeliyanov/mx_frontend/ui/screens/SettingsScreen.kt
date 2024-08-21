@@ -42,13 +42,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
 
-    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
+//    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
 
     val context = LocalContext.current
-    var user = mxViewModel.user
+    val user = mxViewModel.user
 
     LazyColumn (modifier = modifier) {
         item {

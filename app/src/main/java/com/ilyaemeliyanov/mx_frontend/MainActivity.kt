@@ -94,7 +94,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = AuthScreens.MXApp.name,
+                    startDestination = AuthScreens.InitialScreen.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
