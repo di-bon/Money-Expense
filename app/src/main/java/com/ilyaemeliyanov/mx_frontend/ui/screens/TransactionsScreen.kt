@@ -55,6 +55,7 @@ private const val TAG = "TransactionsScreen"
 fun TransactionsScreen(
     uiState: UiState,
     mxViewModel: MXViewModel,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
     var showContextDialog by remember { mutableStateOf(false) }
@@ -241,7 +242,8 @@ fun TransactionsScreen(
         ) {
             MXRecentTransactions(
                 showTitle = false,
-                transactionList = filteredAndSortedTransactions
+                transactionList = filteredAndSortedTransactions,
+                isLoading = isLoading
             )
         }
     }
@@ -255,6 +257,7 @@ private fun TransactionsScreenPreview() {
         TransactionsScreen(
             mxViewModel = vm,
             uiState = vm.uiState.collectAsState().value,
+            isLoading = false,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()

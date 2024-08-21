@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.CompareArrows
@@ -41,7 +42,9 @@ import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.WalletsScreen
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
+import kotlinx.coroutines.delay
 
 private const val TAG = "MXApp"
 
@@ -55,7 +58,12 @@ sealed class Screens(val route: String) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
-        modifier = Modifier.height(56.dp)
+        modifier = Modifier
+            .height(80.dp)
+//            .height(64.dp)
+//            .padding(vertical = 4.dp)
+        ,
+        backgroundColor = MXColors.Default.BgColor
     ) {
         val items = BottomNavigationItem().bottomNavigationItems()
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -168,18 +176,26 @@ fun MXApp(
     var navSelectedItem by remember { mutableStateOf(0) }
     val bottomNavController = rememberNavController()
 
+    var isLoading by remember {
+        mutableStateOf(true)
+    }
+    LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
+        if (mxViewModel.transactions.isEmpty()) {
+            delay(10000) // set max of 10000 ms
+        }
+        isLoading = false
+    }
+
 //    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
 //    val mxViewModel: MXViewModel = viewModel()
     LaunchedEffect(Unit) {
 //        val email = "john.doe@gmail.com"
 //        mxViewModel.email = "dibon.francesco@gmail.com"
-//        mxViewModel.email = "john.doe@gmail.com"
+        mxViewModel.email = "john.doe@gmail.com"
         mxViewModel.loadData(mxViewModel.email)
+        isLoading = false
         Log.d(TAG, mxViewModel.user.toString())
     }
-//    mxViewModel.updateData()
-
-//    mxViewModel.printUiState()
 
     Column(
         modifier = modifier
@@ -198,6 +214,7 @@ fun MXApp(
                     DashboardScreen(
                         mxViewModel = mxViewModel,
                         uiState = mxViewModel.uiState.collectAsState().value,
+                        isLoading = isLoading,
                         modifier = Modifier
                             .padding(32.dp)
                     )
@@ -216,6 +233,7 @@ fun MXApp(
 //                    getBalance = mxViewModel::getBalance,
                         uiState = mxViewModel.uiState.collectAsState().value,
                         mxViewModel = mxViewModel,
+                        isLoading = isLoading,
                         modifier = Modifier
                             .padding(32.dp)
                             .fillMaxHeight()

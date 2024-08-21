@@ -26,6 +26,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.ShimmerListItem
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
@@ -39,6 +40,7 @@ private const val TAG = "DashboardScreen"
 fun DashboardScreen(
     mxViewModel: MXViewModel,
     uiState: UiState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -61,6 +63,7 @@ fun DashboardScreen(
         ) {
             MXRecentTransactions(
                 transactionList = mxViewModel.getLast10Transactions(mxViewModel.transactions),
+                isLoading = isLoading,
                 modifier = Modifier
                     .fillMaxHeight()
             )

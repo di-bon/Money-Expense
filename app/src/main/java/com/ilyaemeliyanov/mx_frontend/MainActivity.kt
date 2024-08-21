@@ -48,7 +48,6 @@ import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
 import com.ilyaemeliyanov.mx_frontend.ui.screens.InitialScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.LoginScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
-import com.ilyaemeliyanov.mx_frontend.ui.screens.TestScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 //import com.ilyaemeliyanov.barmanager.ui.theme.MXApp
@@ -93,14 +92,9 @@ class MainActivity : ComponentActivity() {
                     backStackEntry?.destination?.route ?: AuthScreens.MXApp.name
                 )
 
-//                Column (
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .fillMaxHeight()
-//                ) {
                 NavHost(
                     navController = navController,
-                    startDestination = AuthScreens.InitialScreen.name,
+                    startDestination = AuthScreens.MXApp.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
@@ -149,46 +143,13 @@ class MainActivity : ComponentActivity() {
                             mxViewModel = mxViewModel,
                             modifier = Modifier
                                 .background(color = MXColors.Default.BgColor)
-//                                    .padding(32.dp)
-//                                .padding(32.dp)
-//                                .height(800.dp)
-//                                .width(500.dp)
                                 .fillMaxWidth()
                                 .fillMaxHeight()
                         )
                     }
                 }
             }
-//            }
         }
-    }
-
-    // TODO: decide what to do with this unused Composable
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun MXTopAppBar(
-        currentScreen: AuthScreens,
-        canNavigateBack: Boolean,
-        navigateUp: () -> Unit,
-        modifier: Modifier = Modifier
-    ) {
-        TopAppBar(
-            title = {  },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = MXColors.Default.BgColor
-            ),
-            modifier = modifier,
-            navigationIcon = {
-                if (canNavigateBack) {
-                    IconButton(onClick = navigateUp) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back button"
-                        )
-                    }
-                }
-            }
-        )
     }
 
     public override fun onStart() {
