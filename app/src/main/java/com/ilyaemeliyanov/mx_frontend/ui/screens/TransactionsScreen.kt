@@ -118,7 +118,7 @@ fun TransactionsScreen(
                         Text("Income")
                     }
                 }
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
                 MXInput(
                     titleText = "Label",
