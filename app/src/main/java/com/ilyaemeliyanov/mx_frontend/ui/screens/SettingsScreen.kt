@@ -3,6 +3,7 @@ package com.ilyaemeliyanov.mx_frontend.ui.screens
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -24,9 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +38,7 @@ import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSettingsButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -177,7 +182,7 @@ fun SettingsScreen(
 
         if (showCurrencyContextDialog) {
             MXAlertDialog(
-                title = "Change Ccurrency",
+                title = "Change Currency",
                 dismissLabel = "Cancel",
                 confirmLabel = "Save",
                 onDismiss = { showCurrencyContextDialog = false },
@@ -189,11 +194,29 @@ fun SettingsScreen(
                     mxViewModel.updateUser(newUser)
                     showCurrencyContextDialog = false
                 }) {
-                MXDropdownMenu(
-                    items = Currency.entries.map { it.symbol },
-                    selectedItem = selectedCurrency
-                ) {
-                    selectedCurrency = it
+                Column {
+                    Text("Select a currency...")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp)
+                            .border(
+                                1.dp,
+                                brush = SolidColor(Color.Gray),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 16.dp),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        MXDropdownMenu(
+                            items = Currency.entries.map { it.symbol },
+                            selectedItem = selectedCurrency,
+                            showLabel = false
+                        ) {
+                            selectedCurrency = it
+                        }
+                    }
                 }
             }
         }

@@ -149,7 +149,7 @@ fun MXApp(
 
     LaunchedEffect(Unit) {
         // TODO: change to logged in user
-        mxViewModel.email = "john.doe@gmail.com"
+//        mxViewModel.email = "john.doe@gmail.com"
 
         // If this screen is the first one to be loaded, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
