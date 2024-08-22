@@ -7,7 +7,14 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import okhttp3.Credentials
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import java.util.Date
 
 private const val TAG = "MXRepository"
@@ -206,6 +213,39 @@ class MXRepository {
         for (document in query.documents) {
             transactionsCollection.document(document.id).delete().await()
         }
+    }
+
+    suspend fun getPayPalAccessToken(clientId: String, clientSecret: String, callback: (String?) -> Unit) {
+        withContext(Dispatchers.IO) {
+            val client = OkHttpClient()
+            val credential = Credentials.basic(clientId, clientSecret)
+            val request = Request.Builder()
+                .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
+                .post(FormBody.Builder().add("grant_type", "client_credentials").build())
+                .header("Authorization", credential)
+                .build()
+
+            val response = client.newCall(request).execute()
+            val jsonResponse = JSONObject(response.body?.string() ?: "")
+            callback(jsonResponse.getString("access_token"))
+        }
+        callback(null)
+    }
+
+    suspend fun getPayPalTransactions(accessToken: String, callback: (String?) -> Unit) {
+        withContext(Dispatchers.IO) {
+            val client = OkHttpClient()
+            val request = Request.Builder()
+                .url("https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info&start_date=2024-03-20T11:59:59.999Z&end_date=2024-03-20T23:59:00.000Z") // TODO: test query, replace in production
+                .get()
+                .addHeader("Authorization", "Bearer $accessToken")
+                .build()
+
+            val response = client.newCall(request).execute()
+            val jsonResponse = JSONObject(response.body?.string() ?: "")
+            callback(jsonResponse.toString())
+        }
+        callback(null)
     }
 }
 

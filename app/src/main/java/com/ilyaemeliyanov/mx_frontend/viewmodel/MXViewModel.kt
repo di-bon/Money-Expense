@@ -63,14 +63,12 @@ class MXViewModel(
     var transactionWalletName: String by mutableStateOf("")
     var transactionType: TransactionType by mutableStateOf(TransactionType.EXPENSE)
 
-//    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
-//    init {
-//        Log.d(TAG, "init() called")
-//        viewModelScope.launch {
-//            loadData(email)
-//        }
-//    }
+    // Paypal
+    var payPalAccessToken = ""
+
+
+//    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
     fun updateCurrentFilter(newFilter: String) {
         _uiState.update {
@@ -125,7 +123,7 @@ class MXViewModel(
 
     // Defining the state for user, wallets and transaction
     var user by mutableStateOf<User?>(null)
-    var wallets by mutableStateOf<List<Wallet>>(listOf<Wallet>())
+    var wallets by mutableStateOf(listOf<Wallet>())
     var transactions by mutableStateOf(listOf<Transaction>())
 
     // Defining the state for general info
@@ -253,7 +251,7 @@ class MXViewModel(
                     if (walletRef != null) {
                         // Update User
                         user?.wallets = user?.wallets?.filter { it != walletRef } ?: emptyList()
-                        val filteredTransactions = transactions?.filter { it.wallet.id != wallet.id } ?: emptyList()
+                        val filteredTransactions = transactions.filter { it.wallet.id != wallet.id }
                         user?.transactions = user?.transactions?.filter {
                             if (filteredTransactions != null) {
                                 for (t in filteredTransactions) {
@@ -293,7 +291,7 @@ class MXViewModel(
                         transactions += transaction
 
                         // Update the user.transactions references
-                        user?.transactions = user?.transactions?.plus(transactionRef) ?: emptyList<DocumentReference>()
+                        user?.transactions = user?.transactions?.plus(transactionRef) ?: emptyList()
                         updateUser(user)
                     }
                 }
@@ -364,7 +362,7 @@ class MXViewModel(
             .sortedByDescending { it.date }
     }
 
-    fun setSelectedWallet(item: String): Unit {
+    fun setSelectedWallet(item: String) {
         selectedWallet = null
         for (wallet in wallets) {
             if (wallet.name == item) {
@@ -410,21 +408,19 @@ class MXViewModel(
         }
     }
 
-//    Encrypted Shared Preferences
+    //    Encrypted Shared Preferences
     private fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
 
-        val sharedPreferences = EncryptedSharedPreferences.create(
+        return EncryptedSharedPreferences.create(
             context,
             "mx_prefs",
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
-
-        return sharedPreferences
     }
 
     fun storeData(context: Context, key: String, value: String) {
@@ -445,39 +441,22 @@ class MXViewModel(
 
 
     //    Paypal
-    fun getPayPalAccessToken(clientId: String, clientSecret: String): String {
-        var accessToken = ""
+    fun generatePayPalAccessToken(clientId: String, clientSecret: String) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val client = OkHttpClient()
-                val credential = Credentials.basic(clientId, clientSecret)
-                Log.d("MXViewModel", "1")
-                val request = Request.Builder()
-                    .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
-                    .post(FormBody.Builder().add("grant_type", "client_credentials").build())
-                    .header("Authorization", credential)
-                    .build()
-                Log.d("MXViewModel", "2")
-
-                val response = client.newCall(request).execute()
-                val jsonResponse = JSONObject(response.body?.string() ?: "")
-
-                Log.d("MXViewModel", "3")
-                accessToken = jsonResponse.getString("access_token")
+            repository.getPayPalAccessToken(clientId, clientSecret) { token ->
+                if (token != null) {
+                    payPalAccessToken = token
+                    getPayPalTransactions(payPalAccessToken)
+                }
             }
         }
-        return accessToken
     }
 
-    fun getPayPalTransactions(accessToken: String): String {
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url("https://api.paypal.com/v1/reporting/transactions")
-            .get()
-            .header("Authorization", "Bearer $accessToken")
-            .build()
-
-        val response = client.newCall(request).execute()
-        return response.body?.string() ?: ""
+    fun getPayPalTransactions(accessToken: String) {
+        viewModelScope.launch {
+            repository.getPayPalTransactions(accessToken) { jsonString ->
+                if (jsonString != null) Log.d("MXViewModel", jsonString)
+            }
+        }
     }
 }

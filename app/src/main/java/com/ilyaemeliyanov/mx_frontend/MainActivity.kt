@@ -79,6 +79,9 @@ class MainActivity : ComponentActivity() {
 
         val mxViewModel = MXViewModel(MXRepository())
 
+//        TODO: remove this line when isLoggedIn function implemented
+        mxViewModel.email = "ilya.emeliyanov@gigio.com"
+
         setContent {
             MXTheme {
                 val navController: NavHostController = rememberNavController()
@@ -92,7 +95,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = AuthScreens.InitialScreen.name, // TODO: change based on the login user
+                    startDestination = AuthScreens.MXApp.name, // TODO: change based on the login user
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())

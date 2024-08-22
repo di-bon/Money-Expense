@@ -54,6 +54,7 @@ import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.exportToCSV
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.toCSV
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -240,7 +241,7 @@ fun SettingsScreen(
                         Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
                     }
                 }) {
-                Text("Your files will be exported to your local storage \u60b0")
+                Text("Your files will be exported to your local storage")
             }
         }
         if (showPayPalContextDialog) {
@@ -253,8 +254,10 @@ fun SettingsScreen(
                     mxViewModel.storeData(context, "client_id", payPalClientId)
                     mxViewModel.storeData(context, "client_secret", payPalClientSecret)
 
-                    val payPalAccessToken = mxViewModel.getPayPalAccessToken(payPalClientId, payPalClientSecret)
-                    mxViewModel.storeData(context, "access_token", payPalAccessToken)
+                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
+                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
+
+//                    mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
                 }) {
                 Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
                 Spacer(modifier = Modifier.height(8.dp))
