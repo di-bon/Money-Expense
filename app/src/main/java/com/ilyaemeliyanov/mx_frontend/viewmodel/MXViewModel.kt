@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
@@ -165,7 +166,7 @@ class MXViewModel(
 //        }
     }
 
-    fun createAndSaveUser(email: String, firstName: String, lastName: String, password: String) {
+    fun createAndSaveUser(email: String, firstName: String, lastName: String, password: String, currency: Currency) {
         val user = User(
             id = "",
             email = email,
@@ -173,7 +174,8 @@ class MXViewModel(
             lastName = lastName,
             password = password,
             transactions = listOf(),
-            wallets = listOf()
+            wallets = listOf(),
+            currency = currency
         )
         this.user = user
         repository.saveUser(user) { userRef ->

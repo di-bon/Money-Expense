@@ -31,7 +31,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSettingsButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -58,6 +60,8 @@ fun SettingsScreen(
     val user = mxViewModel.user
 
     var showExportContextDialog by remember { mutableStateOf(false) }
+    var showCurrencyContextDialog by remember { mutableStateOf(false) }
+    var selectedCurrency by remember { mutableStateOf(mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol) }
 
     Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -122,7 +126,7 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     MXSettingsButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { showCurrencyContextDialog = true },
                         leftIconImageVector = Icons.Outlined.AttachMoney, // TODO: set credit card icon
                         titleString = "Change currency",
                         descriptionString = "Choose the currency to display your transactions with",
@@ -168,6 +172,29 @@ fun SettingsScreen(
                     }
                 }) {
                 Text("Your files will be exported to your local storage \u60b0")
+            }
+        }
+
+        if (showCurrencyContextDialog) {
+            MXAlertDialog(
+                title = "Change Ccurrency",
+                dismissLabel = "Cancel",
+                confirmLabel = "Save",
+                onDismiss = { showCurrencyContextDialog = false },
+                onConfirm = {
+                    val newCurrency = Currency.entries.firstOrNull { it.symbol == selectedCurrency } ?: Currency.US_DOLLAR
+                    mxViewModel.user?.currency = newCurrency
+                    val newUser = mxViewModel.user
+                    newUser?.currency = newCurrency
+                    mxViewModel.updateUser(newUser)
+                    showCurrencyContextDialog = false
+                }) {
+                MXDropdownMenu(
+                    items = Currency.entries.map { it.symbol },
+                    selectedItem = selectedCurrency
+                ) {
+                    selectedCurrency = it
+                }
             }
         }
     }

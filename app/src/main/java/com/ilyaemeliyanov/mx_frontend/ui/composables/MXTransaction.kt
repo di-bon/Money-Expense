@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXShapes
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
@@ -41,6 +42,7 @@ import java.util.Locale
 @Composable
 fun MXTransaction(
     transaction: Transaction,
+    currency: Currency,
     modifier: Modifier = Modifier,
     showBottomDivider: Boolean = true
 ) {
@@ -89,7 +91,11 @@ fun MXTransaction(
                 )
             }
             Text(
-                text = if (transaction.amount >= 0f) "+ \$ ${StringFormatter.getFormattedAmount(transaction.amount)}" else "- \$ ${StringFormatter.getFormattedAmount(transaction.amount)}",
+                text =
+                if (transaction.amount >= 0f)
+                    "+ ${currency.symbol} ${StringFormatter.getFormattedAmount(transaction.amount)}"
+                else
+                    "- ${currency.symbol} ${StringFormatter.getFormattedAmount(transaction.amount)}",
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
                 modifier = Modifier

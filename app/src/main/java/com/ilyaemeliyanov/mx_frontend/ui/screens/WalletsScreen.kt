@@ -102,6 +102,7 @@ fun WalletsScreen(
                         2 -> Color(red = 243, green = 184, blue = 116)
                         else -> Color(red = 105, green = 247, blue = 179)
                     },
+                    mxViewModel = mxViewModel,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(168.dp)

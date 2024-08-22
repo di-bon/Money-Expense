@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.ilyaemeliyanov.mx_frontend.AuthScreens
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSecretInput
@@ -153,7 +154,8 @@ fun SignUpScreen(
                             email = email,
                             firstName = firstName,
                             lastName = lastName,
-                            password = password
+                            password = password,
+                            currency = Currency.US_DOLLAR // default currency
                         )
                         navController.navigate(AuthScreens.MXApp.name) {
                             popUpTo(navController.graph.startDestinationId) {

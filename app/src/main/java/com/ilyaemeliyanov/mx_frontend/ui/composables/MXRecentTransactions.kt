@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import kotlinx.coroutines.delay
@@ -62,7 +63,8 @@ fun MXRecentTransactions(
                     }
                 ) {
                     MXTransaction(
-                        transaction = transaction
+                        transaction = transaction,
+                        currency = mxViewModel.user?.currency ?: Currency.US_DOLLAR
                     )
                 }
             }

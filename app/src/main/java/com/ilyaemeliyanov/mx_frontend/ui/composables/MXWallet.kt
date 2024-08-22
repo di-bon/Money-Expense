@@ -33,20 +33,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.ui.theme.spaceGrotesk
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 @Composable
 fun MXWallet(
     wallet: Wallet,
     cardColor: Color,
+    mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
 
-    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
+//    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
 
     var showEditContextDialog by remember { mutableStateOf(false) }
     var showDeleteContextDialog by remember { mutableStateOf(false) }
@@ -90,7 +93,7 @@ fun MXWallet(
                 )
             }
             Text(
-                text = StringFormatter.getFormattedAmount(wallet.amount),
+                text = "${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(wallet.amount)}",
                 style = TextStyle(fontFamily = euclidCircularA, fontSize = 24.sp, fontWeight = FontWeight.Medium),
                 modifier = Modifier
                     .height(IntrinsicSize.Min)

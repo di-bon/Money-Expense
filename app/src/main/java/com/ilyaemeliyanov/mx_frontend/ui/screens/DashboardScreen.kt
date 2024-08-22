@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
@@ -133,7 +134,11 @@ private fun DashboardInfo(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = if (balance >= 0f) "+ \$ ${StringFormatter.getFormattedAmount(balance)}" else "- \$ ${StringFormatter.getFormattedAmount(balance)}",
+                text =
+                if (balance >= 0f)
+                    "+ ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}"
+                else
+                    "- ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}",
                 fontFamily = euclidCircularA,
                 fontWeight = FontWeight.Normal,
                 fontSize = 42.sp
@@ -151,7 +156,7 @@ private fun DashboardInfo(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "+ \$ ${StringFormatter.getFormattedAmount(income)}",
+                    text = "+ ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(income)}",
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
@@ -168,7 +173,7 @@ private fun DashboardInfo(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "- \$ ${StringFormatter.getFormattedAmount(expenses)}",
+                    text = "- ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(expenses)}",
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
