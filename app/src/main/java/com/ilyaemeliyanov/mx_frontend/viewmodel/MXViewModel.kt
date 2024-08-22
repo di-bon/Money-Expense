@@ -1,11 +1,15 @@
 package com.ilyaemeliyanov.mx_frontend.viewmodel
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
@@ -13,12 +17,20 @@ import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Credentials
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 import java.util.Date
 import kotlin.math.abs
+
 
 // OLD STUFF TO INTEGRATE WITH THIS CLASS
 //class MxViewModel : ViewModel() {
@@ -410,5 +422,76 @@ class MXViewModel(
         } else {
             transactions
         }
+    }
+
+//    Encrypted Shared Preferences
+    private fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+        val sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            "mx_prefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+
+        return sharedPreferences
+    }
+
+    fun storeData(context: Context, key: String, value: String) {
+        val sharedPreferences = getEncryptedSharedPreferences(context)
+        val editor = sharedPreferences.edit()
+
+        // Store data
+        editor.putString(key, value)
+        editor.apply()
+    }
+
+    fun getData(context: Context, key: String): String? {
+        val sharedPreferences = getEncryptedSharedPreferences(context)
+
+        // Retrieve data
+        return sharedPreferences.getString(key, null)
+    }
+
+
+    //    Paypal
+    fun getPayPalAccessToken(clientId: String, clientSecret: String): String {
+        var accessToken = ""
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val client = OkHttpClient()
+                val credential = Credentials.basic(clientId, clientSecret)
+                Log.d("MXViewModel", "1")
+                val request = Request.Builder()
+                    .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
+                    .post(FormBody.Builder().add("grant_type", "client_credentials").build())
+                    .header("Authorization", credential)
+                    .build()
+                Log.d("MXViewModel", "2")
+
+                val response = client.newCall(request).execute()
+                val jsonResponse = JSONObject(response.body?.string() ?: "")
+
+                Log.d("MXViewModel", "3")
+                accessToken = jsonResponse.getString("access_token")
+            }
+        }
+        return accessToken
+    }
+
+    fun getPayPalTransactions(accessToken: String): String {
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("https://api.paypal.com/v1/reporting/transactions")
+            .get()
+            .header("Authorization", "Bearer $accessToken")
+            .build()
+
+        val response = client.newCall(request).execute()
+        return response.body?.string() ?: ""
     }
 }

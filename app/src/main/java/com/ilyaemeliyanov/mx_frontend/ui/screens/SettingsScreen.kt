@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonOff
@@ -32,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -40,6 +43,7 @@ import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSecretInput
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSettingsButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -77,6 +81,11 @@ fun SettingsScreen(
     var showExportContextDialog by remember { mutableStateOf(false) }
     var showCurrencyContextDialog by remember { mutableStateOf(false) }
     var selectedCurrency by remember { mutableStateOf(mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol) }
+
+    var showPayPalContextDialog by remember { mutableStateOf(false) }
+    var payPalClientId by remember { mutableStateOf("") }
+    var payPalClientSecret by remember { mutableStateOf("") }
+
 
     Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -133,14 +142,6 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     MXSettingsButton(
-                        onClick = { showExportContextDialog = true },
-                        leftIconImageVector = Icons.Filled.Downloading, // TODO: set download icon
-                        titleString = "Export transactions in CSV",
-                        descriptionString = "Your transactions are available for download in CSV format",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
                         onClick = { showCurrencyContextDialog = true },
                         leftIconImageVector = Icons.Outlined.AttachMoney, // TODO: set credit card icon
                         titleString = "Change currency",
@@ -150,6 +151,29 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+
+            item {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Functionality", style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MXSettingsButton(
+                        onClick = { showExportContextDialog = true },
+                        leftIconImageVector = Icons.Filled.Downloading,
+                        titleString = "Export transactions in CSV",
+                        descriptionString = "Your transactions are available for download in CSV format",
+                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MXSettingsButton(
+                        onClick = { showPayPalContextDialog = true },
+                        leftIconImageVector = Icons.Filled.Payment,
+                        titleString = "Connect to PayPal",
+                        descriptionString = "All of your PayPal transactions will be visible in Money Expense",
+                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                    )
+                }
+            }
+
             item {
                 Column(
                     modifier = Modifier
@@ -281,6 +305,47 @@ fun SettingsScreen(
                 }
             }
         }
+        if (showExportContextDialog) {
+            MXAlertDialog(
+                title = "Export transactions",
+                dismissLabel = "Cancel",
+                confirmLabel = "Export",
+                onDismiss = { showExportContextDialog = false },
+                onConfirm = {
+                    val csvData = mxViewModel.transactions.toCSV()
+                    val file = exportToCSV(context, "transactions", csvData)
+                    file?.let {
+                        // Handle successful export, show Toast with the path for the exported file
+                        Toast.makeText(context, "Exported to: ${it.absolutePath}", Toast.LENGTH_LONG).show()
+                    } ?: run {
+                        // Handle failure
+                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
+                    }
+                }) {
+                Text("Your files will be exported to your local storage \u60b0")
+            }
+        }
+        if (showPayPalContextDialog) {
+            MXAlertDialog(
+                title = "Integrate PayPal account",
+                dismissLabel = "Cancel",
+                confirmLabel = "Connect",
+                onDismiss = { showPayPalContextDialog = false },
+                onConfirm = {
+                    mxViewModel.storeData(context, "client_id", payPalClientId)
+                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
+
+                    val payPalAccessToken = mxViewModel.getPayPalAccessToken(payPalClientId, payPalClientSecret)
+                    mxViewModel.storeData(context, "access_token", payPalAccessToken)
+                }) {
+                Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
+                Spacer(modifier = Modifier.height(8.dp))
+                MXInput(titleText = "Account Client ID", labelText = "Client ID", text = payPalClientId, onTextChange = { payPalClientId = it })
+                Spacer(modifier = Modifier.height(8.dp))
+                MXSecretInput(titleText = "Account Secret Key", labelText = "Client Secret Key", text = payPalClientSecret, keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done), onTextChange = { payPalClientSecret = it })
+            }
+        }
+
     }
 
 }
