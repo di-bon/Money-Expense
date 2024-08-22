@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
@@ -266,9 +267,11 @@ fun TransactionsScreen(
                 .background(color = Color.Black)
         ) {
             Text(
-                text = if (sum >= 0f)
-                    "Sum: + \$ ${StringFormatter.getFormattedAmount(sum)}"
-                    else "Sum: - \$ ${StringFormatter.getFormattedAmount(sum)}",
+                text =
+                if (sum >= 0f)
+                    "Sum: + ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(sum)}"
+                else
+                    "Sum: - ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(sum)}",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 modifier = Modifier.padding(8.dp)

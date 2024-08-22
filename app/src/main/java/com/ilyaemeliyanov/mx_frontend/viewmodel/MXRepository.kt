@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
+import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import kotlinx.coroutines.tasks.await
@@ -21,6 +22,7 @@ class MXRepository {
         val documentSnapshot = usersCollection.whereEqualTo("email", email).get().await().documents[0]
         val id = documentSnapshot.id
         val data = documentSnapshot.data
+        val currencyName = data?.get("currency") as? String
         val user = User(
             id = id,
             email = email,
@@ -29,6 +31,7 @@ class MXRepository {
             password = data?.get("password") as? String ?: "null",
             wallets = (documentSnapshot.get("wallets") as? List<DocumentReference>)?.toList() ?: emptyList(),
             transactions = (documentSnapshot.get("transactions") as? List<DocumentReference>)?.toList() ?: emptyList(),
+            currency = Currency.entries.firstOrNull { it.name == currencyName } ?: Currency.US_DOLLAR
         )
         callback(user)
     }
