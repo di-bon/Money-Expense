@@ -46,6 +46,7 @@ import com.ilyaemeliyanov.mx_frontend.ui.screens.SignUpScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.TransactionsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.WalletsScreen
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import kotlinx.coroutines.delay
 
@@ -133,6 +134,7 @@ data class BottomNavigationItem(
 @Composable
 fun MXApp(
     mxViewModel: MXViewModel,
+    mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -194,7 +196,8 @@ fun MXApp(
                 composable(Screens.SettingsScreen.name) {
                     //call our composable screens here
                     SettingsScreen(
-                        mxViewModel = mxViewModel
+                        mxViewModel = mxViewModel,
+                        mxAuthViewModel = mxAuthViewModel
                     )
                 }
             }

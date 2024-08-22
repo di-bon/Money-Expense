@@ -82,10 +82,8 @@ fun LoginScreen(
         MXRectangularButton(
             onClick = {
                 // TODO: input validation
-                var result = false
                 mxAuthViewModel.logIn(email = email, password = password) {
                     res, error ->
-                    result = res
                     if (res) {
                         Log.d(TAG, "Login successful")
                         mxViewModel.email = email
@@ -96,13 +94,6 @@ fun LoginScreen(
                         }
                     } else {
                         Log.d(TAG, "Login failed: $error")
-                    }
-                }
-                if (result) {
-                    navController.navigate(AuthScreens.MXApp.name) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
-                        }
                     }
                 }
             },

@@ -183,6 +183,20 @@ class MXViewModel(
         }
     }
 
+    fun updateUserInfo(firstName: String, lastName: String) {
+        val updatedUser = User(
+            id = this.user?.id ?: "",
+            email = this.user?.email ?: "",
+            firstName = firstName,
+            lastName = lastName,
+            password = this.user?.password ?: "",
+            transactions = this.user?.transactions ?: listOf(),
+            wallets = this.user?.wallets ?: listOf(),
+            currency = this.user?.currency ?: Currency.US_DOLLAR
+        )
+        updateUser(u = updatedUser)
+    }
+
     fun updateUser(u: User?) {
         if (u != null) {
             viewModelScope.launch {
