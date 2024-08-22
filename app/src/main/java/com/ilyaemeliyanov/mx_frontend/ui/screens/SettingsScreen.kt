@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
+import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
@@ -53,14 +54,17 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.exportToCSV
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.toCSV
+import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+private const val TAG = "SettingsScreen"
 
 @Composable
 fun SettingsScreen(
     mxViewModel: MXViewModel,
+    mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
 
@@ -68,6 +72,12 @@ fun SettingsScreen(
 
     val context = LocalContext.current
     val user = mxViewModel.user
+
+    var showUserUpdateContextDialog by remember { mutableStateOf(false) }
+    var newFirstname by remember { mutableStateOf(mxViewModel.user?.firstName ?: "") }
+    var newLastname by remember { mutableStateOf(mxViewModel.user?.lastName ?: "") }
+    var newPassword by remember { mutableStateOf("") }
+    var newPasswordConfirm by remember { mutableStateOf("") }
 
     var showExportContextDialog by remember { mutableStateOf(false) }
     var showCurrencyContextDialog by remember { mutableStateOf(false) }
@@ -125,7 +135,7 @@ fun SettingsScreen(
                     Text(text = "General", style = MaterialTheme.typography.labelLarge)
                     Spacer(modifier = Modifier.height(12.dp))
                     MXSettingsButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { showUserUpdateContextDialog = true },
                         leftIconImageVector = Icons.Outlined.Person,
                         titleString = "Change personal info",
                         descriptionString = "Here you can change your firstname, lastname and password",
@@ -184,6 +194,78 @@ fun SettingsScreen(
                 }
             }
         }
+
+        if (showUserUpdateContextDialog) {
+            MXAlertDialog(
+                title = "Change Currency",
+                dismissLabel = "Cancel",
+                confirmLabel = "Save",
+                onDismiss = { showUserUpdateContextDialog = false },
+                onConfirm = {
+                    mxViewModel.updateUserInfo(
+                        firstName = newFirstname,
+                        lastName = newLastname
+                    )
+                    mxAuthViewModel.changePassword(newPassword = newPassword) {
+                        res, error ->
+                            if (res) {
+                                Log.d(TAG, "Password successfully updated")
+                            } else {
+                                Log.d(TAG, "Password not updated: $error")
+                            }
+                    }
+                    showUserUpdateContextDialog = false
+                }) {
+                Column {
+                    MXInput(
+                        titleText = "Firstname",
+                        labelText = "Enter your firstname...",
+                        text = newFirstname,
+                        onTextChange = { newFirstname = it }
+                    )
+                    MXInput(
+                        titleText = "Lastname",
+                        labelText = "Enter your lastname...",
+                        text = newLastname,
+                        onTextChange = { newLastname = it }
+                    )
+                    MXInput(
+                        titleText = "Password",
+                        labelText = "Enter your password...",
+                        text = newPassword,
+                        onTextChange = { newPassword = it }
+                    )
+                    MXInput(
+                        titleText = "Confirm password",
+                        labelText = "Enter your password again...",
+                        text = newPasswordConfirm,
+                        onTextChange = { newPasswordConfirm = it }
+                    )
+                }
+            }
+        }
+
+        if (showExportContextDialog) {
+            MXAlertDialog(
+                title = "Export transactions",
+                dismissLabel = "Cancel",
+                confirmLabel = "Export",
+                onDismiss = { showExportContextDialog = false },
+                onConfirm = {
+                    val csvData = mxViewModel.transactions.toCSV()
+                    val file = exportToCSV(context, "transactions", csvData)
+                    file?.let {
+                        // Handle successful export, show Toast with the path for the exported file
+                        Toast.makeText(context, "Exported to: ${it.absolutePath}", Toast.LENGTH_LONG).show()
+                    } ?: run {
+                        // Handle failure
+                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
+                    }
+                }) {
+                Text("Your files will be exported to your local storage \u60b0")
+            }
+        }
+
         if (showCurrencyContextDialog) {
             MXAlertDialog(
                 title = "Change Currency",

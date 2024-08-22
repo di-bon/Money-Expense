@@ -142,6 +142,7 @@ class MainActivity : ComponentActivity() {
                         MXApp(
 //                                navController = navController,
                             mxViewModel = mxViewModel,
+                            mxAuthViewModel = mxAuthViewModel,
                             modifier = Modifier
                                 .background(color = MXColors.Default.BgColor)
                                 .fillMaxWidth()

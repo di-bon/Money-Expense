@@ -50,6 +50,24 @@ class MXAuthViewModel : ViewModel() {
         }
     }
 
+    fun changePassword(newPassword: String, onResult: (Boolean, String?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                user!!.updatePassword(newPassword)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "User password updated.")
+                        onResult(true, null)
+                    } else {
+                        onResult(false, task.exception?.message)
+                    }
+                }
+            } catch (e: Exception) {
+                onResult(false, e.message)
+            }
+        }
+    }
+
     fun signOut() {
         auth.signOut()
     }
