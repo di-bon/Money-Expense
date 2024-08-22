@@ -17,10 +17,12 @@ import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Credentials
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -444,21 +446,27 @@ class MXViewModel(
 
     //    Paypal
     fun getPayPalAccessToken(clientId: String, clientSecret: String): String {
-        val client = OkHttpClient()
-        val credential = Credentials.basic(clientId, clientSecret)
-        Log.d("MXViewModel", "1")
-        val request = Request.Builder()
-            .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
-            .post(FormBody.Builder().add("grant_type", "client_credentials").build())
-            .header("Authorization", credential)
-            .build()
-        Log.d("MXViewModel", "2")
+        var accessToken = ""
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val client = OkHttpClient()
+                val credential = Credentials.basic(clientId, clientSecret)
+                Log.d("MXViewModel", "1")
+                val request = Request.Builder()
+                    .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
+                    .post(FormBody.Builder().add("grant_type", "client_credentials").build())
+                    .header("Authorization", credential)
+                    .build()
+                Log.d("MXViewModel", "2")
 
-        val response = client.newCall(request).execute()
-        val jsonResponse = JSONObject(response.body?.string() ?: "")
+                val response = client.newCall(request).execute()
+                val jsonResponse = JSONObject(response.body?.string() ?: "")
 
-        Log.d("MXViewModel", "3")
-        return jsonResponse.getString("access_token")
+                Log.d("MXViewModel", "3")
+                accessToken = jsonResponse.getString("access_token")
+            }
+        }
+        return accessToken
     }
 
     fun getPayPalTransactions(accessToken: String): String {

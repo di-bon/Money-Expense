@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonOff
@@ -131,14 +132,6 @@ fun SettingsScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     MXSettingsButton(
-                        onClick = { showExportContextDialog = true },
-                        leftIconImageVector = Icons.Filled.Downloading, // TODO: set download icon
-                        titleString = "Export transactions in CSV",
-                        descriptionString = "Your transactions are available for download in CSV format",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
                         onClick = { showCurrencyContextDialog = true },
                         leftIconImageVector = Icons.Outlined.AttachMoney, // TODO: set credit card icon
                         titleString = "Change currency",
@@ -148,6 +141,29 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+
+            item {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Text(text = "Functionality", style = MaterialTheme.typography.labelLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MXSettingsButton(
+                        onClick = { showExportContextDialog = true },
+                        leftIconImageVector = Icons.Filled.Downloading,
+                        titleString = "Export transactions in CSV",
+                        descriptionString = "Your transactions are available for download in CSV format",
+                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MXSettingsButton(
+                        onClick = { showPayPalContextDialog = true },
+                        leftIconImageVector = Icons.Filled.Payment,
+                        titleString = "Connect to PayPal",
+                        descriptionString = "All of your PayPal transactions will be visible in Money Expense",
+                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                    )
+                }
+            }
+
             item {
                 Column(
                     modifier = Modifier
@@ -237,11 +253,8 @@ fun SettingsScreen(
                     mxViewModel.storeData(context, "client_id", payPalClientId)
                     mxViewModel.storeData(context, "client_secret", payPalClientSecret)
 
-//                    val payPalAccessToken = mxViewModel.getPayPalAccessToken(payPalClientId, payPalClientSecret)
-//                    mxViewModel.storeData(context, "access_token", payPalAccessToken)
-
-//                    Log.d("SettingsScreen", payPalAccessToken)
-
+                    val payPalAccessToken = mxViewModel.getPayPalAccessToken(payPalClientId, payPalClientSecret)
+                    mxViewModel.storeData(context, "access_token", payPalAccessToken)
                 }) {
                 Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
                 Spacer(modifier = Modifier.height(8.dp))
