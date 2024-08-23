@@ -120,7 +120,7 @@ fun TransactionsScreen(
                         containerColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
                         contentColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }) {
-                        Text("Expense")
+                        Text("OUT")
                     }
                     MXRectangularButton(
                         modifier = Modifier.padding(4.dp),
@@ -128,7 +128,7 @@ fun TransactionsScreen(
                         contentColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.INCOME }
                     ) {
-                        Text("Income")
+                        Text("IN")
                     }
                 }
 
