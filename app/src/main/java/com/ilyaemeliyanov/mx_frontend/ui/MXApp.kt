@@ -1,6 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui
 
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,7 +70,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     ) {
         val items = BottomNavigationItem().bottomNavigationItems()
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        var navSelectedItem by remember { mutableStateOf(0) }
+        var navSelectedItem = items.indexOfFirst { it.route == currentRoute }.takeIf { it != -1 } ?: 0
 
         items.forEachIndexed { index, navigationItem ->
             //iterating all items with their respective indexes
@@ -137,7 +138,6 @@ fun MXApp(
     mxAuthViewModel: MXAuthViewModel,
     modifier: Modifier = Modifier
 ) {
-
     val bottomNavController = rememberNavController()
     val uiState = mxViewModel.uiState.collectAsState()
 
