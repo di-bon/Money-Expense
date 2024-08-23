@@ -86,6 +86,22 @@ fun SettingsScreen(
     var payPalClientId by remember { mutableStateOf("") }
     var payPalClientSecret by remember { mutableStateOf("") }
 
+    // Listen for PayPal access token generation
+    LaunchedEffect(Unit) {
+        val clientId = mxViewModel.getData(context, "client_id") ?: ""
+        val clientSecret = mxViewModel.getData(context, "client_secret") ?: ""
+
+        if (clientId != "" && clientSecret != "") {
+            mxViewModel.generatePayPalAccessToken(clientId, clientSecret)
+        }
+    }
+
+    LaunchedEffect(mxViewModel.payPalAccessToken) {
+        if (mxViewModel.payPalAccessToken != "") {
+            Log.d("SettingsScreen", "ACCESS_TOKEN: ${mxViewModel.payPalAccessToken}")
+            mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
+        }
+    }
 
     Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -244,7 +260,6 @@ fun SettingsScreen(
                 }
             }
         }
-
         if (showCurrencyContextDialog) {
             MXAlertDialog(
                 title = "Change Currency",
@@ -317,8 +332,6 @@ fun SettingsScreen(
 
                     mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
                     mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
-
-//                    mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
                 }) {
                 Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
                 Spacer(modifier = Modifier.height(8.dp))

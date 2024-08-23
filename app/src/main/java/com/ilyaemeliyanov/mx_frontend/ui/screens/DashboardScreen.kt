@@ -2,6 +2,8 @@ package com.ilyaemeliyanov.mx_frontend.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,12 +11,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,7 +36,9 @@ import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXChartScreen
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -120,6 +133,8 @@ private fun DashboardInfo(
     val expenses = getExpenses(mxViewModel.transactions)
     val balance = expenses + income
 
+    var showChartContextDialog by remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         MXCard(
             containerColor = MXColors.Default.ActiveColor,
@@ -127,22 +142,33 @@ private fun DashboardInfo(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 12.dp)
+                .clickable { showChartContextDialog = true }
         ) {
-            Text(
-                text = "Balance",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text =
-                if (balance >= 0f)
-                    "+ ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}"
-                else
-                    "- ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}",
-                fontFamily = euclidCircularA,
-                fontWeight = FontWeight.Normal,
-                fontSize = 42.sp
-            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Balance",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text =
+                        if (balance >= 0f)
+                            "+ ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}"
+                        else
+                            "- ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}",
+                        fontFamily = euclidCircularA,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 42.sp
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Filled.BarChart,
+                    tint = Color.Black,
+                    contentDescription = "Chart",
+                    modifier = Modifier.size(40.dp)
+                )
+            }
         }
         Row(modifier = Modifier.fillMaxWidth()) {
             MXCard(
@@ -177,6 +203,18 @@ private fun DashboardInfo(
                     style = MaterialTheme.typography.titleSmall,
                     color = Color.White
                 )
+            }
+        }
+
+        if (showChartContextDialog) {
+            MXAlertDialog(
+                title = "Transaction Chart",
+                dismissLabel = "Dismiss",
+                confirmLabel = "Done",
+                onDismiss = { showChartContextDialog = false },
+                onConfirm = { showChartContextDialog = false }
+            ) {
+                MXChartScreen()
             }
         }
     }

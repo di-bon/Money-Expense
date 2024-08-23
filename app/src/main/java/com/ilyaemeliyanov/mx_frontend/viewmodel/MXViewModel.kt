@@ -55,6 +55,11 @@ class MXViewModel(
 
     lateinit var email: String
 
+    // Data to create a new wallet
+    var walletName by mutableStateOf("")
+    var walletDescription by mutableStateOf("")
+    var walletAmount by mutableStateOf("")
+
     // Data to create a new transaction
     var transactionLabel: String by mutableStateOf("")
     var transactionDescription: String by mutableStateOf("")
@@ -110,9 +115,7 @@ class MXViewModel(
                 date = transactionDate,
                 wallet = wallet,
             )
-            Log.d(TAG, "count before: ${transactions.size}")
             saveTransaction(transaction)
-            Log.d(TAG, "count after: ${transactions.size}")
 //            filteredAndSortedTransactions = getFilteredAndSortedTransactions(
 //                transactionList = transactions,
 //                filter = _uiState.value.currentFilter,
@@ -218,7 +221,8 @@ class MXViewModel(
         }
     }
 
-    fun saveWallet(wallet: Wallet?) {
+    fun createAndSaveWallet() {
+        val wallet = Wallet(id = "", name = walletName, amount = walletAmount.toFloat(), description = walletDescription, ref = null)
         if (wallet != null) {
             viewModelScope.launch {
                 repository.saveWallet(wallet) { walletRef ->
@@ -461,7 +465,6 @@ class MXViewModel(
             repository.getPayPalAccessToken(clientId, clientSecret) { token ->
                 if (token != null) {
                     payPalAccessToken = token
-                    getPayPalTransactions(payPalAccessToken)
                 }
             }
         }

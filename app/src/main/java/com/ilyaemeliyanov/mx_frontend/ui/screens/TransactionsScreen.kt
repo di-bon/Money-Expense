@@ -116,14 +116,14 @@ fun TransactionsScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                     MXRectangularButton(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.weight(1f).padding(4.dp),
                         containerColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
                         contentColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }) {
                         Text("OUT")
                     }
                     MXRectangularButton(
-                        modifier = Modifier.padding(4.dp),
+                        modifier = Modifier.weight(1f).padding(4.dp),
                         containerColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
                         contentColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.INCOME }
@@ -232,7 +232,7 @@ fun TransactionsScreen(
                     mxViewModel.updateCurrentFilter(it)
                 }
             }
-            Spacer(modifier = Modifier.width(24.dp))
+            Spacer(modifier = Modifier.width(8.dp))
 
             MXCard (
                 containerColor = MXColors.Default.ActiveColor,

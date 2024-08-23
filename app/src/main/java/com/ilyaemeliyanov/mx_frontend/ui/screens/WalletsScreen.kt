@@ -63,9 +63,6 @@ fun WalletsScreen(
     val wallets = mxViewModel.wallets
 
     var showContextDialog by remember {mutableStateOf(false)}
-    var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var amount by remember { mutableStateOf("") }
 
     Column (modifier = Modifier
         .padding(32.dp)) {
@@ -119,30 +116,29 @@ fun WalletsScreen(
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
                     showContextDialog = false
-                    val wallet = Wallet(id = "", name = name, amount = amount.toFloat(), description = description, ref = null)
-                    mxViewModel.saveWallet(wallet)
+                    mxViewModel.createAndSaveWallet()
                 }
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 MXInput(
                     titleText = "Name",
                     labelText = "Enter your wallet name...",
-                    text = name,
-                    onTextChange = { name = it },
+                    text = mxViewModel.walletName,
+                    onTextChange = { mxViewModel.walletName = it },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 MXInput(
                     titleText = "Description",
                     labelText = "Enter a short description for your wallet...",
-                    text = description,
-                    onTextChange = { value -> description = value },
+                    text = mxViewModel.walletDescription,
+                    onTextChange = { value -> mxViewModel.walletDescription = value },
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 MXInput(
                     titleText = "Amount",
                     labelText = "Enter the initial amount...",
-                    text = amount,
-                    onTextChange = { value -> amount = value },
+                    text = mxViewModel.walletAmount,
+                    onTextChange = { value -> mxViewModel.walletAmount = value },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     ),

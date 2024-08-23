@@ -69,7 +69,7 @@ fun MXTransaction(
 
             Box(modifier = Modifier.width(50.dp).height(50.dp).padding(8.dp).clip(MXShapes.medium).background(Color(246, 246, 246)), contentAlignment = Alignment.Center) {
                 Icon(
-                    imageVector = if (transaction.amount < 0) Icons.Filled.ArrowDownward else Icons.Filled.ArrowUpward,
+                    imageVector = if (transaction.amount < 0) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward,
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth()
                 )
