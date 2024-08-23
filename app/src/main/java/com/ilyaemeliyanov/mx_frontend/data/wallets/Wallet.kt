@@ -7,7 +7,7 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 
 @Entity
 data class Wallet (
-    @PrimaryKey val id: String,
+    @PrimaryKey var id: String,
     val name: String,
     var amount: Float,
     val description: String?,

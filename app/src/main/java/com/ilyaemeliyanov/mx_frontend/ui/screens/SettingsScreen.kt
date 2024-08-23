@@ -71,12 +71,11 @@ fun SettingsScreen(
 //    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
 
     val context = LocalContext.current
-    val user = mxViewModel.user
 
     var showUserUpdateContextDialog by remember { mutableStateOf(false) }
     var newFirstname by remember { mutableStateOf(mxViewModel.user?.firstName ?: "") }
     var newLastname by remember { mutableStateOf(mxViewModel.user?.lastName ?: "") }
-    var newPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf(mxViewModel.user?.password ?: "") }
     var newPasswordConfirm by remember { mutableStateOf("") }
 
     var showExportContextDialog by remember { mutableStateOf(false) }
@@ -116,7 +115,7 @@ fun SettingsScreen(
                         color = Color.White
                     )
                     Text(
-                        text = "${user?.firstName} ${user?.lastName}",
+                        text = "${mxViewModel.user?.firstName} ${mxViewModel.user?.lastName}",
                         style = MaterialTheme.typography.titleMedium,
                         color = MXColors.Default.ActiveColor
                     )
@@ -229,40 +228,20 @@ fun SettingsScreen(
                         text = newLastname,
                         onTextChange = { newLastname = it }
                     )
-                    MXInput(
+                    MXSecretInput(
                         titleText = "Password",
                         labelText = "Enter your password...",
                         text = newPassword,
                         onTextChange = { newPassword = it }
                     )
-                    MXInput(
+                    MXSecretInput(
                         titleText = "Confirm password",
                         labelText = "Enter your password again...",
                         text = newPasswordConfirm,
+                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
                         onTextChange = { newPasswordConfirm = it }
                     )
                 }
-            }
-        }
-
-        if (showExportContextDialog) {
-            MXAlertDialog(
-                title = "Export transactions",
-                dismissLabel = "Cancel",
-                confirmLabel = "Export",
-                onDismiss = { showExportContextDialog = false },
-                onConfirm = {
-                    val csvData = mxViewModel.transactions.toCSV()
-                    val file = exportToCSV(context, "transactions", csvData)
-                    file?.let {
-                        // Handle successful export, show Toast with the path for the exported file
-                        Toast.makeText(context, "Exported to: ${it.absolutePath}", Toast.LENGTH_LONG).show()
-                    } ?: run {
-                        // Handle failure
-                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
-                    }
-                }) {
-                Text("Your files will be exported to your local storage \u60b0")
             }
         }
 

@@ -224,7 +224,8 @@ class MXViewModel(
                 repository.saveWallet(wallet) { walletRef ->
                     // Update UI
                     if (walletRef != null) {
-                        wallet.ref = walletRef
+                        wallet.id = walletRef.id // Remember that ID is not yet defined on UI creation
+                        wallet.ref = walletRef // Remember to save the reference
                         wallets += wallet
                     }
                     // Update User
@@ -238,10 +239,10 @@ class MXViewModel(
     fun updateWallet(wallet: Wallet?) {
         if (wallet != null) {
             viewModelScope.launch {
-                repository.updateWallet(wallet) {wallet ->
-                   if (wallet != null) {
+                repository.updateWallet(wallet) { walletRef ->
+                   if (walletRef != null) {
                        val newWallets = wallets.map {// Generate new list and replace the updated item
-                           if (it.id == wallet.id) wallet else it
+                           if (it.id == walletRef.id) wallet else it
                        }
                        wallets = newWallets
                    }

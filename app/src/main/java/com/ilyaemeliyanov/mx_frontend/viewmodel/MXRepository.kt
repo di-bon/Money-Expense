@@ -78,8 +78,16 @@ class MXRepository {
     }
 
     fun saveUser(user: User, callback: (DocumentReference?) -> Unit) {
+        val userData = mutableMapOf<String, Any?>().apply {
+            put("firstName", user.firstName)
+            put("lastName", user.lastName)
+            put("email", user.email)
+            put("password", user.password)
+            put("transactions", user.transactions)
+            put("wallets", user.wallets)
+        }
         usersCollection
-            .add(user)
+            .add(userData)
             .addOnSuccessListener { userRef ->
                 Log.d(TAG, "User saved with id ${userRef.id}")
                 callback(userRef)
@@ -92,12 +100,19 @@ class MXRepository {
 
     fun updateUser(user: User, callback: (User?) -> Unit) {
         val docRef = usersCollection.document(user.id)
-
-        Log.d("MXRepository", user.transactions.toString())
+        val userData = mutableMapOf<String, Any?>().apply {
+            put("firstName", user.firstName)
+            put("lastName", user.lastName)
+            put("email", user.email)
+            put("password", user.password)
+            put("transactions", user.transactions)
+            put("wallets", user.wallets)
+            put("currency", user.currency)
+        }
 
         // Update the existing document in collection with the specified user
         docRef
-            .set(user)
+            .set(userData)
             .addOnSuccessListener {
                 Log.d("Firestore", "User item updated with ID: ${docRef.id}")
                 callback(user)
@@ -109,8 +124,13 @@ class MXRepository {
     }
 
     fun saveWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit) {
+        val walletData = mutableMapOf<String, Any?>().apply {
+            put("name", wallet.name)
+            put("description", wallet.description)
+            put("amount", wallet.amount)
+        }
         walletsCollection
-            .add(wallet)
+            .add(walletData)
             .addOnSuccessListener { docRef ->
                 Log.d("Firestore", "Wallet item added with ID: ${docRef.id}")
                 callback(docRef)
@@ -122,11 +142,17 @@ class MXRepository {
     }
 
     fun updateWallet(wallet: Wallet, callback: (Wallet?) -> Unit) {
+        Log.d("MXRepository", wallet.toString())
         val docRef = walletsCollection.document(wallet.id)
+        val walletData = mutableMapOf<String, Any?>().apply {
+            put("name", wallet.name)
+            put("description", wallet.description)
+            put("amount", wallet.amount)
+        }
 
         // Update the existing document in collection with the specified wallet
         docRef
-            .set(wallet)
+            .set(walletData)
             .addOnSuccessListener {
                 Log.d("Firestore", "Wallet item updated with ID: ${docRef.id}")
                 callback(wallet)
@@ -175,10 +201,16 @@ class MXRepository {
 
     fun updateTransaction(transaction: Transaction) {
         val docRef = transactionsCollection.document(transaction.id)
-
+        val transactionData = mutableMapOf<String, Any?>().apply {
+            put("label", transaction.label)
+            put("description", transaction.description)
+            put("amount", transaction.amount)
+            put("date", transaction.date)
+            put("wallet", transaction.wallet.ref) // replace the wallet with its reference for future linkage
+        }
         // Update the existing document in collection with the specified wallet
         docRef
-            .set(transaction)
+            .set(transactionData)
             .addOnSuccessListener {
                 Log.d("Firestore", "Transaction item updated with ID: ${docRef.id}")
             }
