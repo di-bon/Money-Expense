@@ -214,7 +214,9 @@ private fun DashboardInfo(
                 onDismiss = { showChartContextDialog = false },
                 onConfirm = { showChartContextDialog = false }
             ) {
-                MXChartScreen()
+                MXChartScreen(
+                    mxViewModel = mxViewModel
+                )
             }
         }
     }
