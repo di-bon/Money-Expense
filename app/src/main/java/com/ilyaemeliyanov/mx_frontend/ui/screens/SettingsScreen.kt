@@ -14,10 +14,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.outlined.AttachMoney
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.PersonOff
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
@@ -65,6 +69,7 @@ private const val TAG = "SettingsScreen"
 fun SettingsScreen(
     mxViewModel: MXViewModel,
     mxAuthViewModel: MXAuthViewModel,
+    navController: NavController,
     modifier: Modifier = Modifier
 ) {
 
@@ -103,7 +108,7 @@ fun SettingsScreen(
         }
     }
 
-    Box {
+//    Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
             item {
                 MXTitle(
@@ -154,15 +159,30 @@ fun SettingsScreen(
                         leftIconImageVector = Icons.Outlined.Person,
                         titleString = "Change personal info",
                         descriptionString = "Here you can change your firstname, lastname and password",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     MXSettingsButton(
                         onClick = { showCurrencyContextDialog = true },
-                        leftIconImageVector = Icons.Outlined.AttachMoney, // TODO: set credit card icon
+                        leftIconImageVector = Icons.Outlined.AttachMoney,
                         titleString = "Change currency",
                         descriptionString = "Choose the currency to display your transactions with",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MXSettingsButton(
+                        onClick = {
+                            mxAuthViewModel.signOut()
+                            navController.navigate(AuthScreens.InitialScreen.name) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                                  },
+                        leftIconImageVector = Icons.AutoMirrored.Outlined.Logout,
+                        titleString = "Log out",
+                        descriptionString = "Log out of your account",
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -177,7 +197,7 @@ fun SettingsScreen(
                         leftIconImageVector = Icons.Filled.Downloading,
                         titleString = "Export transactions in CSV",
                         descriptionString = "Your transactions are available for download in CSV format",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     MXSettingsButton(
@@ -185,7 +205,7 @@ fun SettingsScreen(
                         leftIconImageVector = Icons.Filled.Payment,
                         titleString = "Connect to PayPal",
                         descriptionString = "All of your PayPal transactions will be visible in Money Expense",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                 }
             }
@@ -203,7 +223,7 @@ fun SettingsScreen(
                         titleString = "Close & delete account",
                         titleColor = Color.Red,
                         descriptionString = "Close and delete your account and all related wallets and tra...",
-                        rightIconImageVector = Icons.Filled.KeyboardArrowRight
+                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                 }
@@ -341,7 +361,7 @@ fun SettingsScreen(
             }
         }
 
-    }
+//    }
 
 }
 

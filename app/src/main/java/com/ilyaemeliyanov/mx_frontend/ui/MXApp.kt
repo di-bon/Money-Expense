@@ -136,6 +136,7 @@ data class BottomNavigationItem(
 fun MXApp(
     mxViewModel: MXViewModel,
     mxAuthViewModel: MXAuthViewModel,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val bottomNavController = rememberNavController()
@@ -197,7 +198,8 @@ fun MXApp(
                     //call our composable screens here
                     SettingsScreen(
                         mxViewModel = mxViewModel,
-                        mxAuthViewModel = mxAuthViewModel
+                        mxAuthViewModel = mxAuthViewModel,
+                        navController = navController
                     )
                 }
             }

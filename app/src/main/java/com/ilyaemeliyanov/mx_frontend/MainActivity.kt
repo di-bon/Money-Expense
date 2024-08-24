@@ -140,9 +140,9 @@ class MainActivity : ComponentActivity() {
 //                            TestScreen(modifier = Modifier
 //                                .height(400.dp))
                         MXApp(
-//                                navController = navController,
                             mxViewModel = mxViewModel,
                             mxAuthViewModel = mxAuthViewModel,
+                            navController = navController,
                             modifier = Modifier
                                 .background(color = MXColors.Default.BgColor)
                                 .fillMaxWidth()
