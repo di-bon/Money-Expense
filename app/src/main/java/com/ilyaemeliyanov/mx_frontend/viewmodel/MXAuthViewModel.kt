@@ -71,4 +71,20 @@ class MXAuthViewModel : ViewModel() {
     fun signOut() {
         auth.signOut()
     }
+
+    fun deleteUser() {
+        if (user != null) {
+            user
+                .delete()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d(TAG, "User account deleted from firebase auth.")
+                    } else {
+                        Log.d(TAG, "Error while trying to delete user ${user.email} from firebase auth")
+                    }
+                }
+        } else {
+            Log.d(TAG, "User is null!")
+        }
+    }
 }

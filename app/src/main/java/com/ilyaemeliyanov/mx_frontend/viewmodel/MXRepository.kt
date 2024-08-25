@@ -10,10 +10,10 @@ import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import okhttp3.Credentials
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+//import okhttp3.Credentials
+//import okhttp3.FormBody
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
 import org.json.JSONObject
 import java.util.Date
 
@@ -119,6 +119,20 @@ class MXRepository {
             }
             .addOnFailureListener {e ->
                 Log.w("Firestore", "Error updating user item", e)
+                callback(null)
+            }
+    }
+
+    fun deleteUser(user: User, callback: (DocumentReference?) -> Unit) {
+        val docRef = usersCollection.document(user.id)
+        docRef
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "User ${user.email} successfully deleted")
+                callback(docRef)
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "Error while trying to delete user ${user.email}")
                 callback(null)
             }
     }
@@ -247,47 +261,47 @@ class MXRepository {
         }
     }
 
-    suspend fun getPayPalAccessToken(clientId: String, clientSecret: String, callback: (String?) -> Unit) {
-        withContext(Dispatchers.IO) {
-            val client = OkHttpClient()
-            val credential = Credentials.basic(clientId, clientSecret)
-            val request = Request.Builder()
-                .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
-                .post(FormBody.Builder()
-                    .add("grant_type", "client_credentials")
-                    .add("ignoreCache", "true")
-                    .add("return_authn_schemes", "true")
-                    .add("return_client_metadata", "true")
-                    .add("return_unconsented_scopes", "true")
-                    .build()
-                )
-                .addHeader("Authorization", credential)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                .build()
-
-            val response = client.newCall(request).execute()
-            val jsonResponse = JSONObject(response.body?.string() ?: "")
-            Log.d("Response", jsonResponse.toString())
-            callback(jsonResponse.getString("access_token"))
-        }
-        callback(null)
-    }
-
-    suspend fun getPayPalTransactions(accessToken: String, callback: (String?) -> Unit) {
-        withContext(Dispatchers.IO) {
-            val client = OkHttpClient()
-            val request = Request.Builder()
-                .url("https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info&start_date=2024-03-20T11:59:59.999Z&end_date=2024-03-20T23:59:00.000Z") // TODO: test query, replace in production
-                .get()
-                .addHeader("Authorization", "Bearer $accessToken")
-                .build()
-
-            val response = client.newCall(request).execute()
-            val jsonResponse = JSONObject(response.body?.string() ?: "")
-            callback(jsonResponse.toString())
-        }
-        callback(null)
-    }
+//    suspend fun getPayPalAccessToken(clientId: String, clientSecret: String, callback: (String?) -> Unit) {
+//        withContext(Dispatchers.IO) {
+//            val client = OkHttpClient()
+//            val credential = Credentials.basic(clientId, clientSecret)
+//            val request = Request.Builder()
+//                .url("https://api-m.sandbox.paypal.com/v1/oauth2/token")
+//                .post(FormBody.Builder()
+//                    .add("grant_type", "client_credentials")
+//                    .add("ignoreCache", "true")
+//                    .add("return_authn_schemes", "true")
+//                    .add("return_client_metadata", "true")
+//                    .add("return_unconsented_scopes", "true")
+//                    .build()
+//                )
+//                .addHeader("Authorization", credential)
+//                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+//                .build()
+//
+//            val response = client.newCall(request).execute()
+//            val jsonResponse = JSONObject(response.body?.string() ?: "")
+//            Log.d("Response", jsonResponse.toString())
+//            callback(jsonResponse.getString("access_token"))
+//        }
+//        callback(null)
+//    }
+//
+//    suspend fun getPayPalTransactions(accessToken: String, callback: (String?) -> Unit) {
+//        withContext(Dispatchers.IO) {
+//            val client = OkHttpClient()
+//            val request = Request.Builder()
+//                .url("https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info&start_date=2024-03-20T11:59:59.999Z&end_date=2024-03-20T23:59:00.000Z") // TODO: test query, replace in production
+//                .get()
+//                .addHeader("Authorization", "Bearer $accessToken")
+//                .build()
+//
+//            val response = client.newCall(request).execute()
+//            val jsonResponse = JSONObject(response.body?.string() ?: "")
+//            callback(jsonResponse.toString())
+//        }
+//        callback(null)
+//    }
 }
 
 

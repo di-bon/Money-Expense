@@ -91,22 +91,24 @@ fun SettingsScreen(
     var payPalClientId by remember { mutableStateOf("") }
     var payPalClientSecret by remember { mutableStateOf("") }
 
+    var showDeleteAccountContextDialog by remember { mutableStateOf(false) }
+
     // Listen for PayPal access token generation
-    LaunchedEffect(Unit) {
-        val clientId = mxViewModel.getData(context, "client_id") ?: ""
-        val clientSecret = mxViewModel.getData(context, "client_secret") ?: ""
+//    LaunchedEffect(Unit) {
+//        val clientId = mxViewModel.getData(context, "client_id") ?: ""
+//        val clientSecret = mxViewModel.getData(context, "client_secret") ?: ""
+//
+//        if (clientId != "" && clientSecret != "") {
+//            mxViewModel.generatePayPalAccessToken(clientId, clientSecret)
+//        }
+//    }
 
-        if (clientId != "" && clientSecret != "") {
-            mxViewModel.generatePayPalAccessToken(clientId, clientSecret)
-        }
-    }
-
-    LaunchedEffect(mxViewModel.payPalAccessToken) {
-        if (mxViewModel.payPalAccessToken != "") {
-            Log.d("SettingsScreen", "ACCESS_TOKEN: ${mxViewModel.payPalAccessToken}")
-            mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
-        }
-    }
+//    LaunchedEffect(mxViewModel.payPalAccessToken) {
+//        if (mxViewModel.payPalAccessToken != "") {
+//            Log.d("SettingsScreen", "ACCESS_TOKEN: ${mxViewModel.payPalAccessToken}")
+//            mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
+//        }
+//    }
 
 //    Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -218,11 +220,11 @@ fun SettingsScreen(
                     Text(text = "Danger zone", style = MaterialTheme.typography.labelLarge)
                     Spacer(modifier = Modifier.height(12.dp))
                     MXSettingsButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { showDeleteAccountContextDialog = true },
                         leftIconImageVector = Icons.Outlined.PersonOff, // TODO: set delete account icon
                         titleString = "Close & delete account",
                         titleColor = Color.Red,
-                        descriptionString = "Close and delete your account and all related wallets and tra...",
+                        descriptionString = "Close and delete your account and all related wallets and transactions",
                         rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -347,11 +349,11 @@ fun SettingsScreen(
                 confirmLabel = "Connect",
                 onDismiss = { showPayPalContextDialog = false },
                 onConfirm = {
-                    mxViewModel.storeData(context, "client_id", payPalClientId)
-                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
-
-                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
-                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
+//                    mxViewModel.storeData(context, "client_id", payPalClientId)
+//                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
+//
+//                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
+//                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
                 }) {
                 Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
                 Spacer(modifier = Modifier.height(8.dp))
@@ -360,9 +362,30 @@ fun SettingsScreen(
                 MXSecretInput(titleText = "Account Secret Key", labelText = "Client Secret Key", text = payPalClientSecret, keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done), onTextChange = { payPalClientSecret = it })
             }
         }
-
+        if (showDeleteAccountContextDialog) {
+            MXAlertDialog(
+                title = "Change Currency",
+                dismissLabel = "Cancel",
+                confirmLabel = "Delete account",
+                confirmContainerColor = Color.Red,
+                onDismiss = { showDeleteAccountContextDialog = false },
+                onConfirm = {
+                    mxViewModel.deleteUser(user = mxViewModel.user)
+                    mxAuthViewModel.deleteUser()
+                    showDeleteAccountContextDialog = false
+                    navController.navigate(AuthScreens.InitialScreen.name) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+            ) {
+                Column {
+                    Text("Are you sure you want to permanently delete your account?")
+                }
+            }
+        }
 //    }
-
 }
 
 //@Preview(showBackground = true)

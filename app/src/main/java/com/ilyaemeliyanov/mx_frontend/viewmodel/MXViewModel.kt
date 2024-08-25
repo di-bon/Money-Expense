@@ -1,15 +1,13 @@
 package com.ilyaemeliyanov.mx_frontend.viewmodel
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
+//import androidx.security.crypto.EncryptedSharedPreferences
+//import androidx.security.crypto.MasterKey
 import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
@@ -17,32 +15,17 @@ import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Credentials
-import okhttp3.FormBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
+//import okhttp3.Credentials
+//import okhttp3.FormBody
+//import okhttp3.OkHttpClient
+//import okhttp3.Request
 import org.json.JSONObject
 import java.util.Date
 import kotlin.math.abs
-
-
-// OLD STUFF TO INTEGRATE WITH THIS CLASS
-//class MxViewModel : ViewModel() {
-//    // TODO: implement checkLogIn()
-//    fun checkLogIn(): Boolean {
-//        return true
-//    }
-//
-//    private val _uiState = MutableStateFlow(MxUiState())
-//    val uiState: StateFlow<MxUiState> = _uiState
-//
-//}
 
 private const val TAG = "MXViewModel"
 
@@ -218,6 +201,17 @@ class MXViewModel(
                 }
             }
             Log.d("New User", user.toString())
+        }
+    }
+
+    fun deleteUser(user: User?) {
+        if (user != null) {
+            viewModelScope.launch {
+                wallets.forEach {
+                    deleteWallet(it)
+                }
+                repository.deleteUser(user) { }
+            }
         }
     }
 
@@ -428,53 +422,53 @@ class MXViewModel(
     }
 
     //    Encrypted Shared Preferences
-    private fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+//    private fun getEncryptedSharedPreferences(context: Context): SharedPreferences {
+//        val masterKey = MasterKey.Builder(context)
+//            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+//            .build()
+//
+//        return EncryptedSharedPreferences.create(
+//            context,
+//            "mx_prefs",
+//            masterKey,
+//            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+//            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+//        )
+//    }
 
-        return EncryptedSharedPreferences.create(
-            context,
-            "mx_prefs",
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-    }
-
-    fun storeData(context: Context, key: String, value: String) {
-        val sharedPreferences = getEncryptedSharedPreferences(context)
-        val editor = sharedPreferences.edit()
-
-        // Store data
-        editor.putString(key, value)
-        editor.apply()
-    }
-
-    fun getData(context: Context, key: String): String? {
-        val sharedPreferences = getEncryptedSharedPreferences(context)
-
-        // Retrieve data
-        return sharedPreferences.getString(key, null)
-    }
+//    fun storeData(context: Context, key: String, value: String) {
+//        val sharedPreferences = getEncryptedSharedPreferences(context)
+//        val editor = sharedPreferences.edit()
+//
+//        // Store data
+//        editor.putString(key, value)
+//        editor.apply()
+//    }
+//
+//    fun getData(context: Context, key: String): String? {
+//        val sharedPreferences = getEncryptedSharedPreferences(context)
+//
+//        // Retrieve data
+//        return sharedPreferences.getString(key, null)
+//    }
 
 
     //    Paypal
-    fun generatePayPalAccessToken(clientId: String, clientSecret: String) {
-        viewModelScope.launch {
-            repository.getPayPalAccessToken(clientId, clientSecret) { token ->
-                if (token != null) {
-                    payPalAccessToken = token
-                }
-            }
-        }
-    }
-
-    fun getPayPalTransactions(accessToken: String) {
-        viewModelScope.launch {
-            repository.getPayPalTransactions(accessToken) { jsonString ->
-                if (jsonString != null) Log.d("MXViewModel", jsonString)
-            }
-        }
-    }
+//    fun generatePayPalAccessToken(clientId: String, clientSecret: String) {
+//        viewModelScope.launch {
+//            repository.getPayPalAccessToken(clientId, clientSecret) { token ->
+//                if (token != null) {
+//                    payPalAccessToken = token
+//                }
+//            }
+//        }
+//    }
+//
+//    fun getPayPalTransactions(accessToken: String) {
+//        viewModelScope.launch {
+//            repository.getPayPalTransactions(accessToken) { jsonString ->
+//                if (jsonString != null) Log.d("MXViewModel", jsonString)
+//            }
+//        }
+//    }
 }

@@ -33,6 +33,8 @@ fun MXAlertDialog(
     confirmLabel: String,
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
+    confirmLabelColor: Color = Color.Black,
+    confirmContainerColor: Color = MXColors.Default.ActiveColor,
     content: @Composable () -> Unit
 ) {
     AlertDialog(
@@ -56,8 +58,8 @@ fun MXAlertDialog(
         confirmButton = {
             MXRectangularButton(
                 onClick = onConfirm,
-                containerColor = MXColors.Default.ActiveColor,
-                contentColor = Color.Black,
+                containerColor = confirmContainerColor,
+                contentColor = confirmLabelColor,
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
