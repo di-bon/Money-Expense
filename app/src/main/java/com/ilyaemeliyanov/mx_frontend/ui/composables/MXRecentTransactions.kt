@@ -55,11 +55,10 @@ fun MXRecentTransactions(
             items(transactionList, key = { t -> t.id }) { transaction ->
                 SwipeToDeleteContainer(
                     onDelete = {
-//                        if (!showAlertDialog) {
-//                            showAlertDialog = true
+                        if (!showAlertDialog) {
+                            showAlertDialog = true
                             selectedTransaction = transactionList.find { it.id == transaction.id }
-                            mxViewModel.deleteTransaction(selectedTransaction)
-//                        }
+                        }
                     }
                 ) {
                     MXTransaction(
