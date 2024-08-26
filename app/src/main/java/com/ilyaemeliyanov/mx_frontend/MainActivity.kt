@@ -31,6 +31,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -55,8 +58,6 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
-// TODO: merge this class with ui/MxAppOld.kt
-
 private const val TAG = "MainActivity"
 
 enum class AuthScreens(@StringRes val title: Int) {
@@ -68,19 +69,15 @@ enum class AuthScreens(@StringRes val title: Int) {
 
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
+    private var isUserAlreadyLoggedIn = false
+    private  val mxAuthViewModel = MXAuthViewModel()
+    private val mxViewModel = MXViewModel(MXRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize Firebase Auth
         auth = Firebase.auth
-
-        val mxAuthViewModel = MXAuthViewModel()
-
-        val mxViewModel = MXViewModel(MXRepository())
-
-//        TODO: remove this line when isLoggedIn function implemented
-        mxViewModel.email = "ilya.emeliyanov@gigio.com"
 
         setContent {
             MXTheme {
@@ -90,12 +87,12 @@ class MainActivity : ComponentActivity() {
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 // Get the name of the current screen
                 val currentScreen = AuthScreens.valueOf(
-                    backStackEntry?.destination?.route ?: AuthScreens.MXApp.name
+                    backStackEntry?.destination?.route ?: AuthScreens.InitialScreen.name
                 )
 
                 NavHost(
                     navController = navController,
-                    startDestination = AuthScreens.MXApp.name, // TODO: change based on the login user
+                    startDestination = if (isUserAlreadyLoggedIn) AuthScreens.MXApp.name else AuthScreens.InitialScreen.name, // TODO: change based on the login user
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
@@ -158,9 +155,9 @@ class MainActivity : ComponentActivity() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if (currentUser != null) {
-            // TODO: navigate to MXApp
-//            reload()
+        if (currentUser != null && mxAuthViewModel.user?.email != null) {
+            mxViewModel.email = mxAuthViewModel.user.email.toString()
+            isUserAlreadyLoggedIn = true
         }
     }
 }

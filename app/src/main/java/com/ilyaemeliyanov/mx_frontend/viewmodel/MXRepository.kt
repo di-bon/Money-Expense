@@ -26,7 +26,13 @@ class MXRepository {
     private val transactionsCollection = firestore.collection("transactions")
 
     suspend fun getUserByEmail(email: String, callback: (User?) -> Unit) {
-        val documentSnapshot = usersCollection.whereEqualTo("email", email).get().await().documents[0]
+        val documentSnapshotList = usersCollection.whereEqualTo("email", email).get().await()
+        if (documentSnapshotList.isEmpty) {
+            Log.d(TAG, "Snapshots empty")
+            callback(null)
+            return
+        }
+        val documentSnapshot = documentSnapshotList.documents[0]
         val id = documentSnapshot.id
         val data = documentSnapshot.data
         val currencyName = data?.get("currency") as? String
