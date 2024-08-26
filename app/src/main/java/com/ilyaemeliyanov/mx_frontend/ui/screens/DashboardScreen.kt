@@ -223,7 +223,7 @@ private fun DashboardInfo(
             ) {
                 MXChartScreen(
                     mxViewModel = mxViewModel,
-                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id }
+                    transactionList = transactions
                 )
             }
         }
@@ -237,7 +237,7 @@ private fun DashboardInfo(
             ) {
                 MXChartScreen(
                     mxViewModel = mxViewModel,
-                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id && it.amount > 0 }
+                    transactionList = transactions.filter { it.amount > 0 }
                 )
             }
         }
@@ -251,7 +251,7 @@ private fun DashboardInfo(
             ) {
                 MXChartScreen(
                     mxViewModel = mxViewModel,
-                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id && it.amount < 0 }
+                    transactionList = transactions.filter { it.amount < 0 }
                 )
             }
         }
