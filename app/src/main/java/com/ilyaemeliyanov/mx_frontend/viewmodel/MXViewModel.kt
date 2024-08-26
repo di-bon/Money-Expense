@@ -52,10 +52,6 @@ class MXViewModel(
     var transactionType: TransactionType by mutableStateOf(TransactionType.EXPENSE)
 
 
-    // Paypal
-    var payPalAccessToken = ""
-
-
 //    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
     fun updateCurrentFilter(newFilter: String) {
@@ -364,7 +360,7 @@ class MXViewModel(
         return if (transactions.isNotEmpty() && selectedWallet != null) {
             transactions
                 .filter { transaction ->
-                    transaction.wallet == selectedWallet
+                    transaction.wallet.id == selectedWallet?.id
                 }
                 .take(10)
         } else {

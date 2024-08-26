@@ -1,7 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,24 +12,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +39,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXChartScreen
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
-import com.ilyaemeliyanov.mx_frontend.ui.composables.ShimmerListItem
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
@@ -110,8 +104,8 @@ private fun DashboardTopBar(
         ) {
             MXDropdownMenu(
                 label = "Wallet",
-                items = wallets.map { wallet -> wallet?.name ?: "All wallets" },
-                selectedItem = "All wallets",
+                items = listOf("All wallets") + wallets.map { wallet -> wallet.name },
+                selectedItem = if (mxViewModel.selectedWallet != null) mxViewModel.selectedWallet?.name else "All wallets",
                 showLabel = false
             ) { item ->
                 onWalletSelection(item)
@@ -127,10 +121,10 @@ private fun DashboardInfo(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val transactions = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id }
-    var income by remember { mutableFloatStateOf(mxViewModel.income) }
-    var expenses by remember { mutableFloatStateOf(mxViewModel.expenses) }
-    var balance by remember { mutableFloatStateOf(mxViewModel.balance) }
+    val transactions = if (mxViewModel.selectedWallet != null) mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id } else mxViewModel.transactions
+    var income by remember { mutableStateOf(mxViewModel.income) }
+    var expenses by remember { mutableStateOf(mxViewModel.income) }
+    var balance by remember { mutableStateOf(mxViewModel.income) }
 
     var showChartContextDialog by remember { mutableStateOf(false) }
     var incomeChartContextDialog by remember { mutableStateOf(false) }
@@ -140,6 +134,8 @@ private fun DashboardInfo(
         income = getIncome(transactions)
         expenses = getExpenses(transactions)
         balance = income + expenses
+
+        Log.d("Dashboard", "$income $expenses $balance")
     }
 
     Column(modifier = modifier) {

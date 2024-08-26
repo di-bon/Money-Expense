@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
