@@ -43,7 +43,7 @@ fun MXChartScreen(
     mxViewModel: MXViewModel,
     transactionList: List<Transaction>
 ) {
-    if (transactionList.size > 0) {
+    if (transactionList.size > 1) {
         val minAmountTransaction = mxViewModel.transactions.sortedBy { it.amount }[0]
         val dataPoints = transactionList.sortedBy { it.date }.map {t ->
             val localDate = t.date.toInstant()
@@ -75,7 +75,7 @@ fun MXChartScreen(
             .axisStepSize(20.dp)
             .backgroundColor(Color.Transparent)
             .steps(dataPoints.size - 1)
-            .labelData { i -> abs(transactionList[i].amount).toString() }
+            .labelData { i -> i.toString() }
             .startPadding(10.dp)
             .labelAndAxisLinePadding(20.dp)
             .axisLineColor(Color.Black)

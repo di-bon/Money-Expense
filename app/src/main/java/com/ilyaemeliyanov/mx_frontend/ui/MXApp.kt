@@ -151,9 +151,6 @@ fun MXApp(
     }
 
     LaunchedEffect(Unit) {
-        // TODO: change to logged in user
-//        mxViewModel.email = "john.doe@gmail.com"
-
         // If this screen is the first one to be loaded, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
         isLoading = false
@@ -168,7 +165,6 @@ fun MXApp(
                 navController = bottomNavController,
                 startDestination = Screens.DashboardScreen.name,
                 modifier = Modifier
-//                .padding(vertical = 20.dp, horizontal = 20.dp)
                     .fillMaxHeight()
             ) {
                 composable(Screens.DashboardScreen.name) {

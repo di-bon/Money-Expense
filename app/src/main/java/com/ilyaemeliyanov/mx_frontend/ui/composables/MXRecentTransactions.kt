@@ -1,6 +1,9 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -22,6 +25,7 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MXRecentTransactions(
     mxViewModel: MXViewModel,
@@ -48,19 +52,18 @@ fun MXRecentTransactions(
                 ShimmerListItem(isLoading = isLoading, content = {})
             }
         } else {
-            items(transactionList) { transaction ->
+            items(transactionList, key = { t -> t.id }) { transaction ->
                 SwipeToDeleteContainer(
                     onDelete = {
                         if (!showAlertDialog) {
                             showAlertDialog = true
-                            selectedTransaction =
-                                transactionList.find { it.id == transaction.id }
+                            selectedTransaction = transactionList.find { it.id == transaction.id }
                         }
                     }
                 ) {
                     MXTransaction(
                         transaction = transaction,
-                        currency = mxViewModel.user?.currency ?: Currency.US_DOLLAR
+                        currency = mxViewModel.user?.currency ?: Currency.US_DOLLAR,
                     )
                 }
             }
@@ -75,8 +78,8 @@ fun MXRecentTransactions(
             onDismiss = { showAlertDialog = false },
             onConfirm = {
                 Log.d("MXRecentTransactions", selectedTransaction.toString())
-                mxViewModel.deleteTransaction(selectedTransaction)
                 showAlertDialog = false
+                mxViewModel.deleteTransaction(selectedTransaction)
             }) {
             Text("Are you sure you want to delete this transaction?")
         }

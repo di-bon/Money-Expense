@@ -53,10 +53,6 @@ class MXViewModel(
     var transactionType: TransactionType by mutableStateOf(TransactionType.EXPENSE)
 
 
-    // Paypal
-    var payPalAccessToken = ""
-
-
 //    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
 
     fun updateCurrentFilter(newFilter: String) {
@@ -328,9 +324,8 @@ class MXViewModel(
             viewModelScope.launch {
                 repository.deleteTransaction(transaction) {transactionRef ->
                    if (transactionRef != null) {
-                       Log.d(TAG, "Removing element form list")
                        transactions -= transaction
-                       Log.d("Delete Transaction", user.toString())
+                       Log.d("Transactions", transactions.toString())
                        user?.transactions = user?.transactions?.filter { it.id != transactionRef.id } ?: emptyList()
                        updateUser(user)
                    }
@@ -366,7 +361,7 @@ class MXViewModel(
         return if (transactions.isNotEmpty() && selectedWallet != null) {
             transactions
                 .filter { transaction ->
-                    transaction.wallet == selectedWallet
+                    transaction.wallet.id == selectedWallet?.id
                 }
                 .take(10)
         } else {

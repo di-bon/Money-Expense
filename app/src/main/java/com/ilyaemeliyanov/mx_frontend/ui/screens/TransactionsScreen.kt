@@ -36,7 +36,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
@@ -174,7 +173,7 @@ fun TransactionsScreen(
                     ) {
                         MXDropdownMenu(
                             items = mxViewModel.wallets.map { it.name },
-                            selectedItem = "Select wallet...",
+                            selectedItem = if (mxViewModel.transactionWalletName != "") mxViewModel.transactionWalletName else "Select wallet...",
                             showLabel = false
                         ) {
                             mxViewModel.transactionWalletName = it
