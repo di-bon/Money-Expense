@@ -1,5 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
+import android.graphics.fonts.FontStyle
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
@@ -14,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -22,6 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -30,8 +36,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 
 @Composable
 fun MXInput(
@@ -39,8 +47,10 @@ fun MXInput(
     labelText: String,
     text: String,
     onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
-    modifier: Modifier = Modifier
+    isError: Boolean = false,
+    errorMessage: String = ""
 ) {
     Column(modifier = modifier) {
         Text(text = titleText)
@@ -54,8 +64,19 @@ fun MXInput(
             ) },
             keyboardOptions = keyboardOptions,
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small
+            shape = MaterialTheme.shapes.small,
+            isError = isError
         )
+        if (isError) {
+            Text(
+                text = errorMessage,
+                style = TextStyle(
+                    fontFamily = euclidCircularA,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 16.sp),
+                color = Color(red = 162, green = 21, blue = 23)
+            )
+        }
     }
 }
 
@@ -65,8 +86,10 @@ fun MXSecretInput(
     labelText: String,
     text: String,
     onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
-    modifier: Modifier = Modifier
+    isError: Boolean = false,
+    errorMessage: String = ""
 ) {
 
     var secretVisible by remember { mutableStateOf(false) }
@@ -94,8 +117,19 @@ fun MXSecretInput(
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small
+            shape = MaterialTheme.shapes.small,
+            isError = isError
         )
+        if (isError) {
+            Text(
+                text = errorMessage,
+                style = TextStyle(
+                    fontFamily = euclidCircularA,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 16.sp),
+                color = Color(red = 162, green = 21, blue = 23)
+            )
+        }
     }
 }
 

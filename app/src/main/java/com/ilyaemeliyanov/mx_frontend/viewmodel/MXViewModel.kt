@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 //import okhttp3.Request
 import org.json.JSONObject
 import java.util.Date
+import java.util.regex.Pattern
 import kotlin.math.abs
 
 private const val TAG = "MXViewModel"
@@ -424,6 +425,28 @@ class MXViewModel(
         } else {
             transactions
         }
+    }
+
+    fun validateContent(content: String): Boolean {
+        val contentPattern = "^[A-Za-z]+(?: [A-Za-z]+)*$"
+        val pattern = Pattern.compile(contentPattern)
+        val matcher = pattern.matcher(content)
+        return matcher.matches()
+    }
+
+    fun validateEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"
+        val pattern = Pattern.compile(emailPattern)
+        val matcher = pattern.matcher(email)
+        return matcher.matches()
+    }
+
+    fun validatePassword(password: String): Boolean {
+        return password.length >= 6
+    }
+
+    fun checkConfirmPassword(password: String, confirmPassword: String): Boolean {
+        return password == confirmPassword
     }
 
     //    Encrypted Shared Preferences

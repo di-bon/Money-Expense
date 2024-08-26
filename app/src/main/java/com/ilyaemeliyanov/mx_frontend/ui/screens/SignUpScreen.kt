@@ -28,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -61,6 +62,8 @@ fun SignUpScreen(
     modifier: Modifier = Modifier
 ) {
 
+    val context = LocalContext.current
+
     // ---
     // TODO: to be replaced by viewModel class
     var firstName by remember { mutableStateOf("") }
@@ -69,6 +72,12 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     // ---
+
+    var isFirstnameValid by remember { mutableStateOf(true) }
+    var isLastnameValid by remember { mutableStateOf(true) }
+    var isEmailValid by remember { mutableStateOf(true) }
+    var isPasswordValid by remember { mutableStateOf(true) }
+    var isConfirmPasswordValid by remember { mutableStateOf(true) }
 
     Column(
         modifier = modifier,
@@ -104,66 +113,104 @@ fun SignUpScreen(
                 titleText = "First name",
                 labelText = "Enter your first name...",
                 text = firstName,
-                onTextChange = { value -> firstName = value },
-                modifier = Modifier.padding(vertical = 8.dp)
+                onTextChange = { value ->
+                    firstName = value
+                    isFirstnameValid = true
+                               },
+                modifier = Modifier.padding(vertical = 8.dp),
+                isError = !isFirstnameValid,
+                errorMessage = "Enter a valid firstname"
             )
             MXInput(
                 titleText = "Last name",
                 labelText = "Enter your last name...",
                 text = lastName,
-                onTextChange = { value -> lastName = value },
-                modifier = Modifier.padding(vertical = 8.dp)
+                onTextChange = { value ->
+                    lastName = value
+                    isLastnameValid = true
+                               },
+                modifier = Modifier.padding(vertical = 8.dp),
+                isError = !isLastnameValid,
+                errorMessage = "Enter a valid lastname"
             )
             MXInput(
                 titleText = "Email",
                 labelText = "Enter your email...",
                 text = email,
-                onTextChange = { value -> email = value },
-                modifier = Modifier.padding(vertical = 8.dp)
+                onTextChange = { value ->
+                    email = value
+                    isEmailValid = true
+                               },
+                modifier = Modifier.padding(vertical = 8.dp),
+                isError = !isEmailValid,
+                errorMessage = "Enter a valid email"
             )
             MXSecretInput(
                 titleText = "Password",
                 labelText = "Enter your password...",
                 text = password,
-                onTextChange = { value -> password = value },
-                modifier = Modifier.padding(vertical = 8.dp)
+                onTextChange = { value ->
+                    password = value
+                    isPasswordValid = true
+                               },
+                modifier = Modifier.padding(vertical = 8.dp),
+                isError = !isPasswordValid,
+                errorMessage = "Enter a password of at least 6 characters"
             )
             MXSecretInput(
                 titleText = "Confirm password",
                 labelText = "Confirm your password...",
                 text = confirmPassword,
-                onTextChange = { value -> confirmPassword = value },
+                onTextChange = { value ->
+                    confirmPassword = value
+                    isConfirmPasswordValid = true
+                               },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Done
                 ),
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp),
+                isError = !isConfirmPasswordValid,
+                errorMessage = "Enter the same valid password again"
             )
         }
         Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(24.dp))
         MXRectangularButton(
             onClick = {
-//                navController.navigate(AuthScreens.MXApp.name)
-                // TODO: validate input
-                mxAuthViewModel.signUp(email, password, firstName, lastName) {
-                    res, error ->
-                    if (res) {
-                        Log.d(TAG, "Success")
-                        mxViewModel.email = email
-                        mxViewModel.createAndSaveUser(
-                            email = email,
-                            firstName = firstName,
-                            lastName = lastName,
-                            password = password,
-                            currency = Currency.US_DOLLAR // default currency
-                        )
-                        navController.navigate(AuthScreens.MXApp.name) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
+                isFirstnameValid = mxViewModel.validateContent(firstName)
+                isLastnameValid = mxViewModel.validateContent(lastName)
+                isEmailValid = mxViewModel.validateEmail(email)
+                isPasswordValid = mxViewModel.validatePassword(password) && mxViewModel.checkConfirmPassword(password, confirmPassword)
+                isConfirmPasswordValid = mxViewModel.validatePassword(confirmPassword) && mxViewModel.checkConfirmPassword(password, confirmPassword)
+
+//                Log.d(TAG, "isFirstnameValid: $isFirstnameValid")
+//                Log.d(TAG, "isLastnameValid: $isLastnameValid")
+//                Log.d(TAG, "isEmailValid: $isEmailValid")
+//                Log.d(TAG, "isPasswordValid: $isPasswordValid")
+//                Log.d(TAG, "isConfirmPasswordValid: $isConfirmPasswordValid")
+
+                if (isFirstnameValid && isLastnameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+                    mxAuthViewModel.signUp(email, password, firstName, lastName) { res, error ->
+                        if (res) {
+//                            Log.d(TAG, "Success")
+                            mxViewModel.email = email
+                            mxViewModel.createAndSaveUser(
+                                email = email,
+                                firstName = firstName,
+                                lastName = lastName,
+                                password = password,
+                                currency = Currency.US_DOLLAR // default currency
+                            )
+                            navController.navigate(AuthScreens.MXApp.name) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
                             }
+                        } else {
+//                            Log.d(TAG, "Fail: $error")
+                            Toast.makeText(context, "An error occurred during sign up: $error", Toast.LENGTH_LONG).show()
                         }
-                    } else {
-                        Log.d(TAG, "Fail: $error")
                     }
                 }
                       },
