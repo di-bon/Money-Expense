@@ -110,7 +110,7 @@ fun MXTransaction(
                 )
             ) {
                 Text(
-                    text = transaction.description ?: "No description",
+                    text = "Wallet: ${transaction.wallet.name}${if (transaction.description != "") "\n\n${transaction.description}" else ""}",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

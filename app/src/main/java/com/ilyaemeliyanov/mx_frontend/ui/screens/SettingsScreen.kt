@@ -87,28 +87,11 @@ fun SettingsScreen(
     var showCurrencyContextDialog by remember { mutableStateOf(false) }
     var selectedCurrency by remember { mutableStateOf(mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol) }
 
-    var showPayPalContextDialog by remember { mutableStateOf(false) }
-    var payPalClientId by remember { mutableStateOf("") }
-    var payPalClientSecret by remember { mutableStateOf("") }
+//    var showPayPalContextDialog by remember { mutableStateOf(false) }
+//    var payPalClientId by remember { mutableStateOf("") }
+//    var payPalClientSecret by remember { mutableStateOf("") }
 
     var showDeleteAccountContextDialog by remember { mutableStateOf(false) }
-
-    // Listen for PayPal access token generation
-//    LaunchedEffect(Unit) {
-//        val clientId = mxViewModel.getData(context, "client_id") ?: ""
-//        val clientSecret = mxViewModel.getData(context, "client_secret") ?: ""
-//
-//        if (clientId != "" && clientSecret != "") {
-//            mxViewModel.generatePayPalAccessToken(clientId, clientSecret)
-//        }
-//    }
-
-//    LaunchedEffect(mxViewModel.payPalAccessToken) {
-//        if (mxViewModel.payPalAccessToken != "") {
-//            Log.d("SettingsScreen", "ACCESS_TOKEN: ${mxViewModel.payPalAccessToken}")
-//            mxViewModel.getPayPalTransactions(mxViewModel.payPalAccessToken)
-//        }
-//    }
 
 //    Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -202,13 +185,14 @@ fun SettingsScreen(
                         rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
-                        onClick = { showPayPalContextDialog = true },
-                        leftIconImageVector = Icons.Filled.Payment,
-                        titleString = "Connect to PayPal",
-                        descriptionString = "All of your PayPal transactions will be visible in Money Expense",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
+                    // PayPal
+//                    MXSettingsButton(
+//                        onClick = { showPayPalContextDialog = true },
+//                        leftIconImageVector = Icons.Filled.Payment,
+//                        titleString = "Connect to PayPal",
+//                        descriptionString = "All of your PayPal transactions will be visible in Money Expense",
+//                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+//                    )
                 }
             }
 
@@ -342,26 +326,26 @@ fun SettingsScreen(
                 Text("Your files will be exported to your local storage")
             }
         }
-        if (showPayPalContextDialog) {
-            MXAlertDialog(
-                title = "Integrate PayPal account",
-                dismissLabel = "Cancel",
-                confirmLabel = "Connect",
-                onDismiss = { showPayPalContextDialog = false },
-                onConfirm = {
-//                    mxViewModel.storeData(context, "client_id", payPalClientId)
-//                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
-//
-//                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
-//                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
-                }) {
-                Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
-                Spacer(modifier = Modifier.height(8.dp))
-                MXInput(titleText = "Account Client ID", labelText = "Client ID", text = payPalClientId, onTextChange = { payPalClientId = it })
-                Spacer(modifier = Modifier.height(8.dp))
-                MXSecretInput(titleText = "Account Secret Key", labelText = "Client Secret Key", text = payPalClientSecret, keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done), onTextChange = { payPalClientSecret = it })
-            }
-        }
+//        if (showPayPalContextDialog) {
+//            MXAlertDialog(
+//                title = "Integrate PayPal account",
+//                dismissLabel = "Cancel",
+//                confirmLabel = "Connect",
+//                onDismiss = { showPayPalContextDialog = false },
+//                onConfirm = {
+////                    mxViewModel.storeData(context, "client_id", payPalClientId)
+////                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
+////
+////                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
+////                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
+//                }) {
+//                Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
+//                Spacer(modifier = Modifier.height(8.dp))
+//                MXInput(titleText = "Account Client ID", labelText = "Client ID", text = payPalClientId, onTextChange = { payPalClientId = it })
+//                Spacer(modifier = Modifier.height(8.dp))
+//                MXSecretInput(titleText = "Account Secret Key", labelText = "Client Secret Key", text = payPalClientSecret, keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done), onTextChange = { payPalClientSecret = it })
+//            }
+//        }
         if (showDeleteAccountContextDialog) {
             MXAlertDialog(
                 title = "Change Currency",

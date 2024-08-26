@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -134,6 +135,8 @@ private fun DashboardInfo(
     val balance = expenses + income
 
     var showChartContextDialog by remember { mutableStateOf(false) }
+    var incomeChartContextDialog by remember { mutableStateOf(false) }
+    var expensesChartContextDialog by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         MXCard(
@@ -174,7 +177,7 @@ private fun DashboardInfo(
             MXCard(
                 containerColor = MXColors.Default.PrimaryColor,
                 contentColor = MXColors.Default.SecondaryColor,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).clickable { incomeChartContextDialog = true }
             ) {
                 Text(
                     text = "Income",
@@ -191,7 +194,7 @@ private fun DashboardInfo(
             MXCard(
                 containerColor = Color.Black,
                 contentColor = MXColors.Default.SecondaryColor,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).clickable { expensesChartContextDialog = true }
             ) {
                 Text(
                     text = "Expenses",
@@ -201,7 +204,7 @@ private fun DashboardInfo(
                 Text(
                     text = "- ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(expenses)}",
                     style = MaterialTheme.typography.titleSmall,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
@@ -215,7 +218,36 @@ private fun DashboardInfo(
                 onConfirm = { showChartContextDialog = false }
             ) {
                 MXChartScreen(
-                    mxViewModel = mxViewModel
+                    mxViewModel = mxViewModel,
+                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id }
+                )
+            }
+        }
+        if (incomeChartContextDialog) {
+            MXAlertDialog(
+                title = "Income Chart",
+                dismissLabel = "Dismiss",
+                confirmLabel = "Done",
+                onDismiss = { incomeChartContextDialog = false },
+                onConfirm = { incomeChartContextDialog = false }
+            ) {
+                MXChartScreen(
+                    mxViewModel = mxViewModel,
+                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id && it.amount > 0 }
+                )
+            }
+        }
+        if (expensesChartContextDialog) {
+            MXAlertDialog(
+                title = "Expenses Chart",
+                dismissLabel = "Dismiss",
+                confirmLabel = "Done",
+                onDismiss = { expensesChartContextDialog = false },
+                onConfirm = { expensesChartContextDialog = false }
+            ) {
+                MXChartScreen(
+                    mxViewModel = mxViewModel,
+                    transactionList = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id && it.amount < 0 }
                 )
             }
         }

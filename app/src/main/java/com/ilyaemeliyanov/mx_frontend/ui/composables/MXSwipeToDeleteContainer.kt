@@ -43,19 +43,19 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToDeleteContainer(
-    isRemoved: Boolean,
-    onIsRemoveChange: (Boolean) -> Unit,
     onDelete: () -> Unit,
     animationDuration: Int = 500,
     content: @Composable () -> Unit,
 ) {
+
+    var isRemoved by remember { mutableStateOf(false) }
     val state = rememberDismissState(
         confirmValueChange = { value ->
             if (value == DismissValue.DismissedToStart) {
-                onIsRemoveChange(true)
+                isRemoved = true
                 true
             } else {
-                onIsRemoveChange(true)
+                isRemoved = false
                 false
             }
         }
