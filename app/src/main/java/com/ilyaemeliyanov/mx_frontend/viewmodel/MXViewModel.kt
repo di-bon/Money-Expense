@@ -283,6 +283,7 @@ class MXViewModel(
                         // Delete transactions
                         viewModelScope.launch {
                             repository.deleteTransactionsByWallet(walletRef)
+                            Log.d(TAG, "Transactions deleted from firestore")
                         }
                     }
                 }

@@ -72,14 +72,17 @@ class MXAuthViewModel : ViewModel() {
         auth.signOut()
     }
 
-    fun deleteUser() {
+    fun deleteUser(): Boolean {
+        var result = false
         user = auth.currentUser
         user?.delete()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(TAG, "User account deleted from firebase auth.")
+                result = true
             } else {
                 Log.d(TAG, "Error while trying to delete user ${user?.email} from firebase auth")
             }
         } ?: Log.d(TAG, "User is null!")
+        return result
     }
 }

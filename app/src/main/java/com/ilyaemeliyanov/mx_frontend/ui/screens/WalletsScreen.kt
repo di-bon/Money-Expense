@@ -48,8 +48,10 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXWallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
+import java.text.DecimalFormat
 
 private const val TAG = "WalletsScreen"
 
@@ -63,6 +65,10 @@ fun WalletsScreen(
     val wallets = mxViewModel.wallets
 
     var showContextDialog by remember {mutableStateOf(false)}
+
+    var isWalletNameValid by remember { mutableStateOf(true) }
+    var isDescriptionValid by remember { mutableStateOf(true) }
+    var isAmountValid by remember { mutableStateOf(true) }
 
     Column (modifier = Modifier
         .padding(32.dp)) {
@@ -115,8 +121,26 @@ fun WalletsScreen(
                 dismissLabel = "Cancel",
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
-                    showContextDialog = false
-                    mxViewModel.createAndSaveWallet()
+                    isWalletNameValid = mxViewModel.validateContent(mxViewModel.walletName)
+                    isDescriptionValid = mxViewModel.validateContent(mxViewModel.walletDescription)
+                    isAmountValid = try {
+                        val formattedAmount = "%.2f".format(mxViewModel.walletAmount.toFloat())
+                        Log.d(TAG, "formattedAmount: $formattedAmount")
+                        formattedAmount.toFloat()
+                        true
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Cannot parse ${mxViewModel.walletAmount} to float")
+                        false
+                    }
+
+                    if (isWalletNameValid && isDescriptionValid && isAmountValid) {
+                        mxViewModel.walletAmount = "%.2f".format(mxViewModel.walletAmount.toFloat())
+                        showContextDialog = false
+                        mxViewModel.createAndSaveWallet()
+                        mxViewModel.walletName = ""
+                        mxViewModel.walletDescription = ""
+                        mxViewModel.walletAmount = ""
+                    }
                 }
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -124,32 +148,47 @@ fun WalletsScreen(
                     titleText = "Name",
                     labelText = "Enter your wallet name...",
                     text = mxViewModel.walletName,
-                    onTextChange = { mxViewModel.walletName = it },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    onTextChange = {
+                        mxViewModel.walletName = it
+                        isWalletNameValid = true
+                                   },
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isWalletNameValid,
+                    errorMessage = "Enter a valid wallet name"
                 )
                 MXInput(
                     titleText = "Description",
                     labelText = "Enter a short description for your wallet...",
                     text = mxViewModel.walletDescription,
-                    onTextChange = { value -> mxViewModel.walletDescription = value },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    onTextChange = {
+                        mxViewModel.walletDescription = it
+                        isDescriptionValid = true
+                                   },
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isDescriptionValid,
+                    errorMessage = "Enter a valid wallet description"
                 )
                 MXInput(
                     titleText = "Amount",
                     labelText = "Enter the initial amount...",
                     text = mxViewModel.walletAmount,
-                    onTextChange = { value -> mxViewModel.walletAmount = value },
+                    onTextChange = {
+                        mxViewModel.walletAmount = it
+                        isAmountValid = true
+                                   },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     ),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isAmountValid,
+                    errorMessage = "Enter a valid wallet amount (use . for decimal values)"
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(modifier = Modifier.padding(vertical = 8.dp)) {
-                    
-                    Spacer(modifier = Modifier.width(24.dp))
-                    
-                }
+                Spacer(modifier = Modifier.weight(1f))
+//                Row(modifier = Modifier.padding(vertical = 8.dp)) {
+//
+//                    Spacer(modifier = Modifier.width(24.dp))
+//
+//                }
             }
         }
     }
