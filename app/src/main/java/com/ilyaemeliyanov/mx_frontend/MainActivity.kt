@@ -153,10 +153,9 @@ class MainActivity : ComponentActivity() {
 
     public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = auth.currentUser
-        if (currentUser != null && mxAuthViewModel.user?.email != null) {
-            mxViewModel.email = mxAuthViewModel.user.email.toString()
+        if (currentUser != null && mxAuthViewModel.user != null && mxAuthViewModel.user?.email != null) {
+            mxViewModel.email = mxAuthViewModel.user!!.email.toString()
             isUserAlreadyLoggedIn = true
         }
     }

@@ -191,7 +191,7 @@ fun SignUpScreen(
 //                Log.d(TAG, "isConfirmPasswordValid: $isConfirmPasswordValid")
 
                 if (isFirstnameValid && isLastnameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
-                    mxAuthViewModel.signUp(email, password, firstName, lastName) { res, error ->
+                    mxAuthViewModel.signUp(email, password) { res, error ->
                         if (res) {
 //                            Log.d(TAG, "Success")
                             mxViewModel.email = email

@@ -13,9 +13,9 @@ class MXAuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
     // LiveData for observing authentication state
-    val user = auth.currentUser
+    var user = auth.currentUser
 
-    fun signUp(email: String, password: String, firstName: String, lastName: String, onResult: (Boolean, String?) -> Unit) {
+    fun signUp(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             try {
                 auth.createUserWithEmailAndPassword(email, password)
@@ -73,18 +73,13 @@ class MXAuthViewModel : ViewModel() {
     }
 
     fun deleteUser() {
-        if (user != null) {
-            user
-                .delete()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "User account deleted from firebase auth.")
-                    } else {
-                        Log.d(TAG, "Error while trying to delete user ${user.email} from firebase auth")
-                    }
-                }
-        } else {
-            Log.d(TAG, "User is null!")
-        }
+        user = auth.currentUser
+        user?.delete()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "User account deleted from firebase auth.")
+            } else {
+                Log.d(TAG, "Error while trying to delete user ${user?.email} from firebase auth")
+            }
+        } ?: Log.d(TAG, "User is null!")
     }
 }
