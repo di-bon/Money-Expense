@@ -327,9 +327,8 @@ class MXViewModel(
             viewModelScope.launch {
                 repository.deleteTransaction(transaction) {transactionRef ->
                    if (transactionRef != null) {
-                       Log.d(TAG, "Removing element form list")
                        transactions -= transaction
-                       Log.d("Delete Transaction", user.toString())
+                       Log.d("Transactions", transactions.toString())
                        user?.transactions = user?.transactions?.filter { it.id != transactionRef.id } ?: emptyList()
                        updateUser(user)
                    }

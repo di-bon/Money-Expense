@@ -323,7 +323,7 @@ fun SettingsScreen(
                         Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
                     }
                 }) {
-                Text("Your files will be exported to your local storage")
+                Text("Your transactions will be exported to your local storage")
             }
         }
 //        if (showPayPalContextDialog) {

@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -174,7 +175,7 @@ fun TransactionsScreen(
                     ) {
                         MXDropdownMenu(
                             items = mxViewModel.wallets.map { it.name },
-                            selectedItem = "Select wallet...",
+                            selectedItem = if (mxViewModel.transactionWalletName != "") mxViewModel.transactionWalletName else "Select wallet...",
                             showLabel = false
                         ) {
                             mxViewModel.transactionWalletName = it

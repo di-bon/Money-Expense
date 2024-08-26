@@ -88,7 +88,6 @@ fun MXDropdownMenu (
                 }
                 Text(
                     text = textToShow,
-//                    text = "$label: $selected" ?: "Select ${label.lowercase()}",
                     style = MaterialTheme.typography.labelMedium,
                 )
                 if (showIcon) {

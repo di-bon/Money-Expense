@@ -1,5 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,7 +41,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.ui.theme.spaceGrotesk
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 @Composable
 fun MXWallet(
@@ -50,12 +51,23 @@ fun MXWallet(
 ) {
 
 //    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
+    val transactions = mxViewModel.transactions.filter { it.wallet.id == wallet.id }
+    var income by remember { mutableStateOf(0.0f) }
+    var expenses by remember { mutableStateOf(0.0f) }
 
     var showEditContextDialog by remember { mutableStateOf(false) }
     var showDeleteContextDialog by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf(wallet.name) }
     var description by remember { mutableStateOf(wallet.description ?: "") }
     var amount by remember { mutableStateOf(wallet.amount.toString()) }
+
+    LaunchedEffect(transactions.isNotEmpty()) {
+        val amounts = transactions.map { it.amount }
+        if (amounts.isNotEmpty()) {
+            income = mxViewModel.getIncome(transactions)
+            expenses = mxViewModel.getExpenses(transactions)
+        }
+    }
 
     MXCard(
         containerColor = cardColor,
@@ -93,7 +105,7 @@ fun MXWallet(
                 )
             }
             Text(
-                text = "${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(wallet.amount)}",
+                text = "${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(wallet.amount + income + expenses)}",
                 style = TextStyle(fontFamily = euclidCircularA, fontSize = 24.sp, fontWeight = FontWeight.Medium),
                 modifier = Modifier
                     .height(IntrinsicSize.Min)
@@ -117,7 +129,7 @@ fun MXWallet(
                         val newWallet = Wallet(
                             id = wallet.id,
                             name = name,
-                            amount = amount.toFloat(), // TODO: Truncate to .2f (for how the floating point numbers work Firestore doesn't save the exact passed value)
+                            amount = String.format("%.2f", amount.toFloat()).toFloat(), // TODO: Truncate to .2f (for how the floating point numbers work Firestore doesn't save the exact passed value)
                             description = description,
                             ref = null,
                         )

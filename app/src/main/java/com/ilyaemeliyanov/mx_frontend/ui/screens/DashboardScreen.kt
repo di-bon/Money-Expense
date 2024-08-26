@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,11 +61,7 @@ fun DashboardScreen(
     var last10Transactions = mxViewModel.getLast10Transactions(mxViewModel.transactions)
 
     LaunchedEffect(mxViewModel.transactions) {
-        last10Transactions = mxViewModel.getFilteredAndSortedTransactions(
-            transactionList = mxViewModel.transactions,
-            filter = uiState.currentFilter,
-            sort = uiState.currentSortingCriteria
-        )
+        last10Transactions = mxViewModel.getLast10Transactions(mxViewModel.transactions)
     }
 
     Column(modifier = Modifier.padding(32.dp)) {
@@ -130,13 +127,20 @@ private fun DashboardInfo(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val income = getIncome(mxViewModel.transactions)
-    val expenses = getExpenses(mxViewModel.transactions)
-    val balance = expenses + income
+    val transactions = mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id }
+    var income by remember { mutableFloatStateOf(mxViewModel.income) }
+    var expenses by remember { mutableFloatStateOf(mxViewModel.expenses) }
+    var balance by remember { mutableFloatStateOf(mxViewModel.balance) }
 
     var showChartContextDialog by remember { mutableStateOf(false) }
     var incomeChartContextDialog by remember { mutableStateOf(false) }
     var expensesChartContextDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(transactions) {// on transaction change
+        income = getIncome(transactions)
+        expenses = getExpenses(transactions)
+        balance = income + expenses
+    }
 
     Column(modifier = modifier) {
         MXCard(
@@ -177,7 +181,9 @@ private fun DashboardInfo(
             MXCard(
                 containerColor = MXColors.Default.PrimaryColor,
                 contentColor = MXColors.Default.SecondaryColor,
-                modifier = Modifier.weight(1f).clickable { incomeChartContextDialog = true }
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { incomeChartContextDialog = true }
             ) {
                 Text(
                     text = "Income",
@@ -194,7 +200,9 @@ private fun DashboardInfo(
             MXCard(
                 containerColor = Color.Black,
                 contentColor = MXColors.Default.SecondaryColor,
-                modifier = Modifier.weight(1f).clickable { expensesChartContextDialog = true }
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { expensesChartContextDialog = true }
             ) {
                 Text(
                     text = "Expenses",
