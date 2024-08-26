@@ -356,6 +356,7 @@ fun SettingsScreen(
                 onConfirm = {
                     mxViewModel.deleteUser(user = mxViewModel.user)
                     mxAuthViewModel.deleteUser()
+                    mxAuthViewModel.signOut()
                     showDeleteAccountContextDialog = false
                     navController.navigate(AuthScreens.InitialScreen.name) {
                         popUpTo(navController.graph.startDestinationId) {

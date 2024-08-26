@@ -381,6 +381,11 @@ class MXViewModel(
                 selectedWallet = wallet
             }
         }
+        _uiState.update {
+            it.copy(
+                currentWallet = selectedWallet?.name
+            )
+        }
     }
 
     fun getIncome(transactions: List<Transaction>): Float {
