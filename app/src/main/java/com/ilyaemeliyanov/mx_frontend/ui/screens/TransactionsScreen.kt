@@ -1,5 +1,7 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,12 +60,16 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import java.util.Date
 
 
+private const val TAG = "TransactionsScreen"
+
 @Composable
 fun TransactionsScreen(
     mxViewModel: MXViewModel,
     uiState: UiState,
     isLoading: Boolean,
 ) {
+    val context = LocalContext.current
+
     var showContextDialog by remember { mutableStateOf(false) }
     var filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
         transactionList = mxViewModel.transactions,
@@ -70,6 +77,11 @@ fun TransactionsScreen(
         sort = uiState.currentSortingCriteria
     )
     var sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
+
+    var isTransactionLabelValid by remember { mutableStateOf(true) }
+    var isTransactionDescriptionValid by remember { mutableStateOf(true) }
+    var isTransactionAmountValid by remember { mutableStateOf(true) }
+    var isTransactionWalletValid by remember { mutableStateOf(true) }
 
     LaunchedEffect(mxViewModel.transactions) {
         filteredAndSortedTransactions = mxViewModel.getFilteredAndSortedTransactions(
@@ -107,21 +119,50 @@ fun TransactionsScreen(
                 confirmLabel = "Create",
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
-                    mxViewModel.createAndSaveTransaction()
-                    showContextDialog = false
+                    mxViewModel.transactionLabel = mxViewModel.transactionLabel.trim()
+                    isTransactionLabelValid = mxViewModel.validateContent(mxViewModel.transactionLabel)
+
+                    mxViewModel.transactionDescription = mxViewModel.transactionDescription.trim()
+                    isTransactionDescriptionValid = mxViewModel.validateContent(mxViewModel.transactionDescription)
+
+                    isTransactionAmountValid = try {
+                        mxViewModel.transactionAmount = "%.2f".format(mxViewModel.transactionAmount.toFloat())
+                        mxViewModel.transactionAmount.toFloat()
+                        true
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Cannot parse ${mxViewModel.transactionAmount} to float")
+                        false
+                    }
+
+                    isTransactionWalletValid = mxViewModel.transactionWalletName in mxViewModel.wallets.map { it.name }
+
+                    if (isTransactionLabelValid && isTransactionDescriptionValid && isTransactionAmountValid && isTransactionWalletValid) {
+                        mxViewModel.createAndSaveTransaction()
+                        showContextDialog = false
+                        mxViewModel.transactionLabel = ""
+                        mxViewModel.transactionDescription = ""
+                        mxViewModel.transactionAmount = ""
+                        mxViewModel.walletName = "Select wallet..."
+                    } else {
+                        Toast.makeText(context, "Make sure to enter valid input!", Toast.LENGTH_LONG).show()
+                    }
                 }
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                     MXRectangularButton(
-                        modifier = Modifier.weight(1f).padding(4.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp),
                         containerColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
                         contentColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }) {
                         Text("OUT")
                     }
                     MXRectangularButton(
-                        modifier = Modifier.weight(1f).padding(4.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp),
                         containerColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
                         contentColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.PrimaryColor else Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.INCOME }
@@ -136,14 +177,18 @@ fun TransactionsScreen(
                     labelText = "Enter transaction label...",
                     text = mxViewModel.transactionLabel,
                     onTextChange = { mxViewModel.transactionLabel = it },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isTransactionLabelValid,
+                    errorMessage = "Enter a valid label"
                 )
                 MXInput(
                     titleText = "Description",
                     labelText = "Enter a short transaction description...",
                     text = mxViewModel.transactionDescription,
                     onTextChange = { mxViewModel.transactionDescription = it },
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isTransactionDescriptionValid,
+                    errorMessage = "Enter a valid description"
                 )
                 MXInput(
                     titleText = "Amount",
@@ -153,7 +198,9 @@ fun TransactionsScreen(
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done
                     ),
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    isError = !isTransactionAmountValid,
+                    errorMessage = "Enter a valid amount (use . for decimal values)"
                 )
 
                 Column {
