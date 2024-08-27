@@ -66,13 +66,6 @@ dependencies {
     val materialui_ext_version = "1.6.8"
     implementation("androidx.compose.material:material-icons-extended:$materialui_ext_version")
 
-    // TODO: clean up
-    // ROOM
-    val room_version = "2.4.3"
-    implementation("androidx.room:room-runtime:$room_version")
-    kapt("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-
     // Firebase
     val firebase_version = "32.1.1"
     implementation("com.google.firebase:firebase-bom:$firebase_version")

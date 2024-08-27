@@ -2,13 +2,11 @@ package com.ilyaemeliyanov.mx_frontend.viewmodel
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import androidx.security.crypto.EncryptedSharedPreferences
-//import androidx.security.crypto.MasterKey
-import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
@@ -19,11 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-//import okhttp3.Credentials
-//import okhttp3.FormBody
-//import okhttp3.OkHttpClient
-//import okhttp3.Request
-import org.json.JSONObject
 import java.util.Date
 import java.util.UUID
 import java.util.regex.Pattern
@@ -84,7 +77,6 @@ class MXViewModel(
 
     fun createAndSaveTransaction() {
         val wallet = wallets.find { it.name == transactionWalletName }
-        // TODO: validate input
         if (wallet != null) {
             val transactionValue = abs(transactionAmount.toFloat())
             val amount = if (transactionType == TransactionType.INCOME) transactionValue else -transactionValue
@@ -111,9 +103,9 @@ class MXViewModel(
     var transactions by mutableStateOf(listOf<Transaction>())
 
     // Defining the state for general info
-    var balance by mutableStateOf(0.0f)
-    var income by mutableStateOf(0.0f)
-    var expenses by mutableStateOf(0.0f)
+    var balance by mutableFloatStateOf(0.0f)
+    var income by mutableFloatStateOf(0.0f)
+    var expenses by mutableFloatStateOf(0.0f)
 
     // Defining selected items
     var selectedWallet by mutableStateOf<Wallet?>(null)
@@ -122,7 +114,7 @@ class MXViewModel(
         loadUserByEmail(email)
     }
 
-    suspend fun loadUserByEmail(email: String) {
+    private suspend fun loadUserByEmail(email: String) {
         repository.getUserByEmail(email) { fetchedUser ->
             user = fetchedUser
             viewModelScope.launch {
@@ -137,7 +129,6 @@ class MXViewModel(
             transactions = emptyList()
             user.wallets.forEach { walletRef ->
                 repository.getWalletByDocRef(walletRef) { fetchedWallet ->
-                    Log.d(TAG, "FetchedWallet: $fetchedWallet")
                     if (fetchedWallet != null) wallets += fetchedWallet
                     viewModelScope.launch {
                         loadTransactionsByWallet(fetchedWallet!!)
@@ -147,7 +138,7 @@ class MXViewModel(
         }
     }
 
-    suspend fun loadTransactionsByWallet(wallet: Wallet) {
+    private suspend fun loadTransactionsByWallet(wallet: Wallet) {
 //        viewModelScope.launch {
             repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
                 if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
@@ -172,9 +163,7 @@ class MXViewModel(
             currency = currency
         )
         this.user = user
-        repository.saveUser(user) { userRef ->
-
-        }
+        repository.saveUser(user) {}
     }
 
     fun updateUserInfo(firstName: String, lastName: String) {
@@ -215,19 +204,17 @@ class MXViewModel(
 
     fun createAndSaveWallet() {
         val wallet = Wallet(id = UUID.randomUUID().toString(), name = walletName, amount = walletAmount.toFloat(), description = walletDescription, ref = null)
-        if (wallet != null) {
-            viewModelScope.launch {
-                wallets += wallet
-                repository.saveWallet(wallet) { walletRef ->
-                    // Update UI
-                    if (walletRef != null) {
-                        wallet.id = walletRef.id // Remember that ID is not yet defined on UI creation
-                        wallet.ref = walletRef // Remember to save the reference
-                    }
-                    // Update User
-                    user?.wallets = user?.wallets?.plus(walletRef!!) ?: emptyList<DocumentReference>()
-                    updateUser(user)
+        viewModelScope.launch {
+            wallets += wallet
+            repository.saveWallet(wallet) { walletRef ->
+                // Update UI
+                if (walletRef != null) {
+                    wallet.id = walletRef.id // Remember that ID is not yet defined on UI creation
+                    wallet.ref = walletRef // Remember to save the reference
                 }
+                // Update User
+                user?.wallets = user?.wallets?.plus(walletRef!!) ?: emptyList()
+                updateUser(user)
             }
         }
     }
@@ -294,20 +281,16 @@ class MXViewModel(
         }
     }
 
-    fun saveTransaction(transaction: Transaction?) {
+    private fun saveTransaction(transaction: Transaction?) {
         if (transaction != null) {
             viewModelScope.launch {
                 // REMEMBER: pass the docref for the wallet and not the wallet itself
                 transaction.id = UUID.randomUUID().toString() // assign a temporary ID until the user receives the response from Firebase
                 transactions += transaction
-                Log.d("MXViewModel", transactions.toString())
                 repository.saveTransaction(transaction) { transactionRef ->
                     if (transactionRef != null) {
                         // Update local transactions
                         transaction.id = transactionRef.id
-//                        transactions += transaction
-
-                        Log.d("MXViewModel", transactions.toString())
 
                         // Update the user.transactions references
                         user?.transactions = user?.transactions?.plus(transactionRef) ?: emptyList()
@@ -315,7 +298,6 @@ class MXViewModel(
                     }
                 }
             }
-//            updateWalletBalance(transaction.wallet, transaction) // TODO: leave this here? move it away?
         }
     }
 
@@ -334,7 +316,6 @@ class MXViewModel(
                 transactions -= transaction
                 repository.deleteTransaction(transaction) {transactionRef ->
                    if (transactionRef != null) {
-                       Log.d("Transactions", transactions.toString())
                        user?.transactions = user?.transactions?.filter { it.id != transactionRef.id } ?: emptyList()
                        updateUser(user)
                    }

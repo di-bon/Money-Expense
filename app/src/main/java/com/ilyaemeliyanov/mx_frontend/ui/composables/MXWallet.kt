@@ -50,7 +50,6 @@ fun MXWallet(
     modifier: Modifier = Modifier
 ) {
 
-//    val mxViewModel = remember { MXViewModelSingleton.getInstance() }
     val transactions = mxViewModel.transactions.filter { it.wallet.id == wallet.id }
     var income by remember { mutableStateOf(0.0f) }
     var expenses by remember { mutableStateOf(0.0f) }
@@ -129,7 +128,7 @@ fun MXWallet(
                         val newWallet = Wallet(
                             id = wallet.id,
                             name = name,
-                            amount = String.format("%.2f", amount.toFloat()).toFloat(), // TODO: Truncate to .2f (for how the floating point numbers work Firestore doesn't save the exact passed value)
+                            amount = String.format("%.2f", amount.toFloat()).toFloat(),
                             description = description,
                             ref = null,
                         )

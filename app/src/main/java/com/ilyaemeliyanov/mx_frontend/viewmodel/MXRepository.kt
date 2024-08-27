@@ -7,14 +7,7 @@ import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-//import okhttp3.Credentials
-//import okhttp3.FormBody
-//import okhttp3.OkHttpClient
-//import okhttp3.Request
-import org.json.JSONObject
 import java.util.Date
 
 private const val TAG = "MXRepository"
@@ -162,7 +155,6 @@ class MXRepository {
     }
 
     fun updateWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit) {
-        Log.d("MXRepository", wallet.toString())
         val docRef = walletsCollection.document(wallet.id)
         val walletData = mutableMapOf<String, Any?>().apply {
             put("name", wallet.name)
@@ -297,7 +289,7 @@ class MXRepository {
 //        withContext(Dispatchers.IO) {
 //            val client = OkHttpClient()
 //            val request = Request.Builder()
-//                .url("https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info&start_date=2024-03-20T11:59:59.999Z&end_date=2024-03-20T23:59:00.000Z") // TODO: test query, replace in production
+//                .url("https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info&start_date=2024-03-20T11:59:59.999Z&end_date=2024-03-20T23:59:00.000Z") // test query, replace in production
 //                .get()
 //                .addHeader("Authorization", "Bearer $accessToken")
 //                .build()

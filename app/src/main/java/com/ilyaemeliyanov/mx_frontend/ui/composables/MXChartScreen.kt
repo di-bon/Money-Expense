@@ -4,16 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import co.yml.charts.axis.AxisData
 import co.yml.charts.common.model.Point
 import co.yml.charts.ui.linechart.LineChart
@@ -29,14 +26,8 @@ import co.yml.charts.ui.linechart.model.SelectionHighlightPopUp
 import co.yml.charts.ui.linechart.model.ShadowUnderLine
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
-import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
-import java.time.LocalDate
-import java.time.YearMonth
 import java.time.ZoneId
-import java.time.temporal.ChronoUnit
-import kotlin.math.abs
 
 @Composable
 fun MXChartScreen(
@@ -44,14 +35,13 @@ fun MXChartScreen(
     transactionList: List<Transaction>
 ) {
     if (transactionList.size > 1) {
-        val minAmountTransaction = mxViewModel.transactions.sortedBy { it.amount }[0]
+//        val minAmountTransaction = mxViewModel.transactions.sortedBy { it.amount }[0]
         val dataPoints = transactionList.sortedBy { it.date }.map {t ->
             val localDate = t.date.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
             val x = localDate.dayOfMonth.toFloat()
-            Log.d("MXChart", x.toString())
-            val y = t.amount // TODO: map this value to Y axis
+            val y = t.amount
             Point(x, y)
         }
 
@@ -139,8 +129,8 @@ fun MXChartScreen(
 //        title = "Transaction Chart",
 //        dismissLabel = "Dismiss",
 //        confirmLabel = "Done",
-//        onDismiss = { /*TODO*/ },
-//        onConfirm = { /*TODO*/ }) {
+//        onDismiss = {},
+//        onConfirm = {}) {
 //       MXChartScreen(mxViewModel = mxViewModel)
 //    }
 //}

@@ -56,7 +56,6 @@ import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import java.util.Date
 
-private const val TAG = "TransactionsScreen"
 
 @Composable
 fun TransactionsScreen(
@@ -157,7 +156,7 @@ fun TransactionsScreen(
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                Column() {
+                Column {
                     Text("Wallet")
                     Spacer(modifier = Modifier.height(8.dp))
                     Box(modifier = Modifier
@@ -182,7 +181,7 @@ fun TransactionsScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Column() {
+                Column {
                     Text("Date")
                     Spacer(modifier = Modifier.height(8.dp))
                     Box(modifier = Modifier

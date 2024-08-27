@@ -30,11 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 
-/*
-    TODO: fix me
-        use DropdownMenu and DropdownMenuItem!
-*/
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MXDropdownMenu (

@@ -1,10 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend.data.user
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.firebase.firestore.DocumentReference
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
-import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 
 enum class Currency(val symbol: String) {
     US_DOLLAR("$"),

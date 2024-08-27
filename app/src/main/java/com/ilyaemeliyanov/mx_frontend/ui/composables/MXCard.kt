@@ -17,10 +17,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import java.util.Calendar
 import java.util.GregorianCalendar
 
-/* TODO: update this composable:
-    - change content color logic: it shouldn't set every color of the composable
- */
-
 @Composable
 fun MXCard(
     modifier: Modifier = Modifier,

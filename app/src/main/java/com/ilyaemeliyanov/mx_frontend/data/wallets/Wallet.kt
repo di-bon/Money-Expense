@@ -1,13 +1,9 @@
 package com.ilyaemeliyanov.mx_frontend.data.wallets
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.firebase.firestore.DocumentReference
-import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 
-@Entity
 data class Wallet (
-    @PrimaryKey var id: String,
+    var id: String,
     val name: String,
     var amount: Float,
     val description: String?,

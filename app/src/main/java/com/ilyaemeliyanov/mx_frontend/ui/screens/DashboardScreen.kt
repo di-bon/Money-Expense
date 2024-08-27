@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,7 +45,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModelSingleton
 
 @Composable
 fun DashboardScreen(
@@ -92,7 +92,7 @@ private fun DashboardTopBar(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val wallets = mxViewModel.wallets ?: emptyList()
+    val wallets = mxViewModel.wallets
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -122,9 +122,9 @@ private fun DashboardInfo(
     modifier: Modifier = Modifier
 ) {
     val transactions = if (mxViewModel.selectedWallet != null) mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id } else mxViewModel.transactions
-    var income by remember { mutableStateOf(mxViewModel.income) }
-    var expenses by remember { mutableStateOf(mxViewModel.expenses) }
-    var balance by remember { mutableStateOf(mxViewModel.balance) }
+    var income by remember { mutableFloatStateOf(mxViewModel.income) }
+    var expenses by remember { mutableFloatStateOf(mxViewModel.expenses) }
+    var balance by remember { mutableFloatStateOf(mxViewModel.balance) }
 
     var showChartContextDialog by remember { mutableStateOf(false) }
     var incomeChartContextDialog by remember { mutableStateOf(false) }
@@ -256,18 +256,18 @@ private fun DashboardInfo(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun DashboardInfoPreview() {
-    MXTheme {
-        val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
-        DashboardInfo(
-            getIncome = mxViewModel::getIncome,
-            getExpenses = mxViewModel::getExpenses,
-            mxViewModel = mxViewModel,
-            modifier = Modifier
-                .padding(16.dp)
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun DashboardInfoPreview() {
+//    MXTheme {
+//        val mxViewModel: MXViewModel = MXViewModelSingleton.getInstance()
+//        DashboardInfo(
+//            getIncome = mxViewModel::getIncome,
+//            getExpenses = mxViewModel::getExpenses,
+//            mxViewModel = mxViewModel,
+//            modifier = Modifier
+//                .padding(16.dp)
+//        )
+//    }
+//}
 

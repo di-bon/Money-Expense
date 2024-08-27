@@ -122,7 +122,7 @@ private fun MXAlertDialogPreview() {
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.padding(vertical = 8.dp)) {
                     MXRectangularButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {},
                         containerColor = MXColors.Default.PrimaryColor,
                         contentColor = Color.White,
                         modifier = Modifier.weight(1f)
@@ -131,7 +131,7 @@ private fun MXAlertDialogPreview() {
                     }
                     Spacer(modifier = Modifier.width(24.dp))
                     MXRectangularButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {},
                         containerColor = MXColors.Default.ActiveColor,
                         contentColor = Color.Black,
                         modifier = Modifier.weight(1f)

@@ -61,8 +61,6 @@ fun SettingsScreen(
     modifier: Modifier = Modifier
 ) {
 
-//    val mxViewModel: MXViewModel = remember { MXViewModelSingleton.getInstance() }
-
     val context = LocalContext.current
 
     var showUserUpdateContextDialog by remember { mutableStateOf(false) }
