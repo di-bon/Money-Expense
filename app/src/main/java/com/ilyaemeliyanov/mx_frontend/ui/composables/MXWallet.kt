@@ -35,12 +35,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.ui.theme.spaceGrotesk
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MXWallet(
@@ -170,8 +172,10 @@ fun MXWallet(
                     dismissLabel = "Cancel",
                     onDismiss = { showDeleteContextDialog = false },
                     onConfirm = {
-                        showDeleteContextDialog = false
-                        mxViewModel.deleteWallet(wallet)
+                        mxViewModel.viewModelScope.launch {
+                            showDeleteContextDialog = false
+                            mxViewModel.deleteWallet(wallet)
+                        }
                     }
                 ) {
                     Text("Are you sure you want to delete this wallet?\n\nAll the associated transactions will be delete as well", style = MaterialTheme.typography.labelMedium)

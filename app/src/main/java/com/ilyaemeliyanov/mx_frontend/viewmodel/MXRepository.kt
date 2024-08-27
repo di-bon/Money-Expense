@@ -175,8 +175,9 @@ class MXRepository {
             }
     }
 
-    fun deleteWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit) {
+    suspend fun deleteWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit): DocumentReference? {
         val docRef = walletsCollection.document(wallet.id)
+        val result: DocumentReference = docRef
 
         // Update the existing document in collection with the specified wallet
         docRef
@@ -189,6 +190,10 @@ class MXRepository {
                 Log.w("Firestore", "Error deleting wallet item", e)
                 callback(null)
             }
+            .await()
+
+        Log.d(TAG, "deleteWallet returning $result")
+        return result
     }
 
     fun saveTransaction(transaction: Transaction, callback: (DocumentReference?) -> Unit) {

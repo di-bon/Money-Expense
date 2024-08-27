@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
@@ -16,6 +17,7 @@ import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
@@ -191,14 +193,15 @@ class MXViewModel(
         }
     }
 
-    fun deleteUser(user: User?) {
+    suspend fun deleteUser(user: User?) {
         if (user != null) {
-            viewModelScope.launch {
+            val job = viewModelScope.launch {
                 wallets.forEach {
                     deleteWallet(it)
                 }
                 repository.deleteUser(user) { }
             }
+            job.join()
         }
     }
 
@@ -244,9 +247,8 @@ class MXViewModel(
 //        }
 //    }
 
-    fun deleteWallet(wallet: Wallet?) {
+    suspend fun deleteWallet(wallet: Wallet?) {
         if (wallet != null) {
-            viewModelScope.launch {
                 // Update wallets UI
                 val newWallets = wallets.filter { it.id != wallet.id }
                 wallets = newWallets
@@ -255,7 +257,8 @@ class MXViewModel(
                 val filteredTransactions = transactions.filter { it.wallet.id != wallet.id }
                 transactions = filteredTransactions
 
-                repository.deleteWallet(wallet) { walletRef ->
+                val walletRefOut = repository.deleteWallet(wallet) { walletRef ->
+                    Log.d(TAG, "walletRef: $walletRef")
                     if (walletRef != null) {
                         // Update User
                         user?.wallets = user?.wallets?.filter { it != walletRef } ?: emptyList()
@@ -271,13 +274,18 @@ class MXViewModel(
                         updateUser(user)
 
                         // Delete transactions
-                        viewModelScope.launch {
+                        val deleteTransactionJob = viewModelScope.launch {
                             repository.deleteTransactionsByWallet(walletRef)
                             Log.d(TAG, "Transactions deleted from firestore")
                         }
                     }
                 }
-            }
+                if (walletRefOut != null) {
+                    repository.deleteTransactionsByWallet(walletRefOut)
+                    Log.d(TAG, "Transactions deleted from firestore")
+                } else {
+                    Log.d(TAG, "No transactions to be deleted from firestore -> walletRef is null")
+                }
         }
     }
 

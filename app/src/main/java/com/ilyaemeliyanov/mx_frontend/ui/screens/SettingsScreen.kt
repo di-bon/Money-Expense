@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
@@ -50,6 +51,7 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.exportToCSV
 import com.ilyaemeliyanov.mx_frontend.utils.CSVConverter.toCSV
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
+import kotlinx.coroutines.launch
 
 private const val TAG = "SettingsScreen"
 
@@ -340,13 +342,15 @@ fun SettingsScreen(
                 confirmContainerColor = Color.Red,
                 onDismiss = { showDeleteAccountContextDialog = false },
                 onConfirm = {
-                    mxViewModel.deleteUser(user = mxViewModel.user)
-                    mxAuthViewModel.deleteUser()
-                    mxAuthViewModel.signOut()
-                    showDeleteAccountContextDialog = false
-                    navController.navigate(AuthScreens.InitialScreen.name) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true
+                    mxViewModel.viewModelScope.launch {
+                        mxViewModel.deleteUser(user = mxViewModel.user)
+                        mxAuthViewModel.deleteUser()
+                        mxAuthViewModel.signOut()
+                        showDeleteAccountContextDialog = false
+                        navController.navigate(AuthScreens.InitialScreen.name) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
+                            }
                         }
                     }
                 }
