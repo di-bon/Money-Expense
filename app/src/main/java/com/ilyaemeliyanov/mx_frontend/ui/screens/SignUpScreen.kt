@@ -166,7 +166,7 @@ fun SignUpScreen(
                 isFirstnameValid = mxViewModel.validateName(firstName)
                 isLastnameValid = mxViewModel.validateName(lastName)
                 isEmailValid = mxViewModel.validateEmail(email)
-                isPasswordValid = mxViewModel.validatePassword(password) && mxViewModel.checkConfirmPassword(password, confirmPassword)
+                isPasswordValid = mxViewModel.validatePassword(password)
                 isConfirmPasswordValid = mxViewModel.validatePassword(confirmPassword) && mxViewModel.checkConfirmPassword(password, confirmPassword)
 
                 if (isFirstnameValid && isLastnameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {

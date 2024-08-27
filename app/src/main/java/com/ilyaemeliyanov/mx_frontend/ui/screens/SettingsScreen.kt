@@ -68,7 +68,7 @@ fun SettingsScreen(
     var showUserUpdateContextDialog by remember { mutableStateOf(false) }
     var newFirstname by remember { mutableStateOf(mxViewModel.user?.firstName ?: "") }
     var newLastname by remember { mutableStateOf(mxViewModel.user?.lastName ?: "") }
-    var newPassword by remember { mutableStateOf(mxViewModel.user?.password ?: "") }
+    var newPassword by remember { mutableStateOf("") }
     var newPasswordConfirm by remember { mutableStateOf("") }
 
     var showExportContextDialog by remember { mutableStateOf(false) }
@@ -80,6 +80,11 @@ fun SettingsScreen(
 //    var payPalClientSecret by remember { mutableStateOf("") }
 
     var showDeleteAccountContextDialog by remember { mutableStateOf(false) }
+
+    var isNewFirstnameValid by remember { mutableStateOf(true) }
+    var isNewLastnameValid by remember { mutableStateOf(true) }
+    var isNewPasswordValid by remember { mutableStateOf(true) }
+    var isNewConfirmPasswordValid by remember { mutableStateOf(true) }
 
 //    Box {
         LazyColumn (modifier = Modifier.padding(32.dp)) {
@@ -206,50 +211,66 @@ fun SettingsScreen(
 
         if (showUserUpdateContextDialog) {
             MXAlertDialog(
-                title = "Change Currency",
+                title = "Update profile",
                 dismissLabel = "Cancel",
                 confirmLabel = "Save",
                 onDismiss = { showUserUpdateContextDialog = false },
                 onConfirm = {
-                    mxViewModel.updateUserInfo(
-                        firstName = newFirstname,
-                        lastName = newLastname
-                    )
-                    mxAuthViewModel.changePassword(newPassword = newPassword) {
-                        res, error ->
+                    isNewFirstnameValid = mxViewModel.validateName(newFirstname)
+                    isNewLastnameValid = mxViewModel.validateName(newLastname)
+                    isNewPasswordValid = mxViewModel.validatePassword(newPassword)
+                    isNewConfirmPasswordValid = mxViewModel.validatePassword(newPasswordConfirm) && mxViewModel.checkConfirmPassword(newPassword, newPasswordConfirm)
+
+                    if (isNewFirstnameValid && isNewLastnameValid && isNewPasswordValid && isNewConfirmPasswordValid) {
+                        mxViewModel.updateUserInfo(
+                            firstName = newFirstname,
+                            lastName = newLastname
+                        )
+                        mxAuthViewModel.changePassword(newPassword = newPassword) { res, error ->
                             if (res) {
+                                Toast.makeText(context, "Password successfully updated!", Toast.LENGTH_LONG).show()
                                 Log.d(TAG, "Password successfully updated")
                             } else {
                                 Log.d(TAG, "Password not updated: $error")
+                                Toast.makeText(context, "Password not updated: $error", Toast.LENGTH_LONG).show()
                             }
+                        }
+                        showUserUpdateContextDialog = false
                     }
-                    showUserUpdateContextDialog = false
                 }) {
                 Column {
                     MXInput(
                         titleText = "Firstname",
                         labelText = "Enter your firstname...",
                         text = newFirstname,
-                        onTextChange = { newFirstname = it }
+                        onTextChange = { newFirstname = it },
+                        isError = !isNewFirstnameValid,
+                        errorMessage = "Enter a valid firstname"
                     )
                     MXInput(
                         titleText = "Lastname",
                         labelText = "Enter your lastname...",
                         text = newLastname,
-                        onTextChange = { newLastname = it }
+                        onTextChange = { newLastname = it },
+                        isError = !isNewLastnameValid,
+                        errorMessage = "Enter a valid lastname"
                     )
                     MXSecretInput(
                         titleText = "Password",
                         labelText = "Enter your password...",
                         text = newPassword,
-                        onTextChange = { newPassword = it }
+                        onTextChange = { newPassword = it },
+                        isError = !isNewPasswordValid,
+                        errorMessage = "Enter a password of at least 6 characters"
                     )
                     MXSecretInput(
                         titleText = "Confirm password",
                         labelText = "Enter your password again...",
                         text = newPasswordConfirm,
                         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                        onTextChange = { newPasswordConfirm = it }
+                        onTextChange = { newPasswordConfirm = it },
+                        isError = !isNewConfirmPasswordValid,
+                        errorMessage = "Enter the same valid password again"
                     )
                 }
             }

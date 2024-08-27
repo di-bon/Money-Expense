@@ -52,7 +52,7 @@ class MXAuthViewModel : ViewModel() {
     fun changePassword(newPassword: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             try {
-                user!!.updatePassword(newPassword)
+                auth.currentUser!!.updatePassword(newPassword)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d(TAG, "User password updated.")
