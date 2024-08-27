@@ -272,12 +272,6 @@ class MXViewModel(
                             false
                         } ?: emptyList()
                         updateUser(user)
-
-                        // Delete transactions
-                        val deleteTransactionJob = viewModelScope.launch {
-                            repository.deleteTransactionsByWallet(walletRef)
-                            Log.d(TAG, "Transactions deleted from firestore")
-                        }
                     }
                 }
                 if (walletRefOut != null) {
