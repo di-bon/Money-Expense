@@ -184,16 +184,9 @@ fun SignUpScreen(
                 isPasswordValid = mxViewModel.validatePassword(password) && mxViewModel.checkConfirmPassword(password, confirmPassword)
                 isConfirmPasswordValid = mxViewModel.validatePassword(confirmPassword) && mxViewModel.checkConfirmPassword(password, confirmPassword)
 
-//                Log.d(TAG, "isFirstnameValid: $isFirstnameValid")
-//                Log.d(TAG, "isLastnameValid: $isLastnameValid")
-//                Log.d(TAG, "isEmailValid: $isEmailValid")
-//                Log.d(TAG, "isPasswordValid: $isPasswordValid")
-//                Log.d(TAG, "isConfirmPasswordValid: $isConfirmPasswordValid")
-
                 if (isFirstnameValid && isLastnameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid) {
                     mxAuthViewModel.signUp(email, password) { res, error ->
                         if (res) {
-//                            Log.d(TAG, "Success")
                             mxViewModel.email = email
                             mxViewModel.createAndSaveUser(
                                 email = email,
@@ -208,7 +201,6 @@ fun SignUpScreen(
                                 }
                             }
                         } else {
-//                            Log.d(TAG, "Fail: $error")
                             Toast.makeText(context, "An error occurred during sign up: $error", Toast.LENGTH_LONG).show()
                         }
                     }

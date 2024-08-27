@@ -161,7 +161,7 @@ class MXRepository {
             }
     }
 
-    fun updateWallet(wallet: Wallet, callback: (Wallet?) -> Unit) {
+    fun updateWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit) {
         Log.d("MXRepository", wallet.toString())
         val docRef = walletsCollection.document(wallet.id)
         val walletData = mutableMapOf<String, Any?>().apply {
@@ -175,7 +175,7 @@ class MXRepository {
             .set(walletData)
             .addOnSuccessListener {
                 Log.d("Firestore", "Wallet item updated with ID: ${docRef.id}")
-                callback(wallet)
+                callback(docRef)
             }
             .addOnFailureListener { e ->
                 Log.w("Firestore", "Error updating wallet item", e)

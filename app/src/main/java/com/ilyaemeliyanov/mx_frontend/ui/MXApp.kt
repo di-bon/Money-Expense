@@ -51,8 +51,6 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import kotlinx.coroutines.delay
 
-private const val TAG = "MXApp"
-
 enum class Screens(@StringRes val title: Int) {
     DashboardScreen(title = R.string.dashboard_screen_route),
     WalletsScreen(title = R.string.wallets_screen_route),
@@ -68,9 +66,10 @@ fun BottomNavigationBar(navController: NavHostController) {
         ,
         backgroundColor = MXColors.Default.BgColor
     ) {
+        // Initialize bottom navigation items
         val items = BottomNavigationItem().bottomNavigationItems()
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        var navSelectedItem = items.indexOfFirst { it.route == currentRoute }.takeIf { it != -1 } ?: 0
+        var navSelectedItem = items.indexOfFirst { it.route == currentRoute }.takeIf { it != -1 } ?: 0 // select the last route
 
         items.forEachIndexed { index, navigationItem ->
             //iterating all items with their respective indexes
@@ -105,6 +104,7 @@ data class BottomNavigationItem(
     val icon: ImageVector = Icons.Filled.Home,
     val route: String = ""
 ) {
+    // Configure the navigation items with label, icon and respective route
     fun bottomNavigationItems() : List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
@@ -145,7 +145,7 @@ fun MXApp(
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
         if (mxViewModel.transactions.isEmpty()) {
-            delay(10000) // set max of 10000 ms
+            delay(5000) // set max of 10000 ms
         }
         isLoading = false
     }
@@ -153,7 +153,6 @@ fun MXApp(
     LaunchedEffect(Unit) {
         // If this screen is the first one to be loaded, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
-        isLoading = false
     }
 
     Column(

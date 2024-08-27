@@ -123,8 +123,8 @@ private fun DashboardInfo(
 ) {
     val transactions = if (mxViewModel.selectedWallet != null) mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id } else mxViewModel.transactions
     var income by remember { mutableStateOf(mxViewModel.income) }
-    var expenses by remember { mutableStateOf(mxViewModel.income) }
-    var balance by remember { mutableStateOf(mxViewModel.income) }
+    var expenses by remember { mutableStateOf(mxViewModel.expenses) }
+    var balance by remember { mutableStateOf(mxViewModel.balance) }
 
     var showChartContextDialog by remember { mutableStateOf(false) }
     var incomeChartContextDialog by remember { mutableStateOf(false) }
@@ -134,8 +134,6 @@ private fun DashboardInfo(
         income = getIncome(transactions)
         expenses = getExpenses(transactions)
         balance = income + expenses
-
-        Log.d("Dashboard", "$income $expenses $balance")
     }
 
     Column(modifier = modifier) {

@@ -107,7 +107,6 @@ fun LoginScreen(
                 if (isEmailValid && isPasswordValid) {
                     mxAuthViewModel.logIn(email = email, password = password) { res, error ->
                         if (res) {
-//                        Log.d(TAG, "Login successful")
                             mxViewModel.email = email
                             navController.navigate(AuthScreens.MXApp.name) {
                                 popUpTo(navController.graph.startDestinationId) {
@@ -115,7 +114,6 @@ fun LoginScreen(
                                 }
                             }
                         } else {
-//                        Log.d(TAG, "Login failed: $error")
                             Toast.makeText(
                                 context,
                                 "An error occurred during log in: $error",

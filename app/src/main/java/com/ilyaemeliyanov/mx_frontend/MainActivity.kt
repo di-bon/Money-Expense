@@ -70,6 +70,8 @@ enum class AuthScreens(@StringRes val title: Int) {
 class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private var isUserAlreadyLoggedIn = false
+
+    // Initialize necessary viewmodels
     private  val mxAuthViewModel = MXAuthViewModel()
     private val mxViewModel = MXViewModel(MXRepository())
 
@@ -92,7 +94,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = if (isUserAlreadyLoggedIn) AuthScreens.MXApp.name else AuthScreens.InitialScreen.name, // TODO: change based on the login user
+                    startDestination = if (isUserAlreadyLoggedIn) AuthScreens.MXApp.name else AuthScreens.InitialScreen.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
@@ -134,8 +136,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(route = AuthScreens.MXApp.name) {
-//                            TestScreen(modifier = Modifier
-//                                .height(400.dp))
                         MXApp(
                             mxViewModel = mxViewModel,
                             mxAuthViewModel = mxAuthViewModel,
