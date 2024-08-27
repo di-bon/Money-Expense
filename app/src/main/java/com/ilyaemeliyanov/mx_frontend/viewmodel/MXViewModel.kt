@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.DocumentReference
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.data.user.User
@@ -17,7 +16,6 @@ import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import java.util.Date
 import java.util.UUID
@@ -415,6 +413,10 @@ class MXViewModel(
     }
 
     fun validateContent(content: String): Boolean {
+        return content != ""
+    }
+
+    fun validateName(content: String): Boolean {
         val contentPattern = "^[A-Za-z]+(?: [A-Za-z]+)*$"
         val pattern = Pattern.compile(contentPattern)
         val matcher = pattern.matcher(content)

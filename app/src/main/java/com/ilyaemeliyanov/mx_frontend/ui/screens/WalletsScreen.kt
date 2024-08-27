@@ -97,7 +97,9 @@ fun WalletsScreen(
                 dismissLabel = "Cancel",
                 onDismiss = { showContextDialog = false },
                 onConfirm = {
+                    mxViewModel.walletName = mxViewModel.walletName.trim()
                     isWalletNameValid = mxViewModel.validateContent(mxViewModel.walletName)
+                    mxViewModel.walletDescription = mxViewModel.walletDescription.trim()
                     isDescriptionValid = mxViewModel.validateContent(mxViewModel.walletDescription)
                     isAmountValid = try {
                         val formattedAmount = "%.2f".format(mxViewModel.walletAmount.toFloat())

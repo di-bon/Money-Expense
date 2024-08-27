@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -164,8 +163,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(24.dp))
         MXRectangularButton(
             onClick = {
-                isFirstnameValid = mxViewModel.validateContent(firstName)
-                isLastnameValid = mxViewModel.validateContent(lastName)
+                isFirstnameValid = mxViewModel.validateName(firstName)
+                isLastnameValid = mxViewModel.validateName(lastName)
                 isEmailValid = mxViewModel.validateEmail(email)
                 isPasswordValid = mxViewModel.validatePassword(password) && mxViewModel.checkConfirmPassword(password, confirmPassword)
                 isConfirmPasswordValid = mxViewModel.validatePassword(confirmPassword) && mxViewModel.checkConfirmPassword(password, confirmPassword)
