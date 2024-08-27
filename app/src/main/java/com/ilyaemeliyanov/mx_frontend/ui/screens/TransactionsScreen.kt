@@ -57,6 +57,8 @@ import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.Date
 
 
@@ -79,7 +81,6 @@ fun TransactionsScreen(
     var sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
 
     var isTransactionLabelValid by remember { mutableStateOf(true) }
-    var isTransactionDescriptionValid by remember { mutableStateOf(true) }
     var isTransactionAmountValid by remember { mutableStateOf(true) }
     var isTransactionWalletValid by remember { mutableStateOf(true) }
 
@@ -122,21 +123,28 @@ fun TransactionsScreen(
                     mxViewModel.transactionLabel = mxViewModel.transactionLabel.trim()
                     isTransactionLabelValid = mxViewModel.validateContent(mxViewModel.transactionLabel)
 
-                    mxViewModel.transactionDescription = mxViewModel.transactionDescription.trim()
-                    isTransactionDescriptionValid = mxViewModel.validateContent(mxViewModel.transactionDescription)
+//                    isTransactionAmountValid = try {
+//                        val decimalFormat = DecimalFormat("#.00", DecimalFormatSymbols().apply {
+//                            groupingSeparator = ','
+//                            decimalSeparator = '.'
+//                        })
+//                        decimalFormat.parse(mxViewModel.transactionAmount)?.toFloat()
+//                        true
+//                    } catch (e: Exception) {
+//                        false
+//                    }
 
                     isTransactionAmountValid = try {
-                        mxViewModel.transactionAmount = "%.2f".format(mxViewModel.transactionAmount.toFloat())
                         mxViewModel.transactionAmount.toFloat()
                         true
                     } catch (e: Exception) {
-                        Log.d(TAG, "Cannot parse ${mxViewModel.transactionAmount} to float")
                         false
                     }
 
+
                     isTransactionWalletValid = mxViewModel.transactionWalletName in mxViewModel.wallets.map { it.name }
 
-                    if (isTransactionLabelValid && isTransactionDescriptionValid && isTransactionAmountValid && isTransactionWalletValid) {
+                    if (isTransactionLabelValid && isTransactionAmountValid && isTransactionWalletValid) {
                         mxViewModel.createAndSaveTransaction()
                         showContextDialog = false
                         mxViewModel.transactionLabel = ""
@@ -186,9 +194,7 @@ fun TransactionsScreen(
                     labelText = "Enter a short transaction description...",
                     text = mxViewModel.transactionDescription,
                     onTextChange = { mxViewModel.transactionDescription = it },
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    isError = !isTransactionDescriptionValid,
-                    errorMessage = "Enter a valid description"
+                    modifier = Modifier.padding(vertical = 8.dp)
                 )
                 MXInput(
                     titleText = "Amount",

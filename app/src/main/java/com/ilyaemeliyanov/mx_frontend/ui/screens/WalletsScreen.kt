@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -29,6 +28,9 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXWallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 private const val TAG = "WalletsScreen"
 
@@ -102,19 +104,34 @@ fun WalletsScreen(
                     mxViewModel.walletDescription = mxViewModel.walletDescription.trim()
                     isDescriptionValid = mxViewModel.validateContent(mxViewModel.walletDescription)
                     isAmountValid = try {
-                        val formattedAmount = "%.2f".format(mxViewModel.walletAmount.toFloat())
-                        Log.d(TAG, "formattedAmount: $formattedAmount")
-                        formattedAmount.toFloat()
+                        mxViewModel.walletAmount.toFloat()
                         true
                     } catch (e: Exception) {
-                        Log.d(TAG, "Cannot parse ${mxViewModel.walletAmount} to float")
                         false
                     }
+//                    isAmountValid = try {
+//                        val decimalFormat = DecimalFormat("#.00", DecimalFormatSymbols().apply {
+//                            groupingSeparator = ','
+//                            decimalSeparator = '.'
+//                        })
+//                        decimalFormat.parse(mxViewModel.walletAmount)?.toFloat()
+//                        true
+//                    } catch (e: Exception) {
+//                        false
+//                    }
+//                    isAmountValid = try {
+//                        val formattedAmount = "%.2f".format(mxViewModel.walletAmount.toFloat(), Locale.US)
+//                        Log.d(TAG, "formattedAmount: $formattedAmount")
+//                        formattedAmount.toFloat()
+//                        true
+//                    } catch (e: Exception) {
+//                        Log.d(TAG, "Cannot parse ${mxViewModel.walletAmount} to float")
+//                        false
+//                    }
 
                     if (isWalletNameValid && isDescriptionValid && isAmountValid) {
-                        mxViewModel.walletAmount = "%.2f".format(mxViewModel.walletAmount.toFloat())
-                        showContextDialog = false
                         mxViewModel.createAndSaveWallet()
+                        showContextDialog = false
                         mxViewModel.walletName = ""
                         mxViewModel.walletDescription = ""
                         mxViewModel.walletAmount = ""
