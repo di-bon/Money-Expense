@@ -49,7 +49,7 @@ fun MXRecentTransactions(
                 ShimmerListItem(isLoading = isLoading, content = {})
             }
         } else {
-            if (transactionList.size > 0) {
+            if (transactionList.isNotEmpty()) {
                 items(transactionList, key = { t -> t.id }) { transaction ->
                     SwipeToDeleteContainer(
                         onDelete = {
