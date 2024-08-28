@@ -34,7 +34,6 @@ fun MXChartScreen(
     transactionList: List<Transaction>
 ) {
     if (transactionList.size > 1) {
-//        val minAmountTransaction = mxViewModel.transactions.sortedBy { it.amount }[0]
         val dataPoints = transactionList.sortedBy { it.date }.map {t ->
             val localDate = t.date.toInstant()
                 .atZone(ZoneId.systemDefault())

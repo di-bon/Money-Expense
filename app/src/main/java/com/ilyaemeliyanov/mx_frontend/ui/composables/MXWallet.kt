@@ -61,6 +61,7 @@ fun MXWallet(
     var name by remember { mutableStateOf(wallet.name) }
     var description by remember { mutableStateOf(wallet.description ?: "") }
     var amount by remember { mutableStateOf(wallet.amount.toString()) }
+    var balance by remember { mutableFloatStateOf(wallet.amount) }
 
     var isEditNameValid by remember { mutableStateOf(true) }
     var isDescriptionEditValid by remember { mutableStateOf(true) }
@@ -71,6 +72,7 @@ fun MXWallet(
         if (amounts.isNotEmpty()) {
             income = mxViewModel.getIncome(transactions)
             expenses = mxViewModel.getExpenses(transactions)
+            balance = income + expenses
         }
     }
 
@@ -117,7 +119,7 @@ fun MXWallet(
                 )
             }
             Text(
-                text = "${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(wallet.amount + income + expenses)}",
+                text = "${if (balance >= 0.0f) "+" else "-"} ${mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol} ${StringFormatter.getFormattedAmount(balance)}",
                 style = TextStyle(fontFamily = euclidCircularA, fontSize = 24.sp, fontWeight = FontWeight.Medium),
                 modifier = Modifier
                     .height(IntrinsicSize.Min)
