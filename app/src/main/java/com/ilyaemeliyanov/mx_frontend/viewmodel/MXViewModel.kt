@@ -235,12 +235,8 @@ class MXViewModel(
                         updateUser(user)
                     }
                 }
-                if (walletRef != null) {
-                    repository.deleteTransactionsByWallet(walletRef)
-                    Log.d(TAG, "Transactions deleted from firestore")
-                } else {
-                    Log.d(TAG, "No transactions to be deleted from firestore -> walletRef is null")
-                }
+            repository.deleteTransactionsByWallet(walletRef)
+            Log.d(TAG, "Transactions deleted from firestore")
         }
     }
 
