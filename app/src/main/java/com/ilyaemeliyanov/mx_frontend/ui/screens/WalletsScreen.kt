@@ -78,7 +78,7 @@ fun WalletsScreen(
                 .fillMaxHeight()
         ) {
             if (wallets.isNotEmpty()) {
-                items(wallets.size) { i ->
+                items(wallets.size, key = { i -> wallets[i].id }) { i ->
                     MXWallet(
                         wallet = wallets[i],
                         cardColor = when (i % 3) {

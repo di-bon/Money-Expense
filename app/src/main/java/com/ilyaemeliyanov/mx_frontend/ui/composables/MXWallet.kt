@@ -72,7 +72,7 @@ fun MXWallet(
         if (amounts.isNotEmpty()) {
             income = mxViewModel.getIncome(transactions)
             expenses = mxViewModel.getExpenses(transactions)
-            balance = income + expenses
+            balance += income + expenses
         }
     }
 
@@ -155,6 +155,7 @@ fun MXWallet(
                                 description = description,
                                 ref = null,
                             )
+                            balance = newWallet.amount
                             mxViewModel.updateWallet(newWallet)
                             showEditContextDialog = false
                         }
