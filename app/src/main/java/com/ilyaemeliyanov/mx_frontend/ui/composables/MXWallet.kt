@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -158,6 +159,7 @@ fun MXWallet(
                         text = amount,
                         onTextChange = { value -> amount = value },
                         keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
                         modifier = Modifier.padding(vertical = 8.dp)

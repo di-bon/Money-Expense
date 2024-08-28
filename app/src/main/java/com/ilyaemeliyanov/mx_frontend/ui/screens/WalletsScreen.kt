@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
@@ -172,6 +173,7 @@ fun WalletsScreen(
                         isAmountValid = true
                                    },
                     keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
                     modifier = Modifier.padding(vertical = 8.dp),
