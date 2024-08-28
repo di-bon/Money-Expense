@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
-import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
@@ -32,12 +29,8 @@ fun MXRecentTransactions(
     modifier: Modifier = Modifier,
     showTitle: Boolean = true
 ) {
-    var showAlertDialog by remember { mutableStateOf(false) }
+//    var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
-
-    LaunchedEffect(showAlertDialog) {
-        Log.d("Transactions", transactionList.toString())
-    }
 
     LazyColumn (modifier = modifier) {
         if (showTitle) {
@@ -54,15 +47,12 @@ fun MXRecentTransactions(
                 ShimmerListItem(isLoading = isLoading, content = {})
             }
         } else {
-            if (transactionList.size > 0) {
+            if (transactionList.isNotEmpty()) {
                 items(transactionList, key = { t -> t.id }) { transaction ->
                     SwipeToDeleteContainer(
                         onDelete = {
-                            if (!showAlertDialog) {
-                                showAlertDialog = true
-                                selectedTransaction =
-                                    transactionList.find { it.id == transaction.id }
-                            }
+                            selectedTransaction = transactionList.find { it.id == transaction.id }
+                            mxViewModel.deleteTransaction(selectedTransaction)
                         }
                     ) {
                         MXTransaction(
@@ -87,21 +77,6 @@ fun MXRecentTransactions(
                     }
                 }
             }
-        }
-    }
-
-    if (showAlertDialog) {
-        MXAlertDialog(
-            title = "Confirm deletion",
-            dismissLabel = "Cancel",
-            confirmLabel = "Confirm",
-            onDismiss = { showAlertDialog = false },
-            onConfirm = {
-                Log.d("MXRecentTransactions", selectedTransaction.toString())
-                showAlertDialog = false
-                mxViewModel.deleteTransaction(selectedTransaction)
-            }) {
-            Text("Are you sure you want to delete this transaction?")
         }
     }
 }
