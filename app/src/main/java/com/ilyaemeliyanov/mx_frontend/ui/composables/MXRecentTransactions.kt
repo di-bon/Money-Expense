@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,10 @@ fun MXRecentTransactions(
 ) {
     var showAlertDialog by remember { mutableStateOf(false) }
     var selectedTransaction by remember { mutableStateOf<Transaction?>(null) }
+
+    LaunchedEffect(showAlertDialog) {
+        Log.d("Transactions", transactionList.toString())
+    }
 
     LazyColumn (modifier = modifier) {
         if (showTitle) {
