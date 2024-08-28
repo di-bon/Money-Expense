@@ -227,10 +227,7 @@ class MXViewModel(
                     if (walletRef != null) {
                         user?.wallets = user?.wallets?.filter { it != walletRef } ?: emptyList()
                         user?.transactions = user?.transactions?.filter {
-                            for (t in filteredTransactions) {
-                                if (it.id != t.id) false
-                            }
-                            true
+                            it.id in filteredTransactions.map { t -> t.id }
                         } ?: emptyList()
                         updateUser(user)
                     }
