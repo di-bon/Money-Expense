@@ -16,7 +16,6 @@ data class User (
     val email: String,
     val firstName: String,
     val lastName: String,
-    val password: String,
     var transactions: List<DocumentReference>,
     var wallets: List<DocumentReference>,
     var currency: Currency

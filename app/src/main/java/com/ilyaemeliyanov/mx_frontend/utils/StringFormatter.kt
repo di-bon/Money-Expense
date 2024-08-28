@@ -8,14 +8,6 @@ import kotlin.math.abs
 object StringFormatter {
     fun getFormattedAmount (amount: Float): String {
         return "%.2f".format(locale = Locale.US, abs(amount))
-//        return when {
-//            amount >= 0f -> {
-//                "+ \$%.2f".format(locale = Locale.US, amount)
-//            }
-//            else -> {
-//                "- \$%.2f".format(locale = Locale.US, abs(amount))
-//            }
-//        }
     }
 
     fun getDateFromString(dateString: String, pattern: String = "yyyy-MM-dd"): Date? {

@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.composables
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,8 +54,8 @@ fun MXWallet(
 ) {
 
     val transactions = mxViewModel.transactions.filter { it.wallet.id == wallet.id }
-    var income by remember { mutableStateOf(0.0f) }
-    var expenses by remember { mutableStateOf(0.0f) }
+    var income by remember { mutableFloatStateOf(0.0f) }
+    var expenses by remember { mutableFloatStateOf(0.0f) }
 
     var showEditContextDialog by remember { mutableStateOf(false) }
     var showDeleteContextDialog by remember { mutableStateOf(false) }

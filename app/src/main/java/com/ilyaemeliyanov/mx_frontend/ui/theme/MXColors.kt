@@ -9,10 +9,4 @@ object MXColors {
         val SecondaryColor = Color(0xFFBFBFBF)
         val ActiveColor = Color(0xFFE0F754)
     }
-
-    object Navbar {
-        val NavbarBgColor = Color(0xFFEDEDED)
-        val IconDefaultColor = Color(0xFF8D8D8D)
-        val IconSelectedColor = Color(0xFF2F2F2F)
-    }
 }

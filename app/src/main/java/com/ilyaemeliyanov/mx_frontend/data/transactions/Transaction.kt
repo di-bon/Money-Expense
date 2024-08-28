@@ -13,6 +13,6 @@ data class Transaction (
     val wallet: Wallet,
 ) {
     override fun toString(): String {
-        return "Transaction=($id, $label, $amount, $date, ${wallet.toString()})"
+        return "Transaction=($id, $label, $amount, $date, $wallet)"
     }
 }

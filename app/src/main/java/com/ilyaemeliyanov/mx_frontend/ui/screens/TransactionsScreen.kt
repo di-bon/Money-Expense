@@ -1,6 +1,5 @@
 package com.ilyaemeliyanov.mx_frontend.ui.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -58,12 +57,8 @@ import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.util.Date
 
-
-private const val TAG = "TransactionsScreen"
 
 @Composable
 fun TransactionsScreen(

@@ -157,7 +157,6 @@ class MXViewModel(
             email = email,
             firstName = firstName,
             lastName = lastName,
-            password = password,
             transactions = listOf(),
             wallets = listOf(),
             currency = currency
@@ -172,7 +171,6 @@ class MXViewModel(
             email = this.user?.email ?: "",
             firstName = firstName,
             lastName = lastName,
-            password = this.user?.password ?: "",
             transactions = this.user?.transactions ?: listOf(),
             wallets = this.user?.wallets ?: listOf(),
             currency = this.user?.currency ?: Currency.US_DOLLAR

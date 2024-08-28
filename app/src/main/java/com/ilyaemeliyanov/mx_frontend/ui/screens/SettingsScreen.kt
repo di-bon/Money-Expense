@@ -331,6 +331,7 @@ fun SettingsScreen(
                         // Handle failure
                         Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
                     }
+                    showExportContextDialog = false
                 }) {
                 Text("Your transactions will be exported to your local storage")
             }

@@ -34,7 +34,6 @@ class MXRepository {
             email = email,
             firstName = data?.get("firstName") as? String ?: "null",
             lastName = data?.get("lastName") as? String ?: "null",
-            password = data?.get("password") as? String ?: "null",
             wallets = (documentSnapshot.get("wallets") as? List<DocumentReference>)?.toList() ?: emptyList(),
             transactions = (documentSnapshot.get("transactions") as? List<DocumentReference>)?.toList() ?: emptyList(),
             currency = Currency.entries.firstOrNull { it.name == currencyName } ?: Currency.US_DOLLAR
@@ -81,7 +80,6 @@ class MXRepository {
             put("firstName", user.firstName)
             put("lastName", user.lastName)
             put("email", user.email)
-            put("password", user.password)
             put("transactions", user.transactions)
             put("wallets", user.wallets)
         }
@@ -103,7 +101,6 @@ class MXRepository {
             put("firstName", user.firstName)
             put("lastName", user.lastName)
             put("email", user.email)
-            put("password", user.password)
             put("transactions", user.transactions)
             put("wallets", user.wallets)
             put("currency", user.currency)
