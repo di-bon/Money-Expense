@@ -77,7 +77,7 @@ fun WalletsScreen(
             modifier = Modifier
                 .fillMaxHeight()
         ) {
-            if (wallets.size > 0) {
+            if (wallets.isNotEmpty()) {
                 items(wallets.size) { i ->
                     MXWallet(
                         wallet = wallets[i],
