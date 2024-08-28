@@ -12,6 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,14 +21,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXWallet
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 @Composable
@@ -69,21 +77,39 @@ fun WalletsScreen(
             modifier = Modifier
                 .fillMaxHeight()
         ) {
-            items(wallets.size) {i ->
-                MXWallet(
-                    wallet = wallets[i],
-                    cardColor = when (i % 3) {
-                        0 -> Color(red = 105, green = 247, blue = 179)
-                        1 -> Color(red = 236, green = 247, blue = 105)
-                        2 -> Color(red = 243, green = 184, blue = 116)
-                        else -> Color(red = 105, green = 247, blue = 179)
-                    },
-                    mxViewModel = mxViewModel,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(168.dp)
-                        .padding(vertical = 8.dp)
-                )
+            if (wallets.size > 0) {
+                items(wallets.size) { i ->
+                    MXWallet(
+                        wallet = wallets[i],
+                        cardColor = when (i % 3) {
+                            0 -> Color(red = 105, green = 247, blue = 179)
+                            1 -> Color(red = 236, green = 247, blue = 105)
+                            2 -> Color(red = 243, green = 184, blue = 116)
+                            else -> Color(red = 105, green = 247, blue = 179)
+                        },
+                        mxViewModel = mxViewModel,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(168.dp)
+                            .padding(vertical = 8.dp)
+                    )
+                }
+            }
+            else {
+                item {
+                    MXCard(
+                        containerColor = MXColors.Default.ActiveColor
+                    ) {
+                        Text(
+                            "You don't have any wallets. Create your first one now!",
+                            style = TextStyle(
+                                fontFamily = euclidCircularA,
+                                fontWeight = FontWeight.Light,
+                                fontSize = 20.sp
+                            )
+                        )
+                    }
+                }
             }
         }
 

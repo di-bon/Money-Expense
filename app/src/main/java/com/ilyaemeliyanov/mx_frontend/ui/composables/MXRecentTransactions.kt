@@ -13,9 +13,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ilyaemeliyanov.mx_frontend.data.transactions.Transaction
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
+import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
+import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 @Composable
@@ -44,19 +49,37 @@ fun MXRecentTransactions(
                 ShimmerListItem(isLoading = isLoading, content = {})
             }
         } else {
-            items(transactionList, key = { t -> t.id }) { transaction ->
-                SwipeToDeleteContainer(
-                    onDelete = {
-                        if (!showAlertDialog) {
-                            showAlertDialog = true
-                            selectedTransaction = transactionList.find { it.id == transaction.id }
+            if (transactionList.size > 0) {
+                items(transactionList, key = { t -> t.id }) { transaction ->
+                    SwipeToDeleteContainer(
+                        onDelete = {
+                            if (!showAlertDialog) {
+                                showAlertDialog = true
+                                selectedTransaction =
+                                    transactionList.find { it.id == transaction.id }
+                            }
                         }
+                    ) {
+                        MXTransaction(
+                            transaction = transaction,
+                            currency = mxViewModel.user?.currency ?: Currency.US_DOLLAR,
+                        )
                     }
-                ) {
-                    MXTransaction(
-                        transaction = transaction,
-                        currency = mxViewModel.user?.currency ?: Currency.US_DOLLAR,
-                    )
+                }
+            } else {
+                item {
+                    MXCard (
+                        contentPadding = 0.dp
+                    ) {
+                        Text(
+                            text = "You don't have any transactions.",
+                            style = TextStyle(
+                                fontFamily = euclidCircularA,
+                                fontWeight = FontWeight.Light,
+                                fontSize = 18.sp
+                            )
+                        )
+                    }
                 }
             }
         }
