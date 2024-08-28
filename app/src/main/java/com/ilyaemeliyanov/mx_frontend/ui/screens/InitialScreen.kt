@@ -45,7 +45,11 @@ fun InitialScreen(
             Text(
                 text = "Money Expense",
                 lineHeight = 68.sp,
-                style = TextStyle(fontFamily = euclidCircularA, fontWeight = FontWeight.SemiBold, fontSize = 64.sp)
+                style = TextStyle(
+                    fontFamily = euclidCircularA,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 64.sp
+                )
             )
             Spacer(modifier = Modifier.height(32.dp))
             Text(
@@ -64,7 +68,6 @@ fun InitialScreen(
         ) {
             MXRectangularButton(
                 onClick = {
-                    Log.d(TAG, "Sign up clicked")
                     navController.navigate(AuthScreens.SignUpScreen.name)
                           },
                 containerColor = MXColors.Default.PrimaryColor,
@@ -81,7 +84,6 @@ fun InitialScreen(
             }
             MXRectangularButton(
                 onClick = {
-                    Log.d(TAG, "Login clicked")
                     navController.navigate(AuthScreens.LoginScreen.name) },
                 containerColor = MXColors.Default.ActiveColor,
                 contentColor = Color.Black,

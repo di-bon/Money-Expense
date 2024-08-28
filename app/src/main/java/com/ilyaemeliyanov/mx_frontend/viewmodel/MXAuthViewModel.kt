@@ -11,7 +11,6 @@ private const val TAG = "MXAuthViewModel"
 class MXAuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
-    // LiveData for observing authentication state
     var user = auth.currentUser
 
     fun signUp(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
@@ -20,7 +19,6 @@ class MXAuthViewModel : ViewModel() {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-
                             onResult(true, null)
                         } else {
                             onResult(false, task.exception?.message)

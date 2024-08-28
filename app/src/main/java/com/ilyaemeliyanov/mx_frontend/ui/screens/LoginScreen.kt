@@ -34,7 +34,6 @@ import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
-
 @Composable
 fun LoginScreen(
     navController: NavController,
@@ -44,7 +43,6 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
 
-    // TODO: move to viewModel?
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -55,7 +53,14 @@ fun LoginScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Login", style = TextStyle(fontFamily = euclidCircularA, fontWeight = FontWeight.SemiBold, fontSize = 64.sp))
+        Text(
+            text = "Login",
+            style = TextStyle(
+                fontFamily = euclidCircularA,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 64.sp
+            )
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Column {
             MXInput(
@@ -118,7 +123,10 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
-            Text(text = "Log in", style = MaterialTheme.typography.labelLarge)
+            Text(
+                text = "Log in",
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }
@@ -130,6 +138,7 @@ fun LoginScreen(
 //        LoginScreen(
 //            navController = rememberNavController(),
 //            mxAuthViewModel = MXAuthViewModel(),
+//            mxViewModel = MXViewModel(MXRepository()),
 //            modifier = Modifier
 //                .background(color = Color(246, 246, 246))
 //                .padding(32.dp)

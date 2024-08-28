@@ -3,7 +3,6 @@ package com.ilyaemeliyanov.mx_frontend.data.transactions
 import com.ilyaemeliyanov.mx_frontend.data.wallets.Wallet
 import java.util.Date
 
-// TODO: add currency
 data class Transaction (
     var id: String,
     val label: String,

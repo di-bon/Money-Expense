@@ -46,7 +46,6 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 @Composable
 fun DashboardScreen(
     mxViewModel: MXViewModel,
-    uiState: UiState,
     isLoading: Boolean,
 ) {
     var last10Transactions = mxViewModel.getLast10Transactions(mxViewModel.transactions)
@@ -67,7 +66,6 @@ fun DashboardScreen(
             modifier = Modifier
                 .padding(vertical = 12.dp)
         )
-
         MXCard(
             containerColor = Color.White,
             contentColor = Color.Black
@@ -102,7 +100,11 @@ private fun DashboardTopBar(
             MXDropdownMenu(
                 label = "Wallet",
                 items = listOf("All wallets") + wallets.map { wallet -> wallet.name },
-                selectedItem = if (mxViewModel.selectedWallet != null) mxViewModel.selectedWallet?.name else "All wallets",
+                selectedItem =
+                if (mxViewModel.selectedWallet != null)
+                    mxViewModel.selectedWallet?.name
+                else
+                    "All wallets",
                 showLabel = false
             ) { item ->
                 onWalletSelection(item)
@@ -118,7 +120,11 @@ private fun DashboardInfo(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-    val transactions = if (mxViewModel.selectedWallet != null) mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id } else mxViewModel.transactions
+    val transactions =
+        if (mxViewModel.selectedWallet != null)
+            mxViewModel.transactions.filter { it.wallet.id == mxViewModel.selectedWallet?.id }
+        else
+            mxViewModel.transactions
     var income by remember { mutableFloatStateOf(mxViewModel.income) }
     var expenses by remember { mutableFloatStateOf(mxViewModel.expenses) }
     var balance by remember { mutableFloatStateOf(mxViewModel.balance) }
@@ -142,7 +148,10 @@ private fun DashboardInfo(
                 .padding(bottom = 12.dp)
                 .clickable { showChartContextDialog = true }
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "Balance",

@@ -82,7 +82,6 @@ fun MXSecretInput(
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
-
     var secretVisible by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
@@ -90,17 +89,18 @@ fun MXSecretInput(
         OutlinedTextField(
             value = text,
             onValueChange = onTextChange,
-            label = { Text(
-                text = labelText,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            ) },
+            label = {
+                Text(
+                    text = labelText,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
             visualTransformation = if (secretVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = keyboardOptions,
             trailingIcon = {
                 val image = if (secretVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
-                // Localized description for accessibility services
                 val description = if (secretVisible) "Hide password" else "Show password"
 
                 IconButton(onClick = { secretVisible = !secretVisible }) {
@@ -117,7 +117,8 @@ fun MXSecretInput(
                 style = TextStyle(
                     fontFamily = euclidCircularA,
                     fontWeight = FontWeight.Light,
-                    fontSize = 16.sp),
+                    fontSize = 16.sp
+                ),
                 color = Color(red = 162, green = 21, blue = 23)
             )
         }

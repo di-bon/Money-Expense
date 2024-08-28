@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
@@ -32,10 +31,8 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
 @Composable
 fun WalletsScreen(
-    mxViewModel: MXViewModel,
-    uiState: UiState
+    mxViewModel: MXViewModel
 ) {
-
     val wallets = mxViewModel.wallets
 
     var showContextDialog by remember {mutableStateOf(false)}
@@ -44,8 +41,10 @@ fun WalletsScreen(
     var isDescriptionValid by remember { mutableStateOf(true) }
     var isAmountValid by remember { mutableStateOf(true) }
 
-    Column (modifier = Modifier
-        .padding(32.dp)) {
+    Column (
+        modifier = Modifier
+            .padding(32.dp)
+    ) {
         MXTitle(
             title = "Wallets",
             modifier = Modifier
@@ -99,31 +98,7 @@ fun WalletsScreen(
                     isWalletNameValid = mxViewModel.validateContent(mxViewModel.walletName)
                     mxViewModel.walletDescription = mxViewModel.walletDescription.trim()
                     isDescriptionValid = mxViewModel.validateContent(mxViewModel.walletDescription)
-                    isAmountValid = try {
-                        mxViewModel.walletAmount.toFloat()
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
-//                    isAmountValid = try {
-//                        val decimalFormat = DecimalFormat("#.00", DecimalFormatSymbols().apply {
-//                            groupingSeparator = ','
-//                            decimalSeparator = '.'
-//                        })
-//                        decimalFormat.parse(mxViewModel.walletAmount)?.toFloat()
-//                        true
-//                    } catch (e: Exception) {
-//                        false
-//                    }
-//                    isAmountValid = try {
-//                        val formattedAmount = "%.2f".format(mxViewModel.walletAmount.toFloat(), Locale.US)
-//                        Log.d(TAG, "formattedAmount: $formattedAmount")
-//                        formattedAmount.toFloat()
-//                        true
-//                    } catch (e: Exception) {
-//                        Log.d(TAG, "Cannot parse ${mxViewModel.walletAmount} to float")
-//                        false
-//                    }
+                    isAmountValid = mxViewModel.validateAmount(mxViewModel.walletAmount)
 
                     if (isWalletNameValid && isDescriptionValid && isAmountValid) {
                         mxViewModel.createAndSaveWallet()
@@ -176,11 +151,6 @@ fun WalletsScreen(
                     errorMessage = "Enter a valid wallet amount (use . for decimal values)"
                 )
                 Spacer(modifier = Modifier.weight(1f))
-//                Row(modifier = Modifier.padding(vertical = 8.dp)) {
-//
-//                    Spacer(modifier = Modifier.width(24.dp))
-//
-//                }
             }
         }
     }

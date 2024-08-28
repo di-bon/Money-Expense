@@ -23,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,9 +35,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.UiState
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXAlertDialog
@@ -46,19 +43,17 @@ import com.ilyaemeliyanov.mx_frontend.ui.composables.MXCard
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDatePicker
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXDropdownMenu
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
-import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRecentTransactions
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MXTitle
+import com.ilyaemeliyanov.mx_frontend.ui.composables.MxCircluarButton
 import com.ilyaemeliyanov.mx_frontend.ui.theme.MXColors
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getDateFromString
 import com.ilyaemeliyanov.mx_frontend.utils.StringFormatter.getStringFromDate
 import com.ilyaemeliyanov.mx_frontend.utils.TransactionType
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 import java.util.Date
-
 
 @Composable
 fun TransactionsScreen(
@@ -89,12 +84,14 @@ fun TransactionsScreen(
         sum = filteredAndSortedTransactions.fold(0.0f) { acc, transaction -> acc + transaction.amount }
     }
 
-
     Column (
         modifier = Modifier
             .padding(32.dp)
     ) {
-        MXTitle(title = "Transactions", modifier = Modifier.fillMaxWidth()) {
+        MXTitle(
+            title = "Transactions",
+            modifier = Modifier.fillMaxWidth()
+        ) {
             MxCircluarButton(
                 onClick = { if(!showContextDialog) showContextDialog = true },
                 modifier = Modifier
@@ -119,24 +116,7 @@ fun TransactionsScreen(
                     mxViewModel.transactionLabel = mxViewModel.transactionLabel.trim()
                     isTransactionLabelValid = mxViewModel.validateContent(mxViewModel.transactionLabel)
 
-//                    isTransactionAmountValid = try {
-//                        val decimalFormat = DecimalFormat("#.00", DecimalFormatSymbols().apply {
-//                            groupingSeparator = ','
-//                            decimalSeparator = '.'
-//                        })
-//                        decimalFormat.parse(mxViewModel.transactionAmount)?.toFloat()
-//                        true
-//                    } catch (e: Exception) {
-//                        false
-//                    }
-
-                    isTransactionAmountValid = try {
-                        mxViewModel.transactionAmount.toFloat()
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
-
+                    isTransactionAmountValid = mxViewModel.validateAmount(mxViewModel.transactionAmount)
 
                     isTransactionWalletValid = mxViewModel.transactionWalletName in mxViewModel.wallets.map { it.name }
 
@@ -153,22 +133,42 @@ fun TransactionsScreen(
                 }
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     MXRectangularButton(
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp),
-                        containerColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
-                        contentColor = if (mxViewModel.transactionType == TransactionType.EXPENSE) MXColors.Default.PrimaryColor else Color.White,
-                        onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }) {
+                        containerColor =
+                        if (mxViewModel.transactionType == TransactionType.EXPENSE)
+                            MXColors.Default.ActiveColor
+                        else
+                            MXColors.Default.SecondaryColor,
+                        contentColor =
+                        if (mxViewModel.transactionType == TransactionType.EXPENSE)
+                            MXColors.Default.PrimaryColor
+                        else
+                            Color.White,
+                        onClick = { mxViewModel.transactionType = TransactionType.EXPENSE }
+                    ) {
                         Text("OUT")
                     }
                     MXRectangularButton(
                         modifier = Modifier
                             .weight(1f)
                             .padding(4.dp),
-                        containerColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.ActiveColor else MXColors.Default.SecondaryColor,
-                        contentColor = if (mxViewModel.transactionType == TransactionType.INCOME) MXColors.Default.PrimaryColor else Color.White,
+                        containerColor =
+                        if (mxViewModel.transactionType == TransactionType.INCOME)
+                            MXColors.Default.ActiveColor
+                        else
+                            MXColors.Default.SecondaryColor,
+                        contentColor =
+                        if (mxViewModel.transactionType == TransactionType.INCOME)
+                            MXColors.Default.PrimaryColor
+                        else
+                            Color.White,
                         onClick = { mxViewModel.transactionType = TransactionType.INCOME }
                     ) {
                         Text("IN")
@@ -222,7 +222,11 @@ fun TransactionsScreen(
                     ) {
                         MXDropdownMenu(
                             items = mxViewModel.wallets.map { it.name },
-                            selectedItem = if (mxViewModel.transactionWalletName != "") mxViewModel.transactionWalletName else "Select wallet...",
+                            selectedItem =
+                            if (mxViewModel.transactionWalletName != "")
+                                mxViewModel.transactionWalletName
+                            else
+                                "Select wallet...",
                             showLabel = false
                         ) {
                             mxViewModel.transactionWalletName = it
@@ -244,11 +248,7 @@ fun TransactionsScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-
-
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.weight(1f))
             }
         }
 
@@ -341,15 +341,15 @@ fun TransactionsScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun TransactionsScreenPreview() {
-    MXTheme {
-        val vm: MXViewModel = viewModel()
-        TransactionsScreen(
-            mxViewModel = vm,
-            uiState = vm.uiState.collectAsState().value,
-            isLoading = false,
-        )
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun TransactionsScreenPreview() {
+//    MXTheme {
+//        val vm: MXViewModel = viewModel()
+//        TransactionsScreen(
+//            mxViewModel = vm,
+//            uiState = vm.uiState.collectAsState().value,
+//            isLoading = false,
+//        )
+//    }
+//}

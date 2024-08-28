@@ -33,6 +33,19 @@ class MXViewModel(
 
     lateinit var email: String
 
+    // Defining the state for user, wallets and transaction
+    var user by mutableStateOf<User?>(null)
+    var wallets by mutableStateOf(listOf<Wallet>())
+    var transactions by mutableStateOf(listOf<Transaction>())
+
+    // Defining the state for general info
+    var balance by mutableFloatStateOf(0.0f)
+    var income by mutableFloatStateOf(0.0f)
+    var expenses by mutableFloatStateOf(0.0f)
+
+    // Defining selected items
+    var selectedWallet by mutableStateOf<Wallet?>(null)
+
     // Data to create a new wallet
     var walletName by mutableStateOf("")
     var walletDescription by mutableStateOf("")
@@ -46,20 +59,12 @@ class MXViewModel(
     var transactionWalletName: String by mutableStateOf("")
     var transactionType: TransactionType by mutableStateOf(TransactionType.EXPENSE)
 
-
-//    var filteredAndSortedTransactions: List<Transaction> by mutableStateOf(emptyList())
-
     fun updateCurrentFilter(newFilter: String) {
         _uiState.update {
             it.copy(
                 currentFilter = newFilter
             )
         }
-//        filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-//            transactionList = transactions,
-//            filter = _uiState.value.currentFilter,
-//            sort = _uiState.value.currentFilter
-//        )
     }
 
     fun updateCurrentSortingCriteria(newSortingCriteria: String) {
@@ -68,11 +73,6 @@ class MXViewModel(
                 currentSortingCriteria = newSortingCriteria,
             )
         }
-//        filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-//            transactionList = transactions,
-//            filter = _uiState.value.currentFilter,
-//            sort = _uiState.value.currentFilter
-//        )
     }
 
     fun createAndSaveTransaction() {
@@ -89,26 +89,8 @@ class MXViewModel(
                 wallet = wallet,
             )
             saveTransaction(transaction)
-//            filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-//                transactionList = transactions,
-//                filter = _uiState.value.currentFilter,
-//                sort = _uiState.value.currentSortingCriteria
-//            )
         }
     }
-
-    // Defining the state for user, wallets and transaction
-    var user by mutableStateOf<User?>(null)
-    var wallets by mutableStateOf(listOf<Wallet>())
-    var transactions by mutableStateOf(listOf<Transaction>())
-
-    // Defining the state for general info
-    var balance by mutableFloatStateOf(0.0f)
-    var income by mutableFloatStateOf(0.0f)
-    var expenses by mutableFloatStateOf(0.0f)
-
-    // Defining selected items
-    var selectedWallet by mutableStateOf<Wallet?>(null)
 
     suspend fun loadData(email: String) {
         loadUserByEmail(email)
@@ -124,7 +106,7 @@ class MXViewModel(
         }
     }
 
-    suspend fun loadWalletsByUser(user: User?) {
+    private suspend fun loadWalletsByUser(user: User?) {
         if (user != null) {
             transactions = emptyList()
             user.wallets.forEach { walletRef ->
@@ -139,19 +121,12 @@ class MXViewModel(
     }
 
     private suspend fun loadTransactionsByWallet(wallet: Wallet) {
-//        viewModelScope.launch {
-            repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
-                if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
-            }
-//            filteredAndSortedTransactions = getFilteredAndSortedTransactions(
-//                transactionList = transactions,
-//                filter = _uiState.value.currentFilter,
-//                sort = _uiState.value.currentFilter
-//            )
-//        }
+        repository.getTransactionsByWallet(wallet) { fetchedTransactions ->
+            if (fetchedTransactions.isNotEmpty()) transactions += fetchedTransactions
+        }
     }
 
-    fun createAndSaveUser(email: String, firstName: String, lastName: String, password: String, currency: Currency) {
+    fun createAndSaveUser(email: String, firstName: String, lastName: String, currency: Currency = Currency.US_DOLLAR) {
         val user = User(
             id = "",
             email = email,
@@ -162,7 +137,7 @@ class MXViewModel(
             currency = currency
         )
         this.user = user
-        repository.saveUser(user) {}
+        repository.saveUser(user) { }
     }
 
     fun updateUserInfo(firstName: String, lastName: String) {
@@ -185,7 +160,7 @@ class MXViewModel(
                     user = newUser?.copy()
                 }
             }
-            Log.d("New User", user.toString())
+            Log.d(TAG, user.toString())
         }
     }
 
@@ -202,16 +177,20 @@ class MXViewModel(
     }
 
     fun createAndSaveWallet() {
-        val wallet = Wallet(id = UUID.randomUUID().toString(), name = walletName, amount = walletAmount.toFloat(), description = walletDescription, ref = null)
+        val wallet = Wallet(
+            id = UUID.randomUUID().toString(),
+            name = walletName,
+            amount = walletAmount.toFloat(),
+            description = walletDescription,
+            ref = null
+        )
         viewModelScope.launch {
             wallets += wallet
             repository.saveWallet(wallet) { walletRef ->
-                // Update UI
                 if (walletRef != null) {
-                    wallet.id = walletRef.id // Remember that ID is not yet defined on UI creation
+                    wallet.id = walletRef.id
                     wallet.ref = walletRef // Remember to save the reference
                 }
-                // Update User
                 user?.wallets = user?.wallets?.plus(walletRef!!) ?: emptyList()
                 updateUser(user)
             }
@@ -221,57 +200,43 @@ class MXViewModel(
     fun updateWallet(wallet: Wallet?) {
         if (wallet != null) {
             viewModelScope.launch {
-                val newWallets = wallets.map {// Generate new list and replace the updated item
+                val newWallets = wallets.map {
                     if (it.id == wallet.id) wallet else it
                 }
                 wallets = newWallets
                 repository.updateWallet(wallet) { walletRef ->
                    if (walletRef != null) {
-                       wallet.id = walletRef.id // when online update the ID
-                       wallet.ref = walletRef // and the document reference to the wallet
+                       wallet.id = walletRef.id
+                       wallet.ref = walletRef
                    }
                 }
             }
         }
     }
 
-    // TODO: fix it, doesn't work
-//    private fun updateWalletBalance(wallet: Wallet, lastTransaction: Transaction) {
-//        viewModelScope.launch {
-//            wallet.amount += lastTransaction.amount
-//            repository.updateWallet(wallet) { }
-//        }
-//    }
-
     suspend fun deleteWallet(wallet: Wallet?) {
         if (wallet != null) {
-                // Update wallets UI
                 val newWallets = wallets.filter { it.id != wallet.id }
                 wallets = newWallets
 
-                // Update transactions UI
                 val filteredTransactions = transactions.filter { it.wallet.id != wallet.id }
                 transactions = filteredTransactions
 
-                val walletRefOut = repository.deleteWallet(wallet) { walletRef ->
+                val walletRef = repository.deleteWallet(wallet) { walletRef ->
                     Log.d(TAG, "walletRef: $walletRef")
                     if (walletRef != null) {
-                        // Update User
                         user?.wallets = user?.wallets?.filter { it != walletRef } ?: emptyList()
                         user?.transactions = user?.transactions?.filter {
-                            if (filteredTransactions != null) {
-                                for (t in filteredTransactions) {
-                                    if (it.id != t.id) false
-                                }
-                                true
+                            for (t in filteredTransactions) {
+                                if (it.id != t.id) false
                             }
-                            false
+                            true
                         } ?: emptyList()
                         updateUser(user)
                     }
                 }
-                if (walletRefOut != null) {
-                    repository.deleteTransactionsByWallet(walletRefOut)
+                if (walletRef != null) {
+                    repository.deleteTransactionsByWallet(walletRef)
                     Log.d(TAG, "Transactions deleted from firestore")
                 } else {
                     Log.d(TAG, "No transactions to be deleted from firestore -> walletRef is null")
@@ -287,10 +252,8 @@ class MXViewModel(
                 transactions += transaction
                 repository.saveTransaction(transaction) { transactionRef ->
                     if (transactionRef != null) {
-                        // Update local transactions
                         transaction.id = transactionRef.id
 
-                        // Update the user.transactions references
                         user?.transactions = user?.transactions?.plus(transactionRef) ?: emptyList()
                         updateUser(user)
                     }
@@ -298,7 +261,6 @@ class MXViewModel(
             }
         }
     }
-
 
     fun updateTransaction(transaction: Transaction?) {
         if (transaction != null) {
@@ -351,11 +313,10 @@ class MXViewModel(
                 .filter { transaction ->
                     transaction.wallet.id == selectedWallet?.id
                 }
-                .take(10)
         } else {
             transactions
-                .take(10)
         }
+            .take(10)
             .sortedByDescending { it.date }
     }
 
@@ -395,18 +356,20 @@ class MXViewModel(
             }.toFloat()
     }
 
-//    fun getBalance(transactions: List<Transaction>): Float {
-//        return transactions
-//            .fold(0.0) { sum, transaction ->
-//                sum + transaction.amount
-//            }.toFloat()
-//    }
-
     fun getCurrentWalletTransactions(transactions: List<Transaction>): List<Transaction> {
         return if (selectedWallet != null) {
             transactions.filter { transaction -> transaction.wallet == selectedWallet }
         } else {
             transactions
+        }
+    }
+
+    fun validateAmount(amount: String): Boolean {
+        return try {
+            amount.toFloat()
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 

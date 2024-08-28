@@ -1,7 +1,6 @@
 package com.ilyaemeliyanov.mx_frontend
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.StringRes
@@ -12,13 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -33,7 +30,6 @@ import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXRepository
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
 
-
 enum class AuthScreens(@StringRes val title: Int) {
     InitialScreen(title = R.string.initial_screen_route),
     LoginScreen(title = R.string.login_screen_route),
@@ -45,30 +41,25 @@ class MainActivity : ComponentActivity() {
     private lateinit var auth: FirebaseAuth
     private var isUserAlreadyLoggedIn = false
 
-    // Initialize necessary viewmodels
     private  val mxAuthViewModel = MXAuthViewModel()
     private val mxViewModel = MXViewModel(MXRepository())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize Firebase Auth
         auth = Firebase.auth
 
         setContent {
             MXTheme {
                 val navController: NavHostController = rememberNavController()
 
-                // Get current back stack entry
-                val backStackEntry by navController.currentBackStackEntryAsState()
-                // Get the name of the current screen
-                val currentScreen = AuthScreens.valueOf(
-                    backStackEntry?.destination?.route ?: AuthScreens.InitialScreen.name
-                )
-
                 NavHost(
                     navController = navController,
-                    startDestination = if (isUserAlreadyLoggedIn) AuthScreens.MXApp.name else AuthScreens.InitialScreen.name,
+                    startDestination =
+                    if (isUserAlreadyLoggedIn)
+                        AuthScreens.MXApp.name
+                    else
+                        AuthScreens.InitialScreen.name,
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
@@ -99,8 +90,6 @@ class MainActivity : ComponentActivity() {
                         SignUpScreen(
                             navController = navController,
                             mxAuthViewModel = mxAuthViewModel,
-//                            navigateUp = navController::navigateUp,
-//                            canNavigateBack = navController.previousBackStackEntry != null,
                             mxViewModel = mxViewModel,
                             modifier = Modifier
                                 .background(color = MXColors.Default.BgColor)

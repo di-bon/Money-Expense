@@ -52,7 +52,6 @@ fun MXWallet(
     mxViewModel: MXViewModel,
     modifier: Modifier = Modifier
 ) {
-
     val transactions = mxViewModel.transactions.filter { it.wallet.id == wallet.id }
     var income by remember { mutableFloatStateOf(0.0f) }
     var expenses by remember { mutableFloatStateOf(0.0f) }
@@ -62,6 +61,10 @@ fun MXWallet(
     var name by remember { mutableStateOf(wallet.name) }
     var description by remember { mutableStateOf(wallet.description ?: "") }
     var amount by remember { mutableStateOf(wallet.amount.toString()) }
+
+    var isEditNameValid by remember { mutableStateOf(true) }
+    var isDescriptionEditValid by remember { mutableStateOf(true) }
+    var isAmountEditValid by remember { mutableStateOf(true) }
 
     LaunchedEffect(transactions.isNotEmpty()) {
         val amounts = transactions.map { it.amount }
@@ -84,7 +87,14 @@ fun MXWallet(
                 modifier = Modifier
                     .height(IntrinsicSize.Min)
             ) {
-                Text(text = wallet.name, style = TextStyle(fontFamily = spaceGrotesk, fontSize = 18.sp, fontWeight = FontWeight.Medium))
+                Text(
+                    text = wallet.name,
+                    style = TextStyle(
+                        fontFamily = spaceGrotesk,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Icon(
                     imageVector = Icons.Filled.Edit,
@@ -127,15 +137,25 @@ fun MXWallet(
                     dismissLabel = "Cancel",
                     onDismiss = { showEditContextDialog = false },
                     onConfirm = {
-                        showEditContextDialog = false
-                        val newWallet = Wallet(
-                            id = wallet.id,
-                            name = name,
-                            amount = String.format("%.2f", amount.toFloat()).toFloat(),
-                            description = description,
-                            ref = null,
-                        )
-                        mxViewModel.updateWallet(newWallet)
+                        name = name.trim()
+                        isEditNameValid = mxViewModel.validateContent(name)
+
+                        description = description.trim()
+                        isDescriptionEditValid = mxViewModel.validateContent(description)
+
+                        isAmountEditValid = mxViewModel.validateAmount(amount)
+
+                        if (isEditNameValid && isDescriptionEditValid && isAmountEditValid) {
+                            val newWallet = Wallet(
+                                id = wallet.id,
+                                name = name,
+                                amount = String.format("%.2f", amount.toFloat()).toFloat(),
+                                description = description,
+                                ref = null,
+                            )
+                            mxViewModel.updateWallet(newWallet)
+                            showEditContextDialog = false
+                        }
                     }
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -144,14 +164,18 @@ fun MXWallet(
                         labelText = "Edit wallet name...",
                         text = name,
                         onTextChange = { name = it },
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        isError = !isEditNameValid,
+                        errorMessage = "Enter a valid name"
                     )
                     MXInput(
                         titleText = "Description",
                         labelText = "Edit wallet description...",
                         text = description,
                         onTextChange = { value -> description = value },
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        isError = !isDescriptionEditValid,
+                        errorMessage = "Enter a valid description"
                     )
                     MXInput(
                         titleText = "Amount",
@@ -162,7 +186,9 @@ fun MXWallet(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        isError = !isAmountEditValid,
+                        errorMessage = "Enter a valid amount (use . for decimal values)"
                     )
                 }
             }
@@ -180,7 +206,10 @@ fun MXWallet(
                         }
                     }
                 ) {
-                    Text("Are you sure you want to delete this wallet?\n\nAll the associated transactions will be delete as well", style = MaterialTheme.typography.labelMedium)
+                    Text(
+                        "Are you sure you want to delete this wallet?\n\nAll the associated transactions will be delete as well",
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
             }
         }

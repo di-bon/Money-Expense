@@ -62,7 +62,6 @@ fun SettingsScreen(
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
-
     val context = LocalContext.current
 
     var showUserUpdateContextDialog by remember { mutableStateOf(false) }
@@ -73,7 +72,11 @@ fun SettingsScreen(
 
     var showExportContextDialog by remember { mutableStateOf(false) }
     var showCurrencyContextDialog by remember { mutableStateOf(false) }
-    var selectedCurrency by remember { mutableStateOf(mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol) }
+    var selectedCurrency by remember {
+        mutableStateOf(
+            mxViewModel.user?.currency?.symbol ?: Currency.US_DOLLAR.symbol
+        )
+    }
 
 //    var showPayPalContextDialog by remember { mutableStateOf(false) }
 //    var payPalClientId by remember { mutableStateOf("") }
@@ -86,99 +89,98 @@ fun SettingsScreen(
     var isNewPasswordValid by remember { mutableStateOf(true) }
     var isNewConfirmPasswordValid by remember { mutableStateOf(true) }
 
-//    Box {
-        LazyColumn (modifier = Modifier.padding(32.dp)) {
-            item {
-                MXTitle(
-                    title = "Settings",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) { }
-            }
+    LazyColumn(modifier = Modifier.padding(32.dp)) {
+        item {
+            MXTitle(
+                title = "Settings",
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) { }
+        }
 
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+        }
 
-            item {
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(shape = MXShapes.medium)
-                        .background(color = Color.Black)
-                        .padding(vertical = 16.dp, horizontal = 12.dp)
-                ) {
-                    Text(
-                        text = "Welcome back,",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "${mxViewModel.user?.firstName} ${mxViewModel.user?.lastName}",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MXColors.Default.ActiveColor
-                    )
-                }
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(shape = MXShapes.medium)
+                    .background(color = Color.Black)
+                    .padding(vertical = 16.dp, horizontal = 12.dp)
+            ) {
+                Text(
+                    text = "Welcome back,",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+                Text(
+                    text = "${mxViewModel.user?.firstName} ${mxViewModel.user?.lastName}",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MXColors.Default.ActiveColor
+                )
             }
+        }
 
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+        item {
+            Spacer(modifier = Modifier.height(24.dp))
+        }
 
-            item {
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(text = "General", style = MaterialTheme.typography.labelLarge)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    MXSettingsButton(
-                        onClick = { showUserUpdateContextDialog = true },
-                        leftIconImageVector = Icons.Outlined.Person,
-                        titleString = "Change personal info",
-                        descriptionString = "Here you can change your firstname, lastname and password",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
-                        onClick = { showCurrencyContextDialog = true },
-                        leftIconImageVector = Icons.Outlined.AttachMoney,
-                        titleString = "Change currency",
-                        descriptionString = "Choose the currency to display your transactions with",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
-                        onClick = {
-                            mxAuthViewModel.signOut()
-                            navController.navigate(AuthScreens.InitialScreen.name) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = "General", style = MaterialTheme.typography.labelLarge)
+                Spacer(modifier = Modifier.height(12.dp))
+                MXSettingsButton(
+                    onClick = { showUserUpdateContextDialog = true },
+                    leftIconImageVector = Icons.Outlined.Person,
+                    titleString = "Change personal info",
+                    descriptionString = "Here you can change your firstname, lastname and password",
+                    rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                MXSettingsButton(
+                    onClick = { showCurrencyContextDialog = true },
+                    leftIconImageVector = Icons.Outlined.AttachMoney,
+                    titleString = "Change currency",
+                    descriptionString = "Choose the currency to display your transactions with",
+                    rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                MXSettingsButton(
+                    onClick = {
+                        mxAuthViewModel.signOut()
+                        navController.navigate(AuthScreens.InitialScreen.name) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                inclusive = true
                             }
-                                  },
-                        leftIconImageVector = Icons.AutoMirrored.Outlined.Logout,
-                        titleString = "Log out",
-                        descriptionString = "Log out of your account",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
+                        }
+                    },
+                    leftIconImageVector = Icons.AutoMirrored.Outlined.Logout,
+                    titleString = "Log out",
+                    descriptionString = "Log out of your account",
+                    rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
+                Spacer(modifier = Modifier.height(8.dp))
             }
+        }
 
-            item {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Functionality", style = MaterialTheme.typography.labelLarge)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    MXSettingsButton(
-                        onClick = { showExportContextDialog = true },
-                        leftIconImageVector = Icons.Filled.Downloading,
-                        titleString = "Export transactions in CSV",
-                        descriptionString = "Your transactions are available for download in CSV format",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    // PayPal
+        item {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Functionality", style = MaterialTheme.typography.labelLarge)
+                Spacer(modifier = Modifier.height(8.dp))
+                MXSettingsButton(
+                    onClick = { showExportContextDialog = true },
+                    leftIconImageVector = Icons.Filled.Downloading,
+                    titleString = "Export transactions in CSV",
+                    descriptionString = "Your transactions are available for download in CSV format",
+                    rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                // PayPal
 //                    MXSettingsButton(
 //                        onClick = { showPayPalContextDialog = true },
 //                        leftIconImageVector = Icons.Filled.Payment,
@@ -186,156 +188,168 @@ fun SettingsScreen(
 //                        descriptionString = "All of your PayPal transactions will be visible in Money Expense",
 //                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
 //                    )
-                }
             }
+        }
 
-            item {
-                Column(
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(text = "Danger zone", style = MaterialTheme.typography.labelLarge)
+                Spacer(modifier = Modifier.height(12.dp))
+                MXSettingsButton(
+                    onClick = { showDeleteAccountContextDialog = true },
+                    leftIconImageVector = Icons.Outlined.PersonOff,
+                    titleString = "Close & delete account",
+                    titleColor = Color.Red,
+                    descriptionString = "Close and delete your account and all related wallets and transactions",
+                    rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+    }
+
+    if (showUserUpdateContextDialog) {
+        MXAlertDialog(
+            title = "Update profile",
+            dismissLabel = "Cancel",
+            confirmLabel = "Save",
+            onDismiss = { showUserUpdateContextDialog = false },
+            onConfirm = {
+                isNewFirstnameValid = mxViewModel.validateName(newFirstname)
+                isNewLastnameValid = mxViewModel.validateName(newLastname)
+                isNewPasswordValid = mxViewModel.validatePassword(newPassword)
+                isNewConfirmPasswordValid =
+                    mxViewModel.validatePassword(newPasswordConfirm) && mxViewModel.checkConfirmPassword(
+                        newPassword,
+                        newPasswordConfirm
+                    )
+
+                if (isNewFirstnameValid && isNewLastnameValid && isNewPasswordValid && isNewConfirmPasswordValid) {
+                    mxViewModel.updateUserInfo(
+                        firstName = newFirstname,
+                        lastName = newLastname
+                    )
+                    mxAuthViewModel.changePassword(newPassword = newPassword) { res, error ->
+                        if (res) {
+                            Toast.makeText(
+                                context,
+                                "Password successfully updated!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            Log.d(TAG, "Password successfully updated")
+                        } else {
+                            Log.d(TAG, "Password not updated: $error")
+                            Toast.makeText(
+                                context,
+                                "Password not updated: $error",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                    showUserUpdateContextDialog = false
+                }
+            }) {
+            Column {
+                MXInput(
+                    titleText = "Firstname",
+                    labelText = "Enter your firstname...",
+                    text = newFirstname,
+                    onTextChange = { newFirstname = it },
+                    isError = !isNewFirstnameValid,
+                    errorMessage = "Enter a valid firstname"
+                )
+                MXInput(
+                    titleText = "Lastname",
+                    labelText = "Enter your lastname...",
+                    text = newLastname,
+                    onTextChange = { newLastname = it },
+                    isError = !isNewLastnameValid,
+                    errorMessage = "Enter a valid lastname"
+                )
+                MXSecretInput(
+                    titleText = "Password",
+                    labelText = "Enter your password...",
+                    text = newPassword,
+                    onTextChange = { newPassword = it },
+                    isError = !isNewPasswordValid,
+                    errorMessage = "Enter a password of at least 6 characters"
+                )
+                MXSecretInput(
+                    titleText = "Confirm password",
+                    labelText = "Enter your password again...",
+                    text = newPasswordConfirm,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    onTextChange = { newPasswordConfirm = it },
+                    isError = !isNewConfirmPasswordValid,
+                    errorMessage = "Enter the same valid password again"
+                )
+            }
+        }
+    }
+    if (showCurrencyContextDialog) {
+        MXAlertDialog(
+            title = "Change Currency",
+            dismissLabel = "Cancel",
+            confirmLabel = "Save",
+            onDismiss = { showCurrencyContextDialog = false },
+            onConfirm = {
+                val newCurrency = Currency.entries.firstOrNull { it.symbol == selectedCurrency } ?: Currency.US_DOLLAR
+                mxViewModel.user?.currency = newCurrency
+                val newUser = mxViewModel.user
+                newUser?.currency = newCurrency
+                mxViewModel.updateUser(newUser)
+                showCurrencyContextDialog = false
+            }) {
+            Column {
+                Text("Select a currency...")
+                Spacer(modifier = Modifier.height(8.dp))
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
-                    Text(text = "Danger zone", style = MaterialTheme.typography.labelLarge)
-                    Spacer(modifier = Modifier.height(12.dp))
-                    MXSettingsButton(
-                        onClick = { showDeleteAccountContextDialog = true },
-                        leftIconImageVector = Icons.Outlined.PersonOff, // TODO: set delete account icon
-                        titleString = "Close & delete account",
-                        titleColor = Color.Red,
-                        descriptionString = "Close and delete your account and all related wallets and transactions",
-                        rightIconImageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-
-        if (showUserUpdateContextDialog) {
-            MXAlertDialog(
-                title = "Update profile",
-                dismissLabel = "Cancel",
-                confirmLabel = "Save",
-                onDismiss = { showUserUpdateContextDialog = false },
-                onConfirm = {
-                    isNewFirstnameValid = mxViewModel.validateName(newFirstname)
-                    isNewLastnameValid = mxViewModel.validateName(newLastname)
-                    isNewPasswordValid = mxViewModel.validatePassword(newPassword)
-                    isNewConfirmPasswordValid = mxViewModel.validatePassword(newPasswordConfirm) && mxViewModel.checkConfirmPassword(newPassword, newPasswordConfirm)
-
-                    if (isNewFirstnameValid && isNewLastnameValid && isNewPasswordValid && isNewConfirmPasswordValid) {
-                        mxViewModel.updateUserInfo(
-                            firstName = newFirstname,
-                            lastName = newLastname
+                        .height(60.dp)
+                        .border(
+                            1.dp,
+                            brush = SolidColor(Color.Gray),
+                            shape = RoundedCornerShape(8.dp)
                         )
-                        mxAuthViewModel.changePassword(newPassword = newPassword) { res, error ->
-                            if (res) {
-                                Toast.makeText(context, "Password successfully updated!", Toast.LENGTH_LONG).show()
-                                Log.d(TAG, "Password successfully updated")
-                            } else {
-                                Log.d(TAG, "Password not updated: $error")
-                                Toast.makeText(context, "Password not updated: $error", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                        showUserUpdateContextDialog = false
-                    }
-                }) {
-                Column {
-                    MXInput(
-                        titleText = "Firstname",
-                        labelText = "Enter your firstname...",
-                        text = newFirstname,
-                        onTextChange = { newFirstname = it },
-                        isError = !isNewFirstnameValid,
-                        errorMessage = "Enter a valid firstname"
-                    )
-                    MXInput(
-                        titleText = "Lastname",
-                        labelText = "Enter your lastname...",
-                        text = newLastname,
-                        onTextChange = { newLastname = it },
-                        isError = !isNewLastnameValid,
-                        errorMessage = "Enter a valid lastname"
-                    )
-                    MXSecretInput(
-                        titleText = "Password",
-                        labelText = "Enter your password...",
-                        text = newPassword,
-                        onTextChange = { newPassword = it },
-                        isError = !isNewPasswordValid,
-                        errorMessage = "Enter a password of at least 6 characters"
-                    )
-                    MXSecretInput(
-                        titleText = "Confirm password",
-                        labelText = "Enter your password again...",
-                        text = newPasswordConfirm,
-                        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-                        onTextChange = { newPasswordConfirm = it },
-                        isError = !isNewConfirmPasswordValid,
-                        errorMessage = "Enter the same valid password again"
-                    )
-                }
-            }
-        }
-        if (showCurrencyContextDialog) {
-            MXAlertDialog(
-                title = "Change Currency",
-                dismissLabel = "Cancel",
-                confirmLabel = "Save",
-                onDismiss = { showCurrencyContextDialog = false },
-                onConfirm = {
-                    val newCurrency = Currency.entries.firstOrNull { it.symbol == selectedCurrency } ?: Currency.US_DOLLAR
-                    mxViewModel.user?.currency = newCurrency
-                    val newUser = mxViewModel.user
-                    newUser?.currency = newCurrency
-                    mxViewModel.updateUser(newUser)
-                    showCurrencyContextDialog = false
-                }) {
-                Column {
-                    Text("Select a currency...")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .border(
-                                1.dp,
-                                brush = SolidColor(Color.Gray),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 16.dp),
-                        contentAlignment = Alignment.CenterStart
+                        .padding(horizontal = 16.dp),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    MXDropdownMenu(
+                        items = Currency.entries.map { it.symbol },
+                        selectedItem = selectedCurrency,
+                        showLabel = false
                     ) {
-                        MXDropdownMenu(
-                            items = Currency.entries.map { it.symbol },
-                            selectedItem = selectedCurrency,
-                            showLabel = false
-                        ) {
-                            selectedCurrency = it
-                        }
+                        selectedCurrency = it
                     }
                 }
             }
         }
-        if (showExportContextDialog) {
-            MXAlertDialog(
-                title = "Export transactions",
-                dismissLabel = "Cancel",
-                confirmLabel = "Export",
-                onDismiss = { showExportContextDialog = false },
-                onConfirm = {
-                    val csvData = mxViewModel.transactions.toCSV()
-                    val file = exportToCSV(context, "transactions", csvData)
-                    file?.let {
-                        // Handle successful export, show Toast with the path for the exported file
-                        Toast.makeText(context, "Exported to: ${it.absolutePath}", Toast.LENGTH_LONG).show()
-                    } ?: run {
-                        // Handle failure
-                        Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
-                    }
-                    showExportContextDialog = false
-                }) {
-                Text("Your transactions will be exported to your local storage")
+    }
+    if (showExportContextDialog) {
+        MXAlertDialog(
+            title = "Export transactions",
+            dismissLabel = "Cancel",
+            confirmLabel = "Export",
+            onDismiss = { showExportContextDialog = false },
+            onConfirm = {
+                val csvData = mxViewModel.transactions.toCSV()
+                val file = exportToCSV(context, "transactions", csvData)
+                file?.let {
+                    Toast.makeText(context, "Exported to: ${it.absolutePath}", Toast.LENGTH_LONG)
+                        .show()
+                } ?: run {
+                    Toast.makeText(context, "Failed to export", Toast.LENGTH_LONG).show()
+                }
+                showExportContextDialog = false
             }
+        ) {
+            Text("Your transactions will be exported to your local storage")
         }
+    }
 //        if (showPayPalContextDialog) {
 //            MXAlertDialog(
 //                title = "Integrate PayPal account",
@@ -343,11 +357,11 @@ fun SettingsScreen(
 //                confirmLabel = "Connect",
 //                onDismiss = { showPayPalContextDialog = false },
 //                onConfirm = {
-////                    mxViewModel.storeData(context, "client_id", payPalClientId)
-////                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
-////
-////                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
-////                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
+//                    mxViewModel.storeData(context, "client_id", payPalClientId)
+//                    mxViewModel.storeData(context, "client_secret", payPalClientSecret)
+//
+//                    mxViewModel.generatePayPalAccessToken(payPalClientId, payPalClientSecret)
+//                    mxViewModel.storeData(context, "access_token", mxViewModel.payPalAccessToken)
 //                }) {
 //                Text("Go to your PayPal account > Apps & Credentials > Create new app > PayPal will generate Client ID and Secret Key")
 //                Spacer(modifier = Modifier.height(8.dp))
@@ -356,33 +370,32 @@ fun SettingsScreen(
 //                MXSecretInput(titleText = "Account Secret Key", labelText = "Client Secret Key", text = payPalClientSecret, keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done), onTextChange = { payPalClientSecret = it })
 //            }
 //        }
-        if (showDeleteAccountContextDialog) {
-            MXAlertDialog(
-                title = "Change Currency",
-                dismissLabel = "Cancel",
-                confirmLabel = "Delete account",
-                confirmContainerColor = Color.Red,
-                onDismiss = { showDeleteAccountContextDialog = false },
-                onConfirm = {
-                    mxViewModel.viewModelScope.launch {
-                        mxViewModel.deleteUser(user = mxViewModel.user)
-                        mxAuthViewModel.deleteUser()
-                        mxAuthViewModel.signOut()
-                        showDeleteAccountContextDialog = false
-                        navController.navigate(AuthScreens.InitialScreen.name) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
+    if (showDeleteAccountContextDialog) {
+        MXAlertDialog(
+            title = "Change Currency",
+            dismissLabel = "Cancel",
+            confirmLabel = "Delete account",
+            confirmContainerColor = Color.Red,
+            onDismiss = { showDeleteAccountContextDialog = false },
+            onConfirm = {
+                mxViewModel.viewModelScope.launch {
+                    mxViewModel.deleteUser(user = mxViewModel.user)
+                    mxAuthViewModel.deleteUser()
+                    mxAuthViewModel.signOut()
+                    showDeleteAccountContextDialog = false
+                    navController.navigate(AuthScreens.InitialScreen.name) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
                         }
                     }
                 }
-            ) {
-                Column {
-                    Text("Are you sure you want to permanently delete your account?")
-                }
+            }
+        ) {
+            Column {
+                Text("Are you sure you want to permanently delete your account?")
             }
         }
-//    }
+    }
 }
 
 //@Preview(showBackground = true)

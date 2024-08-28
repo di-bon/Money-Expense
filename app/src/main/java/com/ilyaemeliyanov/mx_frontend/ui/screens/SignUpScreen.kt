@@ -22,41 +22,31 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.ilyaemeliyanov.mx_frontend.AuthScreens
-import com.ilyaemeliyanov.mx_frontend.data.user.Currency
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXInput
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXRectangularButton
 import com.ilyaemeliyanov.mx_frontend.ui.composables.MXSecretInput
-import com.ilyaemeliyanov.mx_frontend.ui.theme.MXTheme
 import com.ilyaemeliyanov.mx_frontend.ui.theme.euclidCircularA
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXAuthViewModel
 import com.ilyaemeliyanov.mx_frontend.viewmodel.MXViewModel
-
 
 @Composable
 fun SignUpScreen(
     navController: NavController,
     mxAuthViewModel: MXAuthViewModel,
     mxViewModel: MXViewModel,
-//    canNavigateBack: Boolean,
-//    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     val context = LocalContext.current
 
-    // ---
-    // TODO: to be replaced by viewModel class
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    // ---
 
     var isFirstnameValid by remember { mutableStateOf(true) }
     var isLastnameValid by remember { mutableStateOf(true) }
@@ -68,30 +58,14 @@ fun SignUpScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-//        Column (
-//            horizontalAlignment = Alignment.Start
-//        ) {
-//            if (canNavigateBack) {
-//                IconButton(
-//                    onClick = navigateUp,
-//                    modifier = Modifier
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-//                        contentDescription = "Back button",
-//                        modifier = Modifier
-//                    )
-//                }
-//            }
-            Text(
-                text = "Sign up",
-                style = TextStyle(
-                    fontFamily = euclidCircularA,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 64.sp
-                )
+        Text(
+            text = "Sign up",
+            style = TextStyle(
+                fontFamily = euclidCircularA,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 64.sp
             )
-//        }
+        )
         Spacer(modifier = Modifier.height(24.dp))
         Column {
             MXInput(
@@ -176,9 +150,7 @@ fun SignUpScreen(
                             mxViewModel.createAndSaveUser(
                                 email = email,
                                 firstName = firstName,
-                                lastName = lastName,
-                                password = password,
-                                currency = Currency.US_DOLLAR // default currency
+                                lastName = lastName
                             )
                             navController.navigate(AuthScreens.MXApp.name) {
                                 popUpTo(navController.graph.startDestinationId) {
@@ -205,10 +177,10 @@ fun SignUpScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun SignUpScreenPreview() {
-    MXTheme {
+//@Preview(showBackground = true)
+//@Composable
+//private fun SignUpScreenPreview() {
+//    MXTheme {
 //        SignUpScreen(
 //            navController = rememberNavController(),
 //            mxAuthViewModel = MXAuthViewModel(),
@@ -218,5 +190,5 @@ private fun SignUpScreenPreview() {
 //                .fillMaxWidth()
 //                .fillMaxHeight()
 //        )
-    }
-}
+//    }
+//}

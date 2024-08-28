@@ -32,6 +32,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.ilyaemeliyanov.mx_frontend.AuthScreens
 import com.ilyaemeliyanov.mx_frontend.R
 import com.ilyaemeliyanov.mx_frontend.ui.screens.DashboardScreen
 import com.ilyaemeliyanov.mx_frontend.ui.screens.SettingsScreen
@@ -57,17 +59,18 @@ fun BottomNavigationBar(navController: NavHostController) {
         ,
         backgroundColor = MXColors.Default.BgColor
     ) {
-        // Initialize bottom navigation items
         val items = BottomNavigationItem().bottomNavigationItems()
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-        var navSelectedItem = items.indexOfFirst { it.route == currentRoute }.takeIf { it != -1 } ?: 0 // select the last route
+        var navSelectedItem = items.indexOfFirst { it.route == currentRoute }.takeIf { it != -1 } ?: 0
 
         items.forEachIndexed { index, navigationItem ->
-            //iterating all items with their respective indexes
             NavigationBarItem(
                 selected = index == navSelectedItem,
                 label = {
-                    Text(navigationItem.label, style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        navigationItem.label,
+                        style = MaterialTheme.typography.labelSmall
+                    )
                 },
                 icon = {
                     Icon(
@@ -95,7 +98,6 @@ data class BottomNavigationItem(
     val icon: ImageVector = Icons.Filled.Home,
     val route: String = ""
 ) {
-    // Configure the navigation items with label, icon and respective route
     fun bottomNavigationItems() : List<BottomNavigationItem> {
         return listOf(
             BottomNavigationItem(
@@ -120,7 +122,6 @@ data class BottomNavigationItem(
             ),
         )
     }
-
 }
 
 @Composable
@@ -136,20 +137,19 @@ fun MXApp(
     var isLoading by remember { mutableStateOf(true) }
     LaunchedEffect(mxViewModel.transactions.isNotEmpty()) {// waiting for the transactions to load from Firestore
         if (mxViewModel.transactions.isEmpty()) {
-            delay(5000) // set max of 10000 ms
+            delay(5000) // max waiting time
         }
         isLoading = false
     }
 
     LaunchedEffect(Unit) {
-        // If this screen is the first one to be loaded, remember to set mxViewModel.email
+        // If this screen is the first one to be loaded during development, remember to set mxViewModel.email
         mxViewModel.loadData(mxViewModel.email)
     }
 
     Column(
         modifier = modifier
     ) {
-        // Main content
         Box(modifier = Modifier.weight(1f)) {
             NavHost(
                 navController = bottomNavController,
@@ -158,22 +158,17 @@ fun MXApp(
                     .fillMaxHeight()
             ) {
                 composable(Screens.DashboardScreen.name) {
-                    //call our composable screens here
                     DashboardScreen(
                         mxViewModel = mxViewModel,
-                        uiState = uiState.value,
                         isLoading = isLoading
                     )
                 }
                 composable(Screens.WalletsScreen.name) {
-                    //call our composable screens here
                     WalletsScreen(
-                        mxViewModel = mxViewModel,
-                        uiState = uiState.value
+                        mxViewModel = mxViewModel
                     )
                 }
                 composable(Screens.TransactionsScreen.name) {
-                    // call our composable screens here
                     TransactionsScreen(
                         mxViewModel = mxViewModel,
                         uiState = uiState.value,
@@ -181,7 +176,6 @@ fun MXApp(
                     )
                 }
                 composable(Screens.SettingsScreen.name) {
-                    //call our composable screens here
                     SettingsScreen(
                         mxViewModel = mxViewModel,
                         mxAuthViewModel = mxAuthViewModel,
@@ -190,7 +184,6 @@ fun MXApp(
                 }
             }
         }
-        // Bottom Navigation
         BottomNavigationBar(navController = bottomNavController)
     }
 }

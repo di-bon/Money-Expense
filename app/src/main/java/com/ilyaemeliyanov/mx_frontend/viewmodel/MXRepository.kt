@@ -106,15 +106,14 @@ class MXRepository {
             put("currency", user.currency)
         }
 
-        // Update the existing document in collection with the specified user
         docRef
             .set(userData)
             .addOnSuccessListener {
-                Log.d("Firestore", "User item updated with ID: ${docRef.id}")
+                Log.d(TAG, "User item updated with ID: ${docRef.id}")
                 callback(user)
             }
             .addOnFailureListener {e ->
-                Log.w("Firestore", "Error updating user item", e)
+                Log.w(TAG, "Error updating user item", e)
                 callback(null)
             }
     }
@@ -142,11 +141,11 @@ class MXRepository {
         walletsCollection
             .add(walletData)
             .addOnSuccessListener { docRef ->
-                Log.d("Firestore", "Wallet item added with ID: ${docRef.id}")
+                Log.d(TAG, "Wallet item added with ID: ${docRef.id}")
                 callback(docRef)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error adding wallet item", e)
+                Log.w(TAG, "Error adding wallet item", e)
                 callback(null)
             }
     }
@@ -159,37 +158,34 @@ class MXRepository {
             put("amount", wallet.amount)
         }
 
-        // Update the existing document in collection with the specified wallet
         docRef
             .set(walletData)
             .addOnSuccessListener {
-                Log.d("Firestore", "Wallet item updated with ID: ${docRef.id}")
+                Log.d(TAG, "Wallet item updated with ID: ${docRef.id}")
                 callback(docRef)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error updating wallet item", e)
+                Log.w(TAG, "Error updating wallet item", e)
                 callback(null)
             }
     }
 
-    suspend fun deleteWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit): DocumentReference? {
+    suspend fun deleteWallet(wallet: Wallet, callback: (DocumentReference?) -> Unit): DocumentReference {
         val docRef = walletsCollection.document(wallet.id)
         val result: DocumentReference = docRef
 
-        // Update the existing document in collection with the specified wallet
         docRef
             .delete()
             .addOnSuccessListener {
-                Log.d("Firestore", "Wallet item deleted with ID: ${docRef.id}")
+                Log.d(TAG, "Wallet item deleted with ID: ${docRef.id}")
                 callback(docRef)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error deleting wallet item", e)
+                Log.w(TAG, "Error deleting wallet item", e)
                 callback(null)
             }
             .await()
 
-        Log.d(TAG, "deleteWallet returning $result")
         return result
     }
 
@@ -199,16 +195,16 @@ class MXRepository {
             put("description", transaction.description)
             put("amount", transaction.amount)
             put("date", transaction.date)
-            put("wallet", transaction.wallet.ref) // replace the wallet with its reference for future linkage
+            put("wallet", transaction.wallet.ref)
         }
         transactionsCollection
             .add(transactionData)
             .addOnSuccessListener { docRef ->
-                Log.d("Firestore", "Transaction item added with ID: ${docRef.id}")
+                Log.d(TAG, "Transaction item added with ID: ${docRef.id}")
                 callback(docRef)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error adding transaction item", e)
+                Log.w(TAG, "Error adding transaction item", e)
                 callback(null)
             }
     }
@@ -220,31 +216,30 @@ class MXRepository {
             put("description", transaction.description)
             put("amount", transaction.amount)
             put("date", transaction.date)
-            put("wallet", transaction.wallet.ref) // replace the wallet with its reference for future linkage
+            put("wallet", transaction.wallet.ref)
         }
-        // Update the existing document in collection with the specified wallet
+
         docRef
             .set(transactionData)
             .addOnSuccessListener {
-                Log.d("Firestore", "Transaction item updated with ID: ${docRef.id}")
+                Log.d(TAG, "Transaction item updated with ID: ${docRef.id}")
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error updating transaction item", e)
+                Log.w(TAG, "Error updating transaction item", e)
             }
     }
 
     fun deleteTransaction(transaction: Transaction, callback: (DocumentReference?) -> Unit) {
         val docRef = transactionsCollection.document(transaction.id)
 
-        // Update the existing document in collection with the specified wallet
         docRef
             .delete()
             .addOnSuccessListener {
-                Log.d("Firestore", "Transaction item deleted")
+                Log.d(TAG, "Transaction item deleted")
                 callback(docRef)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error deleting transaction item", e)
+                Log.w(TAG, "Error deleting transaction item", e)
                 callback(null)
             }
     }
@@ -255,7 +250,6 @@ class MXRepository {
             .get()
             .await()
 
-        // Iterate over the documents and delete them
         for (document in query.documents) {
             transactionsCollection.document(document.id).delete().await()
         }
@@ -286,7 +280,7 @@ class MXRepository {
 //        }
 //        callback(null)
 //    }
-//
+
 //    suspend fun getPayPalTransactions(accessToken: String, callback: (String?) -> Unit) {
 //        withContext(Dispatchers.IO) {
 //            val client = OkHttpClient()

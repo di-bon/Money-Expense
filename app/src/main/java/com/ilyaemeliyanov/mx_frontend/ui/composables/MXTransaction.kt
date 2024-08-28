@@ -120,8 +120,7 @@ fun MXTransaction(
                 modifier = Modifier
                     .padding(vertical = 8.dp),
                 thickness = 1.dp,
-                // TODO: add this color to Color.kt
-                color = Color(232, 232, 232) // E8E8E8
+                color = Color(232, 232, 232) // hex color: E8E8E8
             )
         }
     }

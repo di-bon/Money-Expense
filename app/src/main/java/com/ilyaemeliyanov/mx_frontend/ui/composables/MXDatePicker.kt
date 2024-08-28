@@ -20,9 +20,19 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 fun MXDatePicker(date: String, onCalendarSelect: (String) -> Unit) {
     val calendarState = rememberSheetState()
 
-    // UI Components
-    CalendarDialog(state = calendarState, config = CalendarConfig(monthSelection = true, yearSelection = true), selection = CalendarSelection.Date { onCalendarSelect("${it.year}-${it.monthValue}-${it.dayOfMonth}")})
-    Button(onClick = {calendarState.show()}, shape = MXShapes.medium, colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = Color.White), modifier = Modifier.fillMaxWidth()) {
+    CalendarDialog(
+        state = calendarState,
+        config = CalendarConfig(monthSelection = true, yearSelection = true),
+        selection = CalendarSelection.Date { onCalendarSelect("${it.year}-${it.monthValue}-${it.dayOfMonth}") })
+    Button(
+        onClick = { calendarState.show() },
+        shape = MXShapes.medium,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = Color.White
+        ),
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Text(date)
     }
 }
